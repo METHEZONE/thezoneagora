@@ -1,0 +1,1273 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable.css");
+
+/* ============================================================
+   THE ZONE AGORA 랜딩 — 따뜻한 아이보리 종이 위의 편집 디자인.
+   어두운 색은 오직 제품 프레임 내부(실제 앱 화면)에만 존재한다.
+   ============================================================ */
+
+.agora-landing {
+  --pi: #11100f; /* ink */
+  --pp: #fff8ed; /* paper */
+  --pp2: #f4ede3; /* paper deep */
+  --po: #ff5a1f; /* agora orange */
+  --pg: #1a9c62; /* data green (종이 위 대비 보정) */
+  --pr: #d93a4a; /* data red (종이 위 대비 보정) */
+  --pm: #6f665a; /* warm muted text */
+  --pm2: #a49a8c; /* warm muted lighter */
+  --ln: rgba(17, 16, 15, 0.14);
+  --ln-soft: rgba(17, 16, 15, 0.08);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --mono: var(--font-mono), "SF Mono", ui-monospace, Menlo, monospace;
+
+  position: relative;
+  background: var(--pp);
+  color: var(--pi);
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", system-ui, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  letter-spacing: -0.014em;
+  -webkit-font-smoothing: antialiased;
+  min-height: 100svh;
+  overflow-x: clip;
+}
+
+.agora-landing *,
+.agora-landing *::before,
+.agora-landing *::after {
+  box-sizing: border-box;
+}
+
+.agora-landing ::selection {
+  background: var(--po);
+  color: var(--pp);
+}
+
+.agora-landing h1,
+.agora-landing h2,
+.agora-landing h3,
+.agora-landing p {
+  margin: 0;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.ag-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-left: clamp(20px, 4.5vw, 56px);
+  padding-right: clamp(20px, 4.5vw, 56px);
+}
+
+.ag-num {
+  font-family: var(--mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.ag-up { color: var(--pg); }
+.ag-dn { color: var(--pr); }
+
+/* ---------- 타이포 ---------- */
+
+.ag-display {
+  font-weight: 800;
+  letter-spacing: -0.045em;
+  line-height: 1.06;
+}
+
+.ag-h1 { font-size: clamp(2.35rem, 5.6vw, 5rem); }
+.ag-h2 { font-size: clamp(1.9rem, 4vw, 3.3rem); }
+
+.ag-lede {
+  font-size: clamp(1.02rem, 1.35vw, 1.2rem);
+  line-height: 1.7;
+  color: var(--pm);
+  max-width: 34em;
+}
+
+.ag-note {
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--pm2);
+}
+
+.ag-kicker {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  color: var(--pm);
+  letter-spacing: 0;
+}
+
+/* ---------- 내비게이션 ---------- */
+
+.ag-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 300;
+  transition: background 0.3s var(--ease), border-color 0.3s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+
+.ag-nav.scrolled {
+  background: rgba(255, 248, 237, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom-color: var(--ln-soft);
+}
+
+.ag-nav-in {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 68px;
+}
+
+.ag-nav-brand {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  color: var(--pi);
+  text-decoration: none;
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: -0.03em;
+}
+
+.ag-nav-brand small {
+  font-weight: 600;
+  font-size: 10.5px;
+  letter-spacing: 0.02em;
+  color: var(--pm2);
+}
+
+.ag-nav-side {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2.4vw, 28px);
+}
+
+.ag-nav-side a,
+.ag-nav-side button {
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--pm);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ag-nav-side a:hover,
+.ag-nav-side button:hover {
+  color: var(--pi);
+}
+
+.ag-nav-cta {
+  color: var(--pp) !important;
+  background: var(--pi) !important;
+  padding: 9px 16px !important;
+  border-radius: 8px;
+  transition: transform 0.2s var(--ease), background 0.2s !important;
+}
+
+.ag-nav-cta:hover {
+  background: #2a2723 !important;
+}
+
+/* ---------- 공통 섹션 ---------- */
+
+.ag-scene {
+  position: relative;
+  padding: clamp(88px, 12vw, 176px) 0;
+}
+
+.ag-scene + .ag-scene {
+  border-top: 1px solid var(--ln-soft);
+}
+
+.ag-scene-head {
+  max-width: 760px;
+}
+
+.ag-scene-head .ag-lede {
+  margin-top: 22px;
+}
+
+/* 씬 사이를 잇는 오렌지 실 — 각 씬 헤드 위에서 스크롤에 맞춰 그려진다 */
+.ag-thread {
+  display: block;
+  width: 56px;
+  height: 2px;
+  background: var(--po);
+  margin-bottom: 26px;
+  transform-origin: left center;
+}
+
+/* ---------- 콜드 오픈 ---------- */
+
+.ag-cold {
+  padding-top: clamp(130px, 17vh, 200px);
+  padding-bottom: clamp(64px, 8vw, 110px);
+}
+
+.ag-cold .ag-h1 {
+  max-width: 17em;
+}
+
+.ag-cold-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: clamp(36px, 6vw, 96px);
+  align-items: start;
+  margin-top: clamp(30px, 4vw, 52px);
+}
+
+.ag-cold-grid .ag-lede {
+  margin-top: 6px;
+}
+
+.ag-keybox {
+  margin: 0;
+}
+
+.ag-keybox-stage {
+  position: relative;
+  height: 180px;
+  border-top: 1px solid var(--ln);
+}
+
+.ag-keybox-rail {
+  position: absolute;
+  left: 0;
+  right: 150px;
+  top: 50%;
+  border-top: 1px dashed rgba(17, 16, 15, 0.22);
+}
+
+.ag-keybox-box {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  width: 150px;
+  height: 116px;
+  transform: translateY(-50%);
+  background: var(--pi);
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ag-keybox-box i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #3a352e;
+}
+
+.ag-keybox-slot {
+  position: absolute;
+  left: -5px;
+  top: 50%;
+  width: 10px;
+  height: 22px;
+  margin-top: -11px;
+  border-radius: 2px;
+  background: var(--pp);
+}
+
+.ag-keybox-boxlabel {
+  position: absolute;
+  right: 0;
+  width: 150px;
+  text-align: center;
+  top: calc(50% + 66px);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--pm);
+}
+
+/* 열쇠 트랙: stage 왼쪽 끝 ~ 상자 슬롯. 열쇠는 track 안에서 left 0~100%로 이동. */
+.ag-key-track {
+  position: absolute;
+  left: 0;
+  right: calc(150px + 110px - 6px);
+  top: 50%;
+  height: 40px;
+  margin-top: -20px;
+}
+
+.ag-key {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 110px;
+  height: 40px;
+  pointer-events: none;
+}
+
+/* 모션 없음: 절반쯤 들어간 정지 화면 */
+.ag-key:not(.loop) {
+  left: 40%;
+}
+
+.ag-key.loop {
+  animation: ag-key-slide 6s cubic-bezier(0.45, 0, 0.2, 1) infinite;
+}
+
+@keyframes ag-key-slide {
+  0%   { left: 0; opacity: 1; }
+  30%  { left: 0; opacity: 1; }
+  64%  { left: calc(100% - 110px); opacity: 1; }
+  70%  { left: calc(100% - 110px); opacity: 0; }
+  71%  { left: 0; opacity: 0; }
+  100% { left: 0; opacity: 1; }
+}
+
+.ag-keybox-slot.loop {
+  animation: ag-slot-flash 6s linear infinite;
+}
+
+@keyframes ag-slot-flash {
+  0%, 68%, 76%, 84%, 100% { background: var(--pp); }
+  72%, 80% { background: var(--po); }
+}
+
+.ag-key svg {
+  display: block;
+  background: var(--pp);
+}
+
+.ag-key-tag {
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--pm2);
+  white-space: nowrap;
+}
+
+.ag-keybox figcaption {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--pm2);
+}
+
+.ag-cold-cue {
+  margin-top: clamp(48px, 7vw, 96px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  color: var(--pm2);
+  font-size: 13px;
+}
+
+.ag-cold-cue i {
+  display: block;
+  width: 1px;
+  height: 36px;
+  background: var(--ln);
+  position: relative;
+  overflow: hidden;
+}
+
+.ag-cold-cue i::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -50%;
+  width: 100%;
+  height: 50%;
+  background: var(--po);
+  animation: ag-cue 2.2s var(--ease) infinite;
+}
+
+@keyframes ag-cue {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(220%); }
+}
+
+/* ---------- 제품 프레임 ---------- */
+
+.ag-frame {
+  position: relative;
+  background: #11100f;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(17, 16, 15, 0.14),
+    0 24px 48px -24px rgba(17, 16, 15, 0.38);
+  border: 1px solid rgba(17, 16, 15, 0.85);
+}
+
+.ag-frame-bar {
+  position: relative;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 40px;
+  padding: 0 14px;
+  background: #1b1917;
+  border-bottom: 1px solid #2c2823;
+}
+
+/* 프레임 안 바텀 시트: 프레임 높이에 맞춘다 */
+.ag-frame .agora-arena .sheet {
+  max-height: 100%;
+}
+
+.ag-frame-bar i {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #3a352e;
+}
+
+.ag-frame-bar span {
+  flex: 1;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #8d857b;
+  letter-spacing: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ag-frame-body {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+/* 프레임 안의 fixed 레이어(아레나 시트/오버레이, 볼트 모달)를 프레임 좌표계로 끌어온다.
+   position: fixed는 transform 조상으로 가두는 방식이 컴포지팅에서 불안정해서
+   절대 배치로 덮어쓴다. 우선순위는 셀렉터 특이도로 확보한다. */
+.ag-frame .ag-frame-body .overlay,
+.ag-frame .ag-frame-body .agora-arena .sheet,
+.ag-frame .ag-frame-body [role="presentation"].fixed {
+  position: absolute !important;
+}
+
+.ag-frame-crop {
+  overflow: hidden;
+  position: relative;
+}
+
+.ag-frame-fade {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 90px;
+  background: linear-gradient(180deg, rgba(17, 16, 15, 0), #11100f);
+  pointer-events: none;
+  z-index: 5;
+}
+
+.ag-frame-static {
+  pointer-events: none;
+  user-select: none;
+}
+
+/* 프레임 안에서 arena.css의 페이지 레벨 부수효과 차단 */
+.ag-frame .agora-arena {
+  min-height: 0;
+  overflow-x: visible;
+}
+
+.ag-frame-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #8d857b;
+  font-size: 13px;
+  background:
+    repeating-linear-gradient(-45deg, transparent 0 14px, rgba(255, 248, 237, 0.02) 14px 28px),
+    #161412;
+}
+
+.ag-caption {
+  margin-top: 16px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--pm);
+  max-width: 46em;
+}
+
+.ag-caption b {
+  color: var(--pi);
+  font-weight: 700;
+}
+
+/* ---------- 아레나 씬 ---------- */
+
+.ag-arena-stack {
+  margin-top: clamp(36px, 5vw, 64px);
+  display: flex;
+  flex-direction: column;
+  gap: clamp(40px, 5vw, 72px);
+}
+
+.ag-arena-detail {
+  max-width: 920px;
+  margin-left: auto;
+}
+
+/* ---------- MINT 핀 챕터 ---------- */
+
+.ag-mint-wrap {
+  position: relative;
+  height: 380vh;
+  border-top: 1px solid var(--ln-soft);
+}
+
+.ag-mint-pin {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  padding-top: 68px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.ag-mint-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 24px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--ln);
+}
+
+.ag-mint-title {
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.ag-mint-archive {
+  font-size: 13px;
+  color: var(--pm);
+  font-variant-numeric: tabular-nums;
+}
+
+.ag-mint-archive b {
+  color: var(--po);
+  font-weight: 700;
+}
+
+.ag-mint-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.5fr);
+  grid-template-areas:
+    "num chart"
+    "tape chart";
+  gap: 0 clamp(28px, 4vw, 64px);
+  margin-top: clamp(20px, 3.2vh, 40px);
+  align-items: start;
+}
+
+.ag-mint-num { grid-area: num; }
+.ag-mint-chartbox { grid-area: chart; }
+.ag-mint-grid .ag-tape { grid-area: tape; }
+
+.ag-mint-eq {
+  font-variant-numeric: tabular-nums;
+  font-weight: 800;
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
+  letter-spacing: -0.05em;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ag-mint-eq small {
+  font-size: 0.42em;
+  color: var(--pm2);
+  font-weight: 400;
+  margin-left: 6px;
+}
+
+.ag-mint-sub {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+  margin-top: 14px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: clamp(0.95rem, 1.3vw, 1.15rem);
+}
+
+.ag-mint-sub .ag-date {
+  color: var(--pm);
+  font-weight: 500;
+}
+
+.ag-mint-summary {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--ln);
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--pm);
+}
+
+.ag-mint-summary b {
+  color: var(--pi);
+  font-weight: 700;
+}
+
+.ag-tape {
+  margin-top: clamp(20px, 3vh, 36px);
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0;
+}
+
+.ag-tape-row {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr) auto;
+  gap: 14px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-top: 1px dashed var(--ln-soft);
+  font-size: 13px;
+}
+
+.ag-tape-row .ag-td {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--pm2);
+  font-variant-numeric: tabular-nums;
+}
+
+.ag-tape-row .ag-tt {
+  color: var(--pm);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ag-tape-row .ag-tt b {
+  color: var(--pi);
+  font-weight: 650;
+}
+
+.ag-tape-row .ag-tv {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.ag-tape-row.trade .ag-tt b {
+  color: var(--pi);
+}
+
+.ag-mint-chartbox {
+  position: relative;
+}
+
+.ag-mint-plot {
+  width: 100%;
+  height: clamp(220px, 34vh, 380px);
+}
+
+.ag-mint-chart {
+  display: block;
+  width: 100%;
+}
+
+.ag-mint-xaxis {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--pm2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 리스크 씬 ---------- */
+
+.ag-risk-grid {
+  margin-top: clamp(36px, 5vw, 64px);
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.3fr);
+  gap: clamp(36px, 5vw, 80px);
+  align-items: start;
+}
+
+.ag-risk-stat {
+  padding: 22px 0;
+  border-top: 1px solid var(--ln);
+}
+
+.ag-risk-stat:last-child {
+  border-bottom: 1px solid var(--ln);
+}
+
+.ag-risk-stat .v {
+  font-variant-numeric: tabular-nums;
+  font-size: clamp(2.2rem, 3.6vw, 3.4rem);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.ag-risk-stat .k {
+  margin-top: 8px;
+  font-size: 13.5px;
+  color: var(--pm);
+}
+
+.ag-strats {
+  display: flex;
+  flex-direction: column;
+}
+
+.ag-strat-row {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) 88px 74px;
+  gap: clamp(10px, 1.6vw, 22px);
+  align-items: center;
+  padding: 11px 0;
+  border-top: 1px solid var(--ln-soft);
+  font-size: 13.5px;
+}
+
+.ag-strat-row:last-child {
+  border-bottom: 1px solid var(--ln-soft);
+}
+
+.ag-strat-row .nm {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  color: var(--pi);
+  white-space: nowrap;
+}
+
+.ag-strat-bar {
+  position: relative;
+  height: 12px;
+}
+
+.ag-strat-bar::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  bottom: -4px;
+  width: 1px;
+  background: var(--ln);
+}
+
+.ag-strat-bar i {
+  position: absolute;
+  top: 2px;
+  bottom: 2px;
+  display: block;
+  transform-origin: left center;
+}
+
+.ag-strat-bar i.pos {
+  left: 50%;
+  background: var(--pg);
+}
+
+.ag-strat-bar i.neg {
+  right: 50%;
+  background: var(--pr);
+  transform-origin: right center;
+}
+
+.ag-strat-row .roi {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  text-align: right;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.ag-strat-row .wr {
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  font-size: 12px;
+  color: var(--pm2);
+  white-space: nowrap;
+}
+
+.ag-strats-head {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr) 88px 74px;
+  gap: clamp(10px, 1.6vw, 22px);
+  font-size: 11px;
+  color: var(--pm2);
+  padding-bottom: 8px;
+}
+
+.ag-strats-head span:nth-child(3),
+.ag-strats-head span:nth-child(4) {
+  text-align: right;
+}
+
+.ag-kalshi {
+  margin-top: clamp(32px, 4vw, 48px);
+  padding-top: 20px;
+  border-top: 1px solid var(--ln);
+  font-size: 14px;
+  color: var(--pm);
+  max-width: 52em;
+}
+
+.ag-kalshi b {
+  color: var(--pi);
+  font-weight: 700;
+}
+
+/* ---------- 게이트 씬 ---------- */
+
+.ag-gate-stage {
+  margin-top: clamp(36px, 5vw, 60px);
+  border: 1px solid var(--ln);
+  border-radius: 16px;
+  background: var(--pp2);
+  padding: clamp(20px, 3.4vw, 44px);
+}
+
+.ag-gate-lane {
+  position: relative;
+  height: 120px;
+}
+
+.ag-gate-rail {
+  position: absolute;
+  left: 40px;
+  right: 40px;
+  top: 50%;
+  height: 1px;
+  background: var(--ln);
+}
+
+.ag-gate-node {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.ag-gate-node .lb {
+  position: absolute;
+  top: calc(100% + 2px);
+  font-size: 12px;
+  font-weight: 650;
+  color: var(--pm);
+  white-space: nowrap;
+}
+
+.ag-gate-agent {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: var(--pi);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s;
+}
+
+.ag-gate-agent.paused {
+  opacity: 0.35;
+}
+
+.ag-gate-bars {
+  position: relative;
+  width: 46px;
+  height: 66px;
+}
+
+.ag-gate-bars::before,
+.ag-gate-bars::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  border-radius: 2px;
+  background: var(--pi);
+}
+
+.ag-gate-bars::before { left: 8px; }
+.ag-gate-bars::after { right: 8px; }
+
+.ag-gate-shutter {
+  position: absolute;
+  left: 11px;
+  right: 11px;
+  top: 0;
+  height: 100%;
+  background: var(--pi);
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.35s var(--ease);
+  border-radius: 2px;
+}
+
+.ag-gate-bars.closed .ag-gate-shutter {
+  transform: scaleY(1);
+}
+
+.ag-gate-ring {
+  position: absolute;
+  inset: -12px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  transition: border-color 0.25s;
+}
+
+.ag-gate-bars.pass .ag-gate-ring { border-color: var(--pg); }
+.ag-gate-bars.block .ag-gate-ring { border-color: var(--pr); }
+
+.ag-gate-vault {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  border: 2px solid var(--pi);
+  background: var(--pp);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ag-gate-vault svg { display: block; }
+
+.ag-gate-token {
+  position: absolute;
+  top: 50%;
+  left: 40px;
+  width: 14px;
+  height: 14px;
+  margin: -7px 0 0 -7px;
+  border-radius: 50%;
+  background: var(--po);
+  z-index: 3;
+}
+
+.ag-gate-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 34px;
+}
+
+.ag-gate-actions button {
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+  color: var(--pi);
+  background: var(--pp);
+  border: 1px solid var(--ln);
+  border-radius: 9px;
+  padding: 10px 16px;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.15s var(--ease);
+}
+
+.ag-gate-actions button:hover:not(:disabled) {
+  border-color: var(--pi);
+}
+
+.ag-gate-actions button:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.ag-gate-actions button.reset {
+  border-color: transparent;
+  color: var(--pm);
+  background: transparent;
+}
+
+.ag-gate-log {
+  margin-top: 22px;
+  border-top: 1px solid var(--ln);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.ag-gate-log > div > span {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--pm2);
+}
+
+.ag-gate-log > div {
+  display: flex;
+  gap: 14px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-bottom: 1px dashed var(--ln-soft);
+  color: var(--pm);
+}
+
+.ag-gate-log b {
+  font-weight: 600;
+}
+
+.ag-gate-policy {
+  margin-top: 14px;
+  font-size: 13px;
+  color: var(--pm2);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---------- 볼트 씬 ---------- */
+
+.ag-vault-main {
+  margin-top: clamp(36px, 5vw, 64px);
+}
+
+.ag-vault-duo {
+  margin-top: clamp(40px, 6vw, 80px);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: clamp(20px, 3vw, 36px);
+  align-items: start;
+}
+
+/* VaultPerformance는 비동기 init 경합으로 차트 canvas가 한 번 더 붙을 수 있다(제품 측 이슈).
+   프레임 안에서는 컨테이너를 220px로 고정해 겹침이 보이지 않게 한다. */
+.ag-frame [aria-label="볼트 순자산 추이"] {
+  max-height: 220px;
+  overflow: hidden;
+}
+
+/* 볼트 프레임 내부의 앱 배경 재현 */
+.ag-dark {
+  background: #11100f;
+  color: #fff8ed;
+}
+
+/* ---------- 현황 테이블 ---------- */
+
+.ag-status {
+  margin-top: clamp(36px, 5vw, 56px);
+  border-top: 1px solid var(--ln);
+  max-width: 920px;
+}
+
+.ag-status-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 150px;
+  gap: 18px;
+  align-items: baseline;
+  padding: 17px 0;
+  border-bottom: 1px solid var(--ln-soft);
+}
+
+.ag-status-row .what {
+  font-size: 15.5px;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+}
+
+.ag-status-row .what small {
+  display: block;
+  margin-top: 3px;
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--pm);
+}
+
+.ag-status-row .st {
+  font-size: 13px;
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.ag-status-row .st.on { color: var(--pg); }
+.ag-status-row .st.archive { color: var(--pm); }
+.ag-status-row .st.next { color: var(--pm2); }
+
+/* ---------- 클로징 ---------- */
+
+.ag-close {
+  padding-bottom: clamp(48px, 6vw, 80px);
+}
+
+.ag-close-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 22px;
+  margin-top: clamp(30px, 4vw, 48px);
+}
+
+.ag-btn-primary {
+  display: inline-block;
+  background: var(--po);
+  color: var(--pp);
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.02em;
+  padding: 16px 30px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+  box-shadow: 0 12px 28px -14px rgba(255, 90, 31, 0.55);
+}
+
+.ag-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px -14px rgba(255, 90, 31, 0.6);
+}
+
+.ag-link {
+  color: var(--pi);
+  font-size: 14.5px;
+  font-weight: 650;
+  text-decoration: none;
+  border-bottom: 1px solid var(--ln);
+  padding-bottom: 3px;
+  transition: border-color 0.2s;
+}
+
+.ag-link:hover {
+  border-bottom-color: var(--pi);
+}
+
+.ag-footer {
+  margin-top: clamp(64px, 9vw, 120px);
+  padding-top: 26px;
+  border-top: 1px solid var(--ln);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px 32px;
+  font-size: 12.5px;
+  color: var(--pm2);
+  line-height: 1.8;
+}
+
+.ag-footer .legal {
+  max-width: 62em;
+}
+
+/* ---------- 모션 정지 / 접근성 ---------- */
+
+html[data-agora-paused="true"] .agora-landing *,
+html[data-agora-paused="true"] .agora-landing *::before,
+html[data-agora-paused="true"] .agora-landing *::after {
+  animation-play-state: paused !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .agora-landing *,
+  .agora-landing *::before,
+  .agora-landing *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+.agora-landing a:focus-visible,
+.agora-landing button:focus-visible {
+  outline: 2px solid var(--po);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+/* ---------- 반응형 ---------- */
+
+@media (max-width: 960px) {
+  .ag-cold-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ag-keybox {
+    max-width: 520px;
+  }
+
+  .ag-mint-grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "num"
+      "chart"
+      "tape";
+    gap: 18px 0;
+  }
+
+  .ag-mint-wrap { height: 320vh; }
+  .ag-mint-pin { padding-top: 60px; justify-content: flex-start; }
+  .ag-mint-grid { margin-top: 14px; }
+  .ag-mint-plot { height: clamp(150px, 24svh, 220px); }
+  /* 모바일 핀 화면에서는 요약을 접는다 (다음 씬에서 MDD가 다시 나온다) */
+  .ag-mint-wrap .ag-mint-summary { display: none; }
+  .ag-mint-head { padding-bottom: 12px; }
+  .ag-mint-archive { font-size: 12px; }
+  .ag-tape { margin-top: 8px; }
+  .ag-tape-row { padding: 6px 0; font-size: 12.5px; }
+
+  .ag-mint-eq { font-size: clamp(2.3rem, 9.5vw, 3.2rem); }
+
+  /* 모바일에서는 최신 3줄만 (DOM 마지막 = 최신) */
+  .ag-mint-grid .ag-tape .ag-tape-row:nth-last-child(n + 4) { display: none; }
+
+  .ag-risk-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .ag-vault-duo {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px) {
+  .agora-landing { font-size: 16px; }
+
+  .ag-nav-in { height: 60px; }
+  .ag-nav-links { display: none; }
+  .ag-cold .ag-h1 br { display: none; }
+  .ag-key-track { left: 6px; }
+
+  .ag-gate-lane { height: 104px; }
+  .ag-gate-node .lb { font-size: 10.5px; }
+  .ag-gate-agent, .ag-gate-vault { width: 44px; height: 44px; }
+  .ag-gate-bars { width: 38px; height: 56px; }
+
+  .ag-strat-row,
+  .ag-strats-head {
+    grid-template-columns: 78px minmax(0, 1fr) 74px;
+  }
+
+  .ag-strat-row .wr,
+  .ag-strats-head span:nth-child(4) {
+    display: none;
+  }
+
+  .ag-status-row {
+    grid-template-columns: minmax(0, 1fr) 96px;
+  }
+
+  .ag-frame { border-radius: 12px; }
+  .ag-frame-bar { height: 34px; }
+}

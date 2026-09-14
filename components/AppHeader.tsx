@@ -23,13 +23,13 @@ export function AppHeader() {
   return (
     <header className="ar-header">
       <div className="wrap">
-        <Link href="/" className="brand">
+        <a href="https://thezonebio.com/agora" className="brand">
           <AgoraMark />
           <span className="wordmark">
             <span className="z">THE ZONE</span>
             <span className="a">AGORA</span>
           </span>
-        </Link>
+        </a>
         <div className="hd-right">
           <span className="season-chip num">
             <i /> SEASON 1 · LIVE
