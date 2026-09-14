@@ -45,3 +45,22 @@ npm run dev
 ---
 
 기획 아티팩트: `.omc/specs/deep-interview-agora-vault-userside.md` (유저사이드 스펙) · `.omc/specs/deep-interview-agora-web.md` (v1 스펙) · `.omc/plans/agora-agent-derby-v1.md` · 백엔드/컨트랙트 구조: `design/backend-architecture-overview.html`
+
+## 백엔드 API
+
+팀 백엔드(`TheZoneAgora/BE`)는 최종 프로젝트 저장소의 `backend/`에 병합되어 있습니다.
+
+- FastAPI + PostgreSQL + Redis (Docker Compose)
+- 상태 확인: `GET /health`
+- 에이전트 등록: `POST /agents`
+- Swagger UI: `/docs`
+
+로컬 실행:
+
+```bash
+cd backend
+cp .env.example .env
+docker compose up -d --build
+```
+
+배포 환경에서는 `CORS_ORIGINS`에 프론트엔드 origin(`https://thezoneagora.vercel.app`)을 추가합니다.
