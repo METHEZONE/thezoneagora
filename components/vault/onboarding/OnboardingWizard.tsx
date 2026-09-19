@@ -11,7 +11,7 @@ import { ConfirmStep } from "./ConfirmStep";
 import { CompleteScreen } from "./CompleteScreen";
 import { parseUsdcInput } from "./onboardingFormat";
 
-const MIN_DEPOSIT_USDC = 10;
+const MIN_DEPOSIT_USDC = 5; // 사용자 피드백(2026-09-19): Circle 테스트넷 파우셋이 2시간마다 20 USDC로 제한돼 있어 10 USDC 최소는 체험 여지가 너무 좁았다.
 const MIN_DEPOSIT_BASE_UNITS = BigInt(MIN_DEPOSIT_USDC) * 1_000_000n;
 const REDIRECT_DELAY_MS = 1200;
 const DEFAULT_STRATEGY_ID = "mint";
