@@ -70,7 +70,10 @@ export function OnboardingWizard() {
     try {
       await actions.createVault({ depositAmount });
       setCompleted(true);
-    } catch {
+    } catch (err) {
+      // 임시 진단 로그: 원인이 뭐든 화면엔 항상 같은 문구만 떠서 지갑 미연결/서명
+      // 거부/RPC 실패/온체인 revert를 구분할 수 없었다. 원인 확인되면 지워도 된다.
+      console.error("[Agora] createVault failed:", err);
       setError("볼트 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.");
     } finally {
       setSubmitting(false);
