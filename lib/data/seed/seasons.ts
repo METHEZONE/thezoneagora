@@ -24,9 +24,10 @@ export const SEASONS: Season[] = [
 
 export const AGENTS: Agent[] = [
   {
-    // 전 시즌 참고용 실거래 스냅샷(6/23 종료, lib/data/mint/mint-real-data.json)을
-    // 씨드로 삼되, 시즌 1부터는 다른 4개와 동일하게 SUI 실시간 시세에 반응하는
-    // 페이퍼 트레이딩 시뮬레이션이다 — "실거래 중"이 아니라 "실데이터 기반 시뮬레이션".
+    // Mac mini에서 2026.04.17~09.19 155일간 논스톱으로 돈 실제 MK2 엔진(OKX
+    // 페이퍼 트레이딩, 10개 서브전략, 879건)의 아카이브를 그대로 노출한다
+    // (lib/data/mint/mint-real-data.json). 다른 4개 에이전트와 달리 라이브
+    // 컨트래리언 시뮬레이션에 병합하지 않는다 — "실데이터 기반 아카이브".
     id: "mint",
     name: "MINT",
     handle: "@mint",
@@ -34,7 +35,7 @@ export const AGENTS: Agent[] = [
     isReal: true,
     seasonId: "s1",
     ownerLabel: "Agora Labs",
-    tagline: "SUI 실시간 시세 기반 역발상(컨트래리언) 페이퍼 트레이딩. 급락 매수 · 급등 매도.",
+    tagline: "OKX 실데이터 기반 10전략 포트폴리오(BTC/ETH/XRP/DOGE). 2026.04.17~09.19 155일 아카이브, 879건.",
     color: "#8b5cf6",
   },
   {

@@ -19,6 +19,47 @@ import { getLiveStrategyEngine } from "@/lib/live/LiveStrategyEngine";
 import type { LiveAgentState } from "@/lib/live/types";
 import { AGENTS as SEED_AGENTS } from "@/lib/data/seed/seasons";
 import { characterFor } from "@/components/arena/characters";
+import mintReal from "@/lib/data/mint/mint-real-data.json";
+
+// MINT는 라이브 컨트래리언 시뮬레이션이 아니라 실제 MK2 엔진(Mac mini, OKX 페이퍼
+// 트레이딩, 2026.04.17~09.19, 879건)의 아카이브 자산곡선을 그대로 보여준다.
+// lib/data/mint/mint-real-data.json의 equityCurve는 $10,000 균등가중 10전략
+// 포트폴리오 기준(components/landing/mint.ts와 동일 소스) — 레이스 트랙/리더보드도
+// 같은 숫자를 써야 "MINT가 달린 155일" 섹션과 아레나가 서로 다른 값을 보여주지 않는다.
+const MINT_HIST = mintReal.equityCurve.map((p) => ((p.equity - 10_000) / 10_000) * 100);
+const MINT_RET = Math.round(MINT_HIST[MINT_HIST.length - 1] * 100) / 100;
+const MINT_MDD = (() => {
+  let peak = -Infinity;
+  let maxDd = 0;
+  for (const p of mintReal.equityCurve) {
+    if (p.equity > peak) peak = p.equity;
+    if (peak > 0) {
+      const dd = ((peak - p.equity) / peak) * 100;
+      if (dd > maxDd) maxDd = dd;
+    }
+  }
+  return Math.max(0.5, Math.round(maxDd * 10) / 10);
+})();
+const MINT_SHARPE = (() => {
+  const series = mintReal.equityCurve.map((p) => ({ ts: Date.parse(p.ts), equity: p.equity }));
+  if (series.length < 3) return 0;
+  const returns: number[] = [];
+  for (let i = 1; i < series.length; i++) {
+    const prev = series[i - 1].equity;
+    if (prev > 0) returns.push(series[i].equity / prev - 1);
+  }
+  if (returns.length < 2) return 0;
+  const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+  const variance = returns.reduce((a, b) => a + (b - mean) ** 2, 0) / (returns.length - 1);
+  const sd = Math.sqrt(variance);
+  if (sd === 0) return 0;
+  const spanMs = series[series.length - 1].ts - series[0].ts;
+  const avgIntervalMs = spanMs / (series.length - 1);
+  if (avgIntervalMs <= 0) return 0;
+  const MS_PER_YEAR_LOCAL = 365.25 * 24 * 60 * 60 * 1000;
+  const periodsPerYear = MS_PER_YEAR_LOCAL / avgIntervalMs;
+  return Math.round((mean / sd) * Math.sqrt(periodsPerYear) * 100) / 100;
+})();
 
 export interface ArenaAgent {
   id: string;
@@ -105,11 +146,13 @@ function buildAgent(
   mock: { backers: number; aum: number; win: number }
 ): ArenaAgent {
   const seed = SEED_AGENTS.find((a) => a.id === state.agentId);
-  const ret = Math.round(state.roiPct * 100) / 100;
-  const mdd = computeMddPct(state.equitySeries);
-  const sharpe = Math.round(computeSharpe(state.equitySeries) * 100) / 100;
-  const hist =
-    state.equitySeries.length >= 2
+  const isMint = state.agentId === "mint";
+  const ret = isMint ? MINT_RET : Math.round(state.roiPct * 100) / 100;
+  const mdd = isMint ? MINT_MDD : computeMddPct(state.equitySeries);
+  const sharpe = isMint ? MINT_SHARPE : Math.round(computeSharpe(state.equitySeries) * 100) / 100;
+  const hist = isMint
+    ? MINT_HIST
+    : state.equitySeries.length >= 2
       ? state.equitySeries.map((p) => ((p.equity - 10_000) / 10_000) * 100)
       : [ret, ret];
   return {
@@ -117,7 +160,7 @@ function buildAgent(
     name: (seed?.name ?? state.agentId).toUpperCase(),
     strat: seed ? stratLabel(seed.tagline) : state.strategy,
     real: seed?.isReal ?? true,
-    symbol: state.symbol.replace(/USDT$/, ""),
+    symbol: isMint ? "MULTI" : state.symbol.replace(/USDT$/, ""),
     accent: characterFor(state.agentId).accent,
     ret,
     mdd,
