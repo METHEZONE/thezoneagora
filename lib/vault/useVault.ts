@@ -1,7 +1,12 @@
 "use client";
 
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { useCurrentAccount } from "@mysten/dapp-kit";
+import {
+  useCurrentAccount,
+  useSignAndExecuteTransaction,
+  useSuiClient,
+} from "@mysten/dapp-kit";
+import type { Transaction } from "@mysten/sui/transactions";
 import { getVaultDataSource } from "@/lib/vault";
 import type {
   VaultActivityEvent,
@@ -62,6 +67,55 @@ export function useVault(strategyId: string): UseVaultResult {
   const account = useCurrentAccount();
   const owner = account?.address ?? null;
   const source = useMemo(() => getVaultDataSource(), []);
+
+  // real(SuiVaultSource) 모드에서 createVault/depositMore 등이 실제로 지갑 서명을
+  // 요청하려면 dApp Kit의 서명 콜백을 소스에 주입해야 한다. 이 배선이 아예 없어서
+  // 지갑 서명 팝업이 뜨지도 않고 requireSigner()가 매번 조용히 실패해
+  // "볼트 생성에 실패했습니다"만 보이는 버그가 있었다 (OnboardingWizard의 catch가
+  // 실제 에러 메시지를 삼켜서 원인이 안 보였다).
+  const suiClient = useSuiClient();
+  const { mutateAsync: signAndExecuteTransaction } = useSignAndExecuteTransaction({
+    execute: async ({ bytes, signature }) =>
+      suiClient.executeTransactionBlock({
+        transactionBlock: bytes,
+        signature,
+        options: { showRawEffects: true, showObjectChanges: true },
+      }),
+  });
+
+  useEffect(() => {
+    const maybeSuiSource = source as unknown as {
+      setSignAndExecute?: (
+        fn:
+          | ((transaction: Transaction) => Promise<{
+              digest: string;
+              objectChanges?: Array<{
+                type: string;
+                objectType?: string;
+                objectId?: string;
+              }>;
+            }>)
+          | null
+      ) => void;
+    };
+    if (typeof maybeSuiSource.setSignAndExecute !== "function") return;
+    if (!owner) {
+      maybeSuiSource.setSignAndExecute(null);
+      return;
+    }
+    maybeSuiSource.setSignAndExecute(async (transaction) => {
+      const result = await signAndExecuteTransaction({ transaction });
+      return result as unknown as {
+        digest: string;
+        objectChanges?: Array<{
+          type: string;
+          objectType?: string;
+          objectId?: string;
+        }>;
+      };
+    });
+    return () => maybeSuiSource.setSignAndExecute?.(null);
+  }, [source, owner, signAndExecuteTransaction]);
 
   const [vault, setVault] = useState<VaultState | null>(null);
   const [hasVault, setHasVault] = useState<boolean | null>(null);
