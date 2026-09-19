@@ -22,7 +22,7 @@ import { AdvancedAccordion } from "./AdvancedAccordion";
 import { SaveToast } from "./SaveToast";
 
 export function RiskPolicySettings() {
-  const { owner, vault, hasVault, loading, actions } = useVault();
+  const { owner, vault, hasVault, loading, actions } = useVault("mint");
   const vaultKey = owner ?? "guest";
 
   const initializedKeyRef = useRef<string | null>(null);

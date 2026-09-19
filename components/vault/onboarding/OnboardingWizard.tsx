@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useVault } from "@/lib/vault/useVault";
+import { AGENTS } from "@/lib/data/seed/seasons";
 import { StepIndicator } from "./StepIndicator";
 import { ConnectStep } from "./ConnectStep";
 import { DepositStep } from "./DepositStep";
@@ -13,12 +14,16 @@ import { parseUsdcInput } from "./onboardingFormat";
 const MIN_DEPOSIT_USDC = 10;
 const MIN_DEPOSIT_BASE_UNITS = BigInt(MIN_DEPOSIT_USDC) * 1_000_000n;
 const REDIRECT_DELAY_MS = 1200;
+const DEFAULT_STRATEGY_ID = "mint";
 
 type Step = 1 | 2 | 3;
 
 export function OnboardingWizard() {
   const router = useRouter();
-  const { owner, hasVault, loading, actions } = useVault();
+  const searchParams = useSearchParams();
+  const strategyId = searchParams.get("strategy") ?? DEFAULT_STRATEGY_ID;
+  const agentName = AGENTS.find((a) => a.id === strategyId)?.name ?? strategyId;
+  const { owner, hasVault, loading, actions } = useVault(strategyId);
 
   const [step, setStep] = useState<Step>(1);
   const [depositInput, setDepositInput] = useState("");
@@ -30,7 +35,7 @@ export function OnboardingWizard() {
   useEffect(() => {
     if (loading || completed) return;
     if (owner && hasVault) {
-      router.replace("/vault");
+      router.replace(`/vault/${strategyId}`);
       return;
     }
     if (owner && step === 1) {
@@ -39,13 +44,13 @@ export function OnboardingWizard() {
     if (!owner && step !== 1) {
       setStep(1);
     }
-  }, [owner, hasVault, loading, completed, step, router]);
+  }, [owner, hasVault, loading, completed, step, router, strategyId]);
 
   useEffect(() => {
     if (!completed) return;
-    const timer = setTimeout(() => router.push("/vault"), REDIRECT_DELAY_MS);
+    const timer = setTimeout(() => router.push(`/vault/${strategyId}`), REDIRECT_DELAY_MS);
     return () => clearTimeout(timer);
-  }, [completed, router]);
+  }, [completed, router, strategyId]);
 
   const depositAmount = parseUsdcInput(depositInput);
   const depositValid =
@@ -102,6 +107,8 @@ export function OnboardingWizard() {
 
         {step === 3 && depositAmount !== null && (
           <ConfirmStep
+            strategyId={strategyId}
+            agentName={agentName}
             depositAmount={depositAmount}
             submitting={submitting}
             error={error}

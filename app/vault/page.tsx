@@ -1,16 +1,58 @@
 "use client";
 
-import Link from "next/link";
-import { useVault } from "@/lib/vault/useVault";
-import { AgentStatusBadge } from "@/components/vault/AgentStatusBadge";
-import { BalanceCards } from "@/components/vault/BalanceCards";
-import { VaultPerformance } from "@/components/vault/VaultPerformance";
-import { ActivityFeed } from "@/components/vault/ActivityFeed";
-import { ActionBar } from "@/components/vault/ActionBar";
+import { useCurrentAccount } from "@mysten/dapp-kit";
+import { AGENTS } from "@/lib/data/seed/seasons";
+import { useMyVaults } from "@/lib/vault/useVault";
+import { StrategyCard } from "@/components/vault/StrategyCard";
+import { VaultDetail } from "@/components/vault/VaultDetail";
 import { CharacterRow } from "@/components/vault/CharacterRow";
 
+const GUEST_STRATEGY_ID = "mint";
+
 export default function VaultPage() {
-  const { owner, vault, hasVault, loading, activity, actions } = useVault();
+  const account = useCurrentAccount();
+  const owner = account?.address ?? null;
+
+  return owner ? <ConnectedVaultList /> : <GuestVaultView />;
+}
+
+/** 지갑 미연결: 기존 mint 게스트 데모 볼트 + 나머지 4개 전략 미리보기. */
+function GuestVaultView() {
+  const otherAgents = AGENTS.filter((agent) => agent.id !== GUEST_STRATEGY_ID);
+
+  return (
+    <main className="min-h-[calc(100vh-64px)] bg-arena-black">
+      <div className="mx-auto max-w-[1200px] px-5 pt-10 lg:px-6">
+        <section className="mb-8 rounded-2xl border border-white/10 bg-surface-dark p-5">
+          <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-light">
+            5개 전략 둘러보기
+          </div>
+          <p className="mt-1 text-[13px] text-muted-light">
+            지갑을 연결하면 아래 전략에도 각각 따로 배분할 수 있어요. 지금은 mint 데모 볼트만
+            체험할 수 있습니다.
+          </p>
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {otherAgents.map((agent) => (
+              <StrategyCard
+                key={agent.id}
+                agentId={agent.id}
+                name={agent.name}
+                tagline={agent.tagline}
+                href={`/vault/onboarding?strategy=${agent.id}`}
+                ctaLabel="지갑 연결하고 배분하기"
+              />
+            ))}
+          </div>
+        </section>
+      </div>
+      <VaultDetail strategyId={GUEST_STRATEGY_ID} />
+    </main>
+  );
+}
+
+/** 지갑 연결: 5개 전략 전부를 카드로 나열. 볼트가 있으면 잔액 요약 + 관리 링크. */
+function ConnectedVaultList() {
+  const { vaults, loading } = useMyVaults();
 
   if (loading) {
     return (
@@ -22,83 +64,39 @@ export default function VaultPage() {
     );
   }
 
-  // 지갑 연결 + 볼트 없음 → 온보딩 유도.
-  if (owner && hasVault === false) {
-    return (
-      <main className="min-h-[calc(100vh-64px)] bg-arena-black">
-        <div className="mx-auto flex max-w-[640px] flex-col items-center px-5 py-24 text-center lg:px-6">
-          <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-light">
-            내 볼트
-          </div>
-          <h1 className="mt-3 font-display text-2xl font-bold tracking-tight text-warm-ivory">
-            아직 볼트가 없습니다
-          </h1>
-          <p className="mt-3 max-w-md text-[14px] leading-relaxed text-muted-light">
-            지갑 연결을 확인했습니다. 온보딩을 완료하면 실시세 기반 라이브 전략이 내 볼트에서 바로
-            동작합니다.
-          </p>
-          <Link
-            href="/vault/onboarding"
-            className="mt-6 rounded-xl bg-agora-orange px-6 py-3 text-[14px] font-bold text-arena-black transition-opacity hover:opacity-90"
-          >
-            볼트 만들기
-          </Link>
-        </div>
-      </main>
-    );
-  }
-
-  if (!vault) {
-    return (
-      <main className="min-h-[calc(100vh-64px)] bg-arena-black">
-        <div className="mx-auto max-w-[1200px] px-5 py-16 lg:px-6">
-          <p className="text-[13px] text-muted-light">볼트 정보를 불러오는 중…</p>
-        </div>
-      </main>
-    );
-  }
+  const vaultByStrategy = new Map(vaults.map((v) => [v.strategyId, v.state]));
 
   return (
     <main className="min-h-[calc(100vh-64px)] bg-arena-black">
       <div className="mx-auto max-w-[1200px] px-5 py-10 lg:px-6">
-        {vault.isGuest && (
-          <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-agora-orange/30 bg-agora-orange/10 px-4 py-3">
-            <p className="text-[13px] font-medium text-agora-orange">
-              데모 볼트 — 지갑을 연결하면 내 볼트를 만들 수 있어요
-            </p>
-            <CharacterRow size={40} className="hidden sm:flex" />
-          </div>
-        )}
-
-        <header className="mb-6 flex flex-wrap items-center justify-between gap-4">
-          <div className="flex items-center gap-4">
-            <CharacterRow size={56} className="hidden md:flex" />
-            <div>
-              <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-light">
-                {vault.isGuest ? "데모 볼트" : "내 볼트"}
-              </div>
-              <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-warm-ivory">
-                볼트 대시보드
-              </h1>
+        <header className="mb-6 flex items-center gap-4">
+          <CharacterRow size={48} className="hidden md:flex" />
+          <div>
+            <div className="text-[11px] font-medium uppercase tracking-[0.18em] text-muted-light">
+              내 볼트
             </div>
+            <h1 className="mt-1 font-display text-2xl font-bold tracking-tight text-warm-ivory">
+              전략별 배분
+            </h1>
           </div>
-          <AgentStatusBadge status={vault.agentStatus} />
         </header>
 
-        <div className="mb-6">
-          <BalanceCards vault={vault} />
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {AGENTS.map((agent) => {
+            const state = vaultByStrategy.get(agent.id);
+            return (
+              <StrategyCard
+                key={agent.id}
+                agentId={agent.id}
+                name={agent.name}
+                tagline={agent.tagline}
+                vaultState={state}
+                href={state ? `/vault/${agent.id}` : `/vault/onboarding?strategy=${agent.id}`}
+                ctaLabel={state ? "관리하기" : "이 전략에 배분하기"}
+              />
+            );
+          })}
         </div>
-
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1.6fr_1fr]">
-          <VaultPerformance vault={vault} />
-          <ActivityFeed activity={activity} />
-        </div>
-
-        {!vault.isGuest && owner && (
-          <div className="mt-6">
-            <ActionBar vault={vault} actions={actions} />
-          </div>
-        )}
       </div>
     </main>
   );

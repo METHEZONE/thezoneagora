@@ -19,7 +19,7 @@ const noopVault = async () => {
 
 /** 게스트 데모 볼트 대시보드 — app/vault 페이지와 같은 실제 컴포넌트 조립. */
 function VaultDashboardFrame() {
-  const { vault, activity } = useVault();
+  const { vault, activity } = useVault("mint");
 
   if (!vault) return <FramePlaceholder height={700} />;
 
@@ -72,7 +72,7 @@ function SettingsFrame() {
 }
 
 function EmergencyFrame() {
-  const { vault } = useVault();
+  const { vault } = useVault("mint");
 
   if (!vault) return <FramePlaceholder height={600} />;
 

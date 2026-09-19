@@ -8,12 +8,14 @@ import {
 import type {
   CreateVaultParams,
   EmergencyLiquidateAllParams,
+  OwnedVaultSummary,
   VaultDataEvent,
   VaultDataSource,
   VaultSubscriber,
 } from "@/lib/vault/VaultDataSource";
+import { STRATEGY_CONFIGS } from "@/lib/live/strategyLogic";
 
-const STORAGE_KEY = "agora-mock-vault-v1";
+const STORAGE_KEY = "agora-mock-vault-v2";
 
 // 실시세 콜백이 아직 붙지 않았을 때 쓰는 폴백 SUI/USDC 환율.
 // attachEngine으로 엔진이 붙으면 이 값 대신 엔진의 실시세를 우선 사용한다.
@@ -22,6 +24,18 @@ const FALLBACK_CRYPTO_PRICE_USDC = 3.5;
 // 활동 피드가 무한정 커지지 않도록 볼트당 유지할 최근 이벤트 개수.
 const MAX_ACTIVITY_LENGTH = 200;
 
+// 게스트 데모 볼트는 항상 mint 전략 고정 (기존 데모 경험 유지).
+const GUEST_STRATEGY_ID = "mint";
+
+// STRATEGY_CONFIGS(전략 → 실시세 심볼)를 뒤집어 전략별 청산 시세 조회에 쓴다.
+const SYMBOL_BY_STRATEGY: Record<string, string> = Object.fromEntries(
+  STRATEGY_CONFIGS.map((c) => [c.agentId, c.symbol])
+);
+
+function symbolForStrategy(strategyId: string): string {
+  return SYMBOL_BY_STRATEGY[strategyId] ?? "SUIUSDT";
+}
+
 interface StoredVaultRecord {
   state: VaultState;
   activity: VaultActivityEvent[];
@@ -29,7 +43,8 @@ interface StoredVaultRecord {
 
 interface StoredData {
   guest: StoredVaultRecord;
-  vaults: Record<string, StoredVaultRecord>;
+  /** owner -> strategyId -> 볼트. 지갑 1개가 전략별로 독립된 볼트를 가질 수 있다. */
+  vaults: Record<string, Record<string, StoredVaultRecord>>;
 }
 
 /** LiveStrategyEngine의 ActivityEvent와 구조적으로 호환되는 최소 형태. */
@@ -87,7 +102,7 @@ function generateId(prefix: string): string {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
 }
 
-// 심사위원 등 지갑 미연결 방문자가 /vault에서 즉시 보는 사전 시드 데모 볼트.
+// 심사위원 등 지갑 미연결 방문자가 /vault에서 즉시 보는 사전 시드 데모 볼트 (mint 전략 고정).
 function createGuestVaultRecord(): StoredVaultRecord {
   const now = Date.now();
 
@@ -150,13 +165,13 @@ function createSeedData(): StoredData {
 }
 
 /**
- * localStorage("agora-mock-vault-v1") 지속 mock VaultDataSource.
- * 게스트 데모 볼트 + 지갑별 mock 볼트를 함께 관리한다 (1지갑 1볼트 가정).
+ * localStorage("agora-mock-vault-v2") 지속 mock VaultDataSource.
+ * 게스트 데모 볼트(mint 고정) + 지갑별 · 전략별 mock 볼트를 함께 관리한다.
  */
 export class MockVaultSource implements VaultDataSource {
   private data: StoredData;
   private readonly listeners = new Set<VaultSubscriber>();
-  private priceSource: (() => number) | null = null;
+  private priceSource: ((symbol: string) => number | undefined) | null = null;
   private engineUnsubscribe: (() => void) | null = null;
 
   constructor() {
@@ -194,11 +209,11 @@ export class MockVaultSource implements VaultDataSource {
     );
   }
 
-  private requireVault(owner: string): StoredVaultRecord {
-    const record = this.data.vaults[owner];
+  private requireVault(owner: string, strategyId: string): StoredVaultRecord {
+    const record = this.data.vaults[owner]?.[strategyId];
     if (!record) {
       throw new Error(
-        `No vault found for owner ${owner}. Call createVault first.`
+        `No vault found for owner ${owner} / strategy ${strategyId}. Call createVault first.`
       );
     }
     return record;
@@ -224,46 +239,68 @@ export class MockVaultSource implements VaultDataSource {
 
   private commit(
     owner: string | null,
+    strategyId: string,
     record: StoredVaultRecord,
     activity?: VaultActivityEvent
   ): void {
     this.persist();
-    const event: VaultDataEvent = { owner, state: record.state, activity };
+    const event: VaultDataEvent = { owner, strategyId, state: record.state, activity };
     this.listeners.forEach((callback) => callback(event));
   }
 
-  async hasVault(owner: string): Promise<boolean> {
-    return Boolean(this.data.vaults[owner]);
+  async hasVault(owner: string, strategyId: string): Promise<boolean> {
+    return Boolean(this.data.vaults[owner]?.[strategyId]);
   }
 
-  async getVaultState(owner: string): Promise<VaultState> {
-    return this.requireVault(owner).state;
+  async getVaultState(owner: string, strategyId: string): Promise<VaultState> {
+    return this.requireVault(owner, strategyId).state;
   }
 
-  async getActivityHistory(owner: string | null): Promise<VaultActivityEvent[]> {
-    const record = owner ? this.data.vaults[owner] : this.data.guest;
+  async listVaults(owner: string): Promise<OwnedVaultSummary[]> {
+    const byStrategy = this.data.vaults[owner] ?? {};
+    return Object.entries(byStrategy).map(([strategyId, record]) => ({
+      strategyId,
+      state: record.state,
+    }));
+  }
+
+  async getActivityHistory(
+    owner: string | null,
+    strategyId: string
+  ): Promise<VaultActivityEvent[]> {
+    const record = owner
+      ? this.data.vaults[owner]?.[strategyId]
+      : strategyId === GUEST_STRATEGY_ID
+        ? this.data.guest
+        : undefined;
     if (!record) return [];
     // 저장은 시간순 push라 피드용으로는 최신순으로 뒤집어 준다.
     return [...record.activity].reverse();
   }
 
-  async getGuestVault(): Promise<VaultState> {
+  async getGuestVault(strategyId: string): Promise<VaultState> {
+    if (strategyId !== GUEST_STRATEGY_ID) {
+      throw new Error(
+        `No guest vault for strategy ${strategyId}; guest demo is fixed to "${GUEST_STRATEGY_ID}".`
+      );
+    }
     return this.data.guest.state;
   }
 
   async createVault(
     owner: string,
+    strategyId: string,
     params: CreateVaultParams
   ): Promise<VaultState> {
-    if (this.data.vaults[owner]) {
-      throw new Error(`Vault already exists for owner ${owner}.`);
+    if (this.data.vaults[owner]?.[strategyId]) {
+      throw new Error(`Vault already exists for owner ${owner} / strategy ${strategyId}.`);
     }
     if (params.depositAmount <= 0n) {
       throw new Error("depositAmount must be greater than zero.");
     }
 
     const state: VaultState = {
-      vaultId: `mock-vault-${owner}`,
+      vaultId: `mock-vault-${owner}-${strategyId}`,
       owner,
       fiatBalance: params.depositAmount,
       cryptoBalance: 0n,
@@ -276,25 +313,26 @@ export class MockVaultSource implements VaultDataSource {
     };
 
     const record: StoredVaultRecord = { state, activity: [] };
-    this.data.vaults[owner] = record;
-    this.commit(owner, record);
+    this.data.vaults[owner] ??= {};
+    this.data.vaults[owner][strategyId] = record;
+    this.commit(owner, strategyId, record);
     return state;
   }
 
-  async depositMore(owner: string, amount: bigint): Promise<VaultState> {
+  async depositMore(owner: string, strategyId: string, amount: bigint): Promise<VaultState> {
     if (amount <= 0n) throw new Error("amount must be greater than zero.");
-    const record = this.requireVault(owner);
+    const record = this.requireVault(owner, strategyId);
     record.state.fiatBalance += amount;
     const activity = this.appendActivity(record, "DepositReceived", {
       amount: amount.toString(),
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
-  async withdrawAmount(owner: string, amount: bigint): Promise<VaultState> {
+  async withdrawAmount(owner: string, strategyId: string, amount: bigint): Promise<VaultState> {
     if (amount <= 0n) throw new Error("amount must be greater than zero.");
-    const record = this.requireVault(owner);
+    const record = this.requireVault(owner, strategyId);
     if (amount > record.state.fiatBalance) {
       throw new Error("amount exceeds fiatBalance.");
     }
@@ -302,13 +340,13 @@ export class MockVaultSource implements VaultDataSource {
     const activity = this.appendActivity(record, "WithdrawalExecuted", {
       fiatWithdrawn: amount.toString(),
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
-  async withdrawCrypto(owner: string, amount: bigint): Promise<VaultState> {
+  async withdrawCrypto(owner: string, strategyId: string, amount: bigint): Promise<VaultState> {
     if (amount <= 0n) throw new Error("amount must be greater than zero.");
-    const record = this.requireVault(owner);
+    const record = this.requireVault(owner, strategyId);
     if (amount > record.state.cryptoBalance) {
       throw new Error("amount exceeds cryptoBalance.");
     }
@@ -316,12 +354,12 @@ export class MockVaultSource implements VaultDataSource {
     const activity = this.appendActivity(record, "WithdrawalExecuted", {
       cryptoWithdrawn: amount.toString(),
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
-  async withdrawAll(owner: string): Promise<VaultState> {
-    const record = this.requireVault(owner);
+  async withdrawAll(owner: string, strategyId: string): Promise<VaultState> {
+    const record = this.requireVault(owner, strategyId);
     const withdrawnFiat = record.state.fiatBalance;
     const withdrawnCrypto = record.state.cryptoBalance;
     record.state.fiatBalance = 0n;
@@ -330,44 +368,46 @@ export class MockVaultSource implements VaultDataSource {
       fiatWithdrawn: withdrawnFiat.toString(),
       cryptoWithdrawn: withdrawnCrypto.toString(),
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
-  async revokeAgent(owner: string): Promise<VaultState> {
-    const record = this.requireVault(owner);
+  async revokeAgent(owner: string, strategyId: string): Promise<VaultState> {
+    const record = this.requireVault(owner, strategyId);
     record.state.agentStatus = "PAUSED";
     const activity = this.appendActivity(record, "AgentRevoked", {});
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
-  async reactivateAgent(owner: string): Promise<VaultState> {
-    const record = this.requireVault(owner);
+  async reactivateAgent(owner: string, strategyId: string): Promise<VaultState> {
+    const record = this.requireVault(owner, strategyId);
     record.state.agentStatus = "ACTIVE";
     const activity = this.appendActivity(record, "AgentReactivated", {});
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
   async setReduceOnly(
     owner: string,
+    strategyId: string,
     reduceOnly: boolean
   ): Promise<VaultState> {
-    const record = this.requireVault(owner);
+    const record = this.requireVault(owner, strategyId);
     record.state.agentStatus = reduceOnly ? "REDUCE_ONLY" : "ACTIVE";
     const activity = this.appendActivity(record, "ReduceOnlyUpdated", {
       reduceOnly,
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
   async configurePolicy(
     owner: string,
+    strategyId: string,
     policy: ExecutionPolicyUpdate
   ): Promise<VaultState> {
-    const record = this.requireVault(owner);
+    const record = this.requireVault(owner, strategyId);
     // allowedPool/거래시간대는 real 모드 configure_execution_policy 트랜잭션 전용 값이라
     // mock VaultState.policy(RiskPolicy)에는 반영하지 않는다 — rest로만 분리해 버린다.
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -376,17 +416,18 @@ export class MockVaultSource implements VaultDataSource {
     const activity = this.appendActivity(record, "PolicyUpdated", {
       changed: Object.keys(riskFields),
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
   async emergencyLiquidateAll(
     owner: string,
+    strategyId: string,
     params: EmergencyLiquidateAllParams
   ): Promise<VaultState> {
-    const record = this.requireVault(owner);
+    const record = this.requireVault(owner, strategyId);
     const cryptoAmount = record.state.cryptoBalance;
-    const price = this.resolveCryptoPrice();
+    const price = this.resolveCryptoPrice(strategyId);
 
     // cryptoAmount는 MIST(1e9 decimals), price는 SUI 1개당 USDC, fiat는 USDC 6 decimals.
     const fiatOut =
@@ -419,19 +460,19 @@ export class MockVaultSource implements VaultDataSource {
       minFiatOutput: params.minFiatOutput.toString(),
       realizedLossDelta: lossDelta.toString(),
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
-  async emergencyPauseAndWithdraw(owner: string): Promise<VaultState> {
-    const record = this.requireVault(owner);
+  async emergencyPauseAndWithdraw(owner: string, strategyId: string): Promise<VaultState> {
+    const record = this.requireVault(owner, strategyId);
     const withdrawn = record.state.fiatBalance;
     record.state.fiatBalance = 0n;
     record.state.agentStatus = "PAUSED";
     const activity = this.appendActivity(record, "EmergencyFiatWithdrawn", {
       fiatWithdrawn: withdrawn.toString(),
     });
-    this.commit(owner, record, activity);
+    this.commit(owner, strategyId, record, activity);
     return record.state;
   }
 
@@ -440,16 +481,18 @@ export class MockVaultSource implements VaultDataSource {
     return () => this.listeners.delete(callback);
   }
 
-  /** LiveStrategyEngine 등 실시세 소스가 준비되면 crypto 가격 콜백을 주입한다. */
-  setPriceSource(source: (() => number) | null): void {
+  /** LiveStrategyEngine 등 실시세 소스가 준비되면 심볼별 가격 콜백을 주입한다. */
+  setPriceSource(source: ((symbol: string) => number | undefined) | null): void {
     this.priceSource = source;
   }
 
-  private resolveCryptoPrice(): number {
+  private resolveCryptoPrice(strategyId: string): number {
     if (this.priceSource) {
       try {
-        const price = this.priceSource();
-        if (Number.isFinite(price) && price > 0) return price;
+        const price = this.priceSource(symbolForStrategy(strategyId));
+        if (typeof price === "number" && Number.isFinite(price) && price > 0) {
+          return price;
+        }
       } catch {
         // 시세 콜백이 실패하면 고정 폴백 환율을 사용한다.
       }
@@ -459,36 +502,29 @@ export class MockVaultSource implements VaultDataSource {
 
   /**
    * LiveStrategyEngine 연결 지점. import로 타입을 고정하지 않고 duck typing으로만 다룬다.
-   *  - engine.getLatestPrice(symbol)이 있으면 긴급청산 환산 시세로 사용한다.
-   *  - engine.subscribe(cb)가 있으면 시그널 이벤트를 활동 피드로 변환해 흘려보낸다.
+   *  - engine.getLatestPrice(symbol)/getSnapshot().prices가 있으면 긴급청산 환산 시세로 쓴다.
+   *  - engine.subscribe(cb)가 있으면 이 strategyId(agentId)에 해당하는 시그널만 활동 피드로 흘려보낸다.
    */
-  attachEngine(engine: unknown, options?: { owner?: string | null }): void {
+  attachEngine(engine: unknown, options: { owner?: string | null; strategyId: string }): void {
     this.detachEngine();
 
     if (!engine || typeof engine !== "object") return;
     const candidate = engine as EngineLike;
+    const strategyId = options.strategyId;
 
     if (typeof candidate.getLatestPrice === "function") {
       const getLatestPrice = candidate.getLatestPrice.bind(candidate);
-      this.setPriceSource(
-        () => getLatestPrice("SUIUSDT") ?? FALLBACK_CRYPTO_PRICE_USDC
-      );
+      this.setPriceSource((symbol) => getLatestPrice(symbol));
     } else if (typeof candidate.getSnapshot === "function") {
       // LiveStrategyEngine은 getLatestPrice 대신 getSnapshot().prices를 노출한다.
-      // 긴급청산의 minFiatOutput(라이브 시세 기반)과 환산 시세가 어긋나지 않도록 여기서 연결.
       const getSnapshot = candidate.getSnapshot.bind(candidate);
-      this.setPriceSource(() => {
-        const price = getSnapshot()?.prices?.SUIUSDT;
-        return typeof price === "number" && price > 0
-          ? price
-          : FALLBACK_CRYPTO_PRICE_USDC;
-      });
+      this.setPriceSource((symbol) => getSnapshot()?.prices?.[symbol]);
     }
 
     if (typeof candidate.subscribe === "function") {
-      const owner = options?.owner ?? null;
+      const owner = options.owner ?? null;
       const unsubscribe = candidate.subscribe((tick) =>
-        this.handleEngineTick(tick, owner)
+        this.handleEngineTick(tick, owner, strategyId)
       );
       this.engineUnsubscribe =
         typeof unsubscribe === "function" ? unsubscribe : null;
@@ -503,17 +539,27 @@ export class MockVaultSource implements VaultDataSource {
   /**
    * 엔진 subscribe 콜백은 매 가격 틱마다 EngineTick을 전달한다.
    * 실제 시그널 파이프라인 이벤트는 tick.events 배열 안에 있으므로 개별로 변환한다.
-   * events가 비어 있는 틱(시그널 없는 가격 갱신)은 피드에 아무것도 남기지 않는다.
+   * 이 엔진은 5개 전략 전부의 이벤트를 함께 흘려보내므로, 이 볼트(strategyId)와
+   * 무관한 다른 전략의 이벤트는 걸러낸다.
    */
-  private handleEngineTick(tick: EngineTickLike, owner: string | null): void {
+  private handleEngineTick(
+    tick: EngineTickLike,
+    owner: string | null,
+    strategyId: string
+  ): void {
     if (!tick || !Array.isArray(tick.events) || tick.events.length === 0) return;
-    const record = owner ? this.data.vaults[owner] : this.data.guest;
+    const record = owner
+      ? this.data.vaults[owner]?.[strategyId]
+      : strategyId === GUEST_STRATEGY_ID
+        ? this.data.guest
+        : undefined;
     if (!record) return;
 
     // 구독자(useVault)는 VaultDataEvent.activity 단위로 피드를 쌓으므로
     // 한 틱에 여러 이벤트가 와도 각각 commit해서 하나도 유실되지 않게 한다.
     for (const event of tick.events) {
       if (!event || typeof event !== "object") continue;
+      if (event.agentId && event.agentId !== strategyId) continue;
       const type = ENGINE_EVENT_TYPE_MAP[event.type ?? ""];
       if (!type) continue;
 
@@ -528,7 +574,7 @@ export class MockVaultSource implements VaultDataSource {
         riskScoreBps: event.riskScoreBps,
         reason: event.reason,
       });
-      this.commit(owner, record, activity);
+      this.commit(owner, strategyId, record, activity);
     }
   }
 }

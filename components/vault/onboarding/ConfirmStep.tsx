@@ -20,6 +20,8 @@ const POLICY_ROWS = [
 ] as const;
 
 interface ConfirmStepProps {
+  strategyId: string;
+  agentName: string;
   depositAmount: bigint;
   submitting: boolean;
   error: string | null;
@@ -28,6 +30,8 @@ interface ConfirmStepProps {
 }
 
 export function ConfirmStep({
+  strategyId,
+  agentName,
   depositAmount,
   submitting,
   error,
@@ -42,9 +46,9 @@ export function ConfirmStep({
       className="rounded-[24px] border border-white/10 bg-surface-dark px-8 py-10"
     >
       <div className="flex items-center gap-3">
-        <AgentCharacter agentId="mint" size={48} />
+        <AgentCharacter agentId={strategyId} size={48} />
         <h1 className="font-display text-xl font-bold tracking-tight text-warm-ivory">
-          내용을 확인해 주세요
+          {agentName}에 배분할 내용을 확인해 주세요
         </h1>
       </div>
 

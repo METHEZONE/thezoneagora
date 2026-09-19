@@ -16,6 +16,7 @@ export function getVaultDataSource(): VaultDataSource {
 export type {
   CreateVaultParams,
   EmergencyLiquidateAllParams,
+  OwnedVaultSummary,
   VaultDataEvent,
   VaultDataSource,
   VaultSubscriber,

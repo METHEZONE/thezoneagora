@@ -3,6 +3,7 @@
 // design/agora-arena.html의 openDetail()/equitySVG()/delegate() 포팅.
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { AgentCharacter } from "@/components/arena/characters";
 import { fmtPct, fmtUsd } from "@/components/arena/format";
 import { burst } from "@/components/arena/confetti";
@@ -290,6 +291,15 @@ export function DetailSheet({
                   ? "서명 2회 · 약 30초 · 언제든 해지"
                   : "지갑 연결 없이 데모로 체험 중 · 실제 볼트는 지갑 연결 후 이용"}
               </span>
+              {wallet.connected && (
+                <Link
+                  href={`/vault/onboarding?strategy=${agent.id}`}
+                  className="dg-note"
+                  style={{ textDecoration: "underline" }}
+                >
+                  실제 볼트 만들기 →
+                </Link>
+              )}
             </div>
           </div>
         </div>

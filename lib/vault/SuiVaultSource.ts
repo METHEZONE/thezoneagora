@@ -27,6 +27,7 @@ import type {
 import type {
   CreateVaultParams,
   EmergencyLiquidateAllParams,
+  OwnedVaultSummary,
   VaultDataEvent,
   VaultDataSource,
   VaultSubscriber,
@@ -46,7 +47,11 @@ import {
   buildWithdrawCryptoAmountTransaction,
 } from "@/lib/sui/transactions";
 
-const VAULT_ID_STORAGE_KEY = "agora-vault-id";
+// 전략별로 vaultId를 독립 추적한다. 접두사 형태라 loadVaultIds()가 localStorage를
+// 스캔해 저장된 전략들을 자동 발견할 수 있다.
+const VAULT_ID_STORAGE_PREFIX = "agora-vault-id-";
+// 다중 전략 지원 이전(1지갑 1볼트 = mint) 버전이 쓰던 키. 있으면 mint 전략으로 승격한다.
+const LEGACY_VAULT_ID_STORAGE_KEY = "agora-vault-id";
 
 // UI(dApp Kit signAndExecuteTransaction)가 지갑 서명 후 돌려주는 결과의 최소 형태.
 // objectChanges는 훅 호출 시 옵션으로 요청해야 채워진다 — 없으면 vaultId 자동감지를 생략한다.
@@ -313,7 +318,7 @@ function parseVaultFields(
 export class SuiVaultSource implements VaultDataSource {
   private readonly client: MinimalSuiObjectClient;
   private signAndExecute: SignAndExecuteFn | null = null;
-  private vaultId: string | null;
+  private vaultIds: Map<string, string>;
   private readonly listeners = new Set<VaultSubscriber>();
 
   constructor(client?: MinimalSuiObjectClient) {
@@ -323,7 +328,7 @@ export class SuiVaultSource implements VaultDataSource {
         url: TESTNET_RPC_URL,
         network: "testnet",
       });
-    this.vaultId = this.loadVaultId();
+    this.vaultIds = this.loadVaultIds();
   }
 
   /** UI 레이어가 지갑 연결 후 서명 콜백을 주입한다. 연결 해제 시 null로 되돌린다. */
@@ -332,29 +337,45 @@ export class SuiVaultSource implements VaultDataSource {
   }
 
   /** createVault 자동감지가 실패했을 때를 위한 수동 vault ID 입력 폴백. */
-  setVaultId(vaultId: string): void {
-    this.vaultId = vaultId;
+  setVaultId(strategyId: string, vaultId: string): void {
+    this.vaultIds.set(strategyId, vaultId);
     if (isBrowser()) {
-      window.localStorage.setItem(VAULT_ID_STORAGE_KEY, vaultId);
+      window.localStorage.setItem(`${VAULT_ID_STORAGE_PREFIX}${strategyId}`, vaultId);
     }
   }
 
-  getVaultId(): string | null {
-    return this.vaultId;
+  getVaultId(strategyId: string): string | null {
+    return this.vaultIds.get(strategyId) ?? null;
   }
 
-  private loadVaultId(): string | null {
-    if (!isBrowser()) return null;
-    return window.localStorage.getItem(VAULT_ID_STORAGE_KEY);
+  private loadVaultIds(): Map<string, string> {
+    const map = new Map<string, string>();
+    if (!isBrowser()) return map;
+
+    for (let i = 0; i < window.localStorage.length; i += 1) {
+      const key = window.localStorage.key(i);
+      if (!key || !key.startsWith(VAULT_ID_STORAGE_PREFIX)) continue;
+      const vaultId = window.localStorage.getItem(key);
+      if (!vaultId) continue;
+      map.set(key.slice(VAULT_ID_STORAGE_PREFIX.length), vaultId);
+    }
+
+    if (!map.has("mint")) {
+      const legacy = window.localStorage.getItem(LEGACY_VAULT_ID_STORAGE_KEY);
+      if (legacy) map.set("mint", legacy);
+    }
+
+    return map;
   }
 
-  private requireVaultId(): string {
-    if (!this.vaultId) {
+  private requireVaultId(strategyId: string): string {
+    const vaultId = this.vaultIds.get(strategyId);
+    if (!vaultId) {
       throw new Error(
-        "Vault ID is not set. Create a vault first, or call setVaultId() manually."
+        `Vault ID is not set for strategy "${strategyId}". Create a vault first, or call setVaultId() manually.`
       );
     }
-    return this.vaultId;
+    return vaultId;
   }
 
   private requireSigner(): SignAndExecuteFn {
@@ -389,30 +410,31 @@ export class SuiVaultSource implements VaultDataSource {
     );
   }
 
-  private notify(owner: string | null, state: VaultState): void {
-    const event: VaultDataEvent = { owner, state };
+  private notify(owner: string | null, strategyId: string, state: VaultState): void {
+    const event: VaultDataEvent = { owner, strategyId, state };
     this.listeners.forEach((callback) => callback(event));
   }
 
-  private async refreshAndNotify(owner: string): Promise<VaultState> {
-    const state = await this.getVaultState(owner);
-    this.notify(owner, state);
+  private async refreshAndNotify(owner: string, strategyId: string): Promise<VaultState> {
+    const state = await this.getVaultState(owner, strategyId);
+    this.notify(owner, strategyId, state);
     return state;
   }
 
-  async hasVault(owner: string): Promise<boolean> {
+  async hasVault(owner: string, strategyId: string): Promise<boolean> {
     void owner; // real 모드는 1지갑 1볼트를 vaultId로 식별하지, owner로 조회하지 않는다.
-    if (!this.vaultId) return false;
+    const vaultId = this.vaultIds.get(strategyId);
+    if (!vaultId) return false;
     try {
-      await this.fetchVaultState(this.vaultId);
+      await this.fetchVaultState(vaultId);
       return true;
     } catch {
       return false;
     }
   }
 
-  async getVaultState(owner: string): Promise<VaultState> {
-    const state = await this.fetchVaultState(this.requireVaultId());
+  async getVaultState(owner: string, strategyId: string): Promise<VaultState> {
+    const state = await this.fetchVaultState(this.requireVaultId(strategyId));
     if (state.owner && state.owner !== owner) {
       console.warn(
         `[SuiVaultSource] Vault owner mismatch: expected ${owner}, found ${state.owner}.`
@@ -421,8 +443,23 @@ export class SuiVaultSource implements VaultDataSource {
     return state;
   }
 
+  async listVaults(owner: string): Promise<OwnedVaultSummary[]> {
+    void owner; // vaultIds에 저장된 전략들이 이미 이 지갑 소유로 감지된 것들이다.
+    const results = await Promise.all(
+      Array.from(this.vaultIds.entries()).map(async ([strategyId, vaultId]) => {
+        try {
+          return { strategyId, state: await this.fetchVaultState(vaultId) };
+        } catch {
+          return null;
+        }
+      })
+    );
+    return results.filter((r): r is OwnedVaultSummary => r !== null);
+  }
+
   async createVault(
     owner: string,
+    strategyId: string,
     params: CreateVaultParams
   ): Promise<VaultState> {
     const signer = this.requireSigner();
@@ -446,76 +483,81 @@ export class SuiVaultSource implements VaultDataSource {
           `(digest: ${result.digest}). Look it up on a Sui explorer and call setVaultId() manually.`
       );
     }
-    this.setVaultId(createdVaultId);
+    this.setVaultId(strategyId, createdVaultId);
 
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async depositMore(owner: string, amount: bigint): Promise<VaultState> {
+  async depositMore(owner: string, strategyId: string, amount: bigint): Promise<VaultState> {
     const signer = this.requireSigner();
     const tx = buildDepositMoreTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
       amount,
     });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async withdrawAmount(owner: string, amount: bigint): Promise<VaultState> {
+  async withdrawAmount(owner: string, strategyId: string, amount: bigint): Promise<VaultState> {
     const signer = this.requireSigner();
     const tx = buildWithdrawAmountTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
       amount,
     });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async withdrawCrypto(owner: string, amount: bigint): Promise<VaultState> {
+  async withdrawCrypto(owner: string, strategyId: string, amount: bigint): Promise<VaultState> {
     const signer = this.requireSigner();
     const tx = buildWithdrawCryptoAmountTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
       amount,
     });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async withdrawAll(owner: string): Promise<VaultState> {
+  async withdrawAll(owner: string, strategyId: string): Promise<VaultState> {
     const signer = this.requireSigner();
-    const tx = buildWithdrawAllTransaction({ vaultId: this.requireVaultId() });
+    const tx = buildWithdrawAllTransaction({ vaultId: this.requireVaultId(strategyId) });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async revokeAgent(owner: string): Promise<VaultState> {
+  async revokeAgent(owner: string, strategyId: string): Promise<VaultState> {
     const signer = this.requireSigner();
-    const tx = buildRevokeAgentTransaction({ vaultId: this.requireVaultId() });
+    const tx = buildRevokeAgentTransaction({ vaultId: this.requireVaultId(strategyId) });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async reactivateAgent(owner: string): Promise<VaultState> {
+  async reactivateAgent(owner: string, strategyId: string): Promise<VaultState> {
     const signer = this.requireSigner();
     const tx = buildReactivateAgentTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
     });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async setReduceOnly(owner: string, reduceOnly: boolean): Promise<VaultState> {
+  async setReduceOnly(
+    owner: string,
+    strategyId: string,
+    reduceOnly: boolean
+  ): Promise<VaultState> {
     const signer = this.requireSigner();
     const tx = buildSetReduceOnlyTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
       reduceOnly,
     });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
   async configurePolicy(
     owner: string,
+    strategyId: string,
     policy: ExecutionPolicyUpdate
   ): Promise<VaultState> {
     if (!policy.allowedPool) {
@@ -527,7 +569,7 @@ export class SuiVaultSource implements VaultDataSource {
     }
 
     const signer = this.requireSigner();
-    const current = await this.getVaultState(owner);
+    const current = await this.getVaultState(owner, strategyId);
     const merged: RiskPolicy = { ...current.policy, ...policy };
 
     // 거래 한도 4종은 configure_execution_policy의 인자가 아니라 별도 함수다.
@@ -536,7 +578,7 @@ export class SuiVaultSource implements VaultDataSource {
     const limits = changedTradeLimits(current.policy, merged);
 
     const tx = buildConfigureExecutionPolicyTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
       allowedPool: policy.allowedPool,
       maxDailyFiatVolume: merged.maxDailyFiatVolume,
       maxPositionSize: merged.maxPositionSize,
@@ -553,11 +595,12 @@ export class SuiVaultSource implements VaultDataSource {
     });
 
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
   async emergencyLiquidateAll(
     owner: string,
+    strategyId: string,
     params: EmergencyLiquidateAllParams
   ): Promise<VaultState> {
     if (!params.poolId || !params.deepFeeCoinId) {
@@ -568,23 +611,23 @@ export class SuiVaultSource implements VaultDataSource {
 
     const signer = this.requireSigner();
     const tx = buildDeepBookEmergencyLiquidateAllTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
       poolId: params.poolId,
       deepFeeCoinId: params.deepFeeCoinId,
       minFiatOutput: params.minFiatOutput,
       deadlineMs: params.deadlineMs ?? Date.now() + 60_000,
     });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
-  async emergencyPauseAndWithdraw(owner: string): Promise<VaultState> {
+  async emergencyPauseAndWithdraw(owner: string, strategyId: string): Promise<VaultState> {
     const signer = this.requireSigner();
     const tx = buildEmergencyPauseAndWithdrawFiatTransaction({
-      vaultId: this.requireVaultId(),
+      vaultId: this.requireVaultId(strategyId),
     });
     await signer(tx);
-    return this.refreshAndNotify(owner);
+    return this.refreshAndNotify(owner, strategyId);
   }
 
   /** 이 Vault에서 일어난 체결·긴급탈출·Kill Switch 이벤트를 온체인에서 읽어
@@ -596,14 +639,17 @@ export class SuiVaultSource implements VaultDataSource {
    *
    *  두 모듈에서 온다 — 체결은 deepbook_executor, 긴급탈출·Kill Switch는
    *  investment_vault. 전부 <FiatT, CryptoT> 제네릭이라 env의 코인 타입으로 조립한다. */
-  async getActivityHistory(owner: string | null): Promise<VaultActivityEvent[]> {
+  async getActivityHistory(
+    owner: string | null,
+    strategyId: string
+  ): Promise<VaultActivityEvent[]> {
     if (!owner || !this.client.queryEvents) return [];
 
     const fiat = AGORA_FIAT_COIN_TYPE;
     const crypto = AGORA_CRYPTO_COIN_TYPE;
     if (!fiat || !crypto) return [];
 
-    const vaultId = this.vaultId;
+    const vaultId = this.vaultIds.get(strategyId);
     if (!vaultId) return [];
 
     const eventSources: Array<{
