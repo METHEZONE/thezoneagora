@@ -149,11 +149,16 @@ function describeEvent(event: VaultActivityEvent): string {
       // 온체인 DeepBookOrderExecuted에만 있는 값들. mock/엔진발 이벤트에는 없다.
       // 유동성이 모자라면 요청액 전부가 체결되지 않으므로, 요청과 실제 체결이
       // 다를 때만 둘을 함께 보여준다.
+      // side(u8: 0=BUY/1=SELL)에 따라 requested_input·consumed_input의 코인이
+      // 뒤바뀐다 — BUY는 FiatT(USDC)를 쓰고, SELL은 CryptoT(SUI)를 쓴다.
+      const isSell = p.side === 1 || p.side === "1";
+      const formatFlow = isSell ? formatSui : formatUsdc;
+      const flowUnit = isSell ? "SUI" : "USDC";
       const requested = asBigint(p.requested_input);
       const consumed = asBigint(p.consumed_input);
       const partial =
         requested !== null && consumed !== null && consumed < requested
-          ? `요청 ${formatUsdc(requested)} → 체결 ${formatUsdc(consumed)} USDC`
+          ? `요청 ${formatFlow(requested)} → 체결 ${formatFlow(consumed)} ${flowUnit}`
           : null;
 
       const fee = asBigint(p.fee_charged);

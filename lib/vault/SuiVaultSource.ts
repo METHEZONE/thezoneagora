@@ -587,13 +587,15 @@ export class SuiVaultSource implements VaultDataSource {
     return this.refreshAndNotify(owner);
   }
 
-  /** 이 Vault에서 일어난 체결 이벤트를 온체인에서 읽어 활동 내역으로 만든다.
+  /** 이 Vault에서 일어난 체결·긴급탈출·Kill Switch 이벤트를 온체인에서 읽어
+   *  활동 내역으로 만든다.
    *
    *  예전에는 real 모드에서도 이 조회가 아예 없어 활동 피드가 mock·라이브 엔진발
-   *  이벤트만 보여줬다. 실제 체결·수수료·부분 체결은 화면에 나타나지 않았다.
+   *  이벤트만 보여줬다. 실제 체결·수수료·부분 체결·긴급탈출·Kill Switch가 화면에
+   *  나타나지 않았다 (contract PROGRESS.md §13-6, 2026-09-16 지적).
    *
-   *  DeepBookOrderExecuted는 제네릭 타입이라 MoveEventType으로 정확히 필터하려면
-   *  FiatT/CryptoT를 알아야 한다. 둘 다 env에서 오므로 여기서 조립한다. */
+   *  두 모듈에서 온다 — 체결은 deepbook_executor, 긴급탈출·Kill Switch는
+   *  investment_vault. 전부 <FiatT, CryptoT> 제네릭이라 env의 코인 타입으로 조립한다. */
   async getActivityHistory(owner: string | null): Promise<VaultActivityEvent[]> {
     if (!owner || !this.client.queryEvents) return [];
 
@@ -604,34 +606,70 @@ export class SuiVaultSource implements VaultDataSource {
     const vaultId = this.vaultId;
     if (!vaultId) return [];
 
-    try {
-      const page = await this.client.queryEvents({
-        query: {
-          MoveEventType: `${AGENT_MARKET_PACKAGE_ID}::deepbook_executor::DeepBookOrderExecuted<${fiat}, ${crypto}>`,
-        },
-        limit: 50,
-        order: "descending",
-      });
+    const eventSources: Array<{
+      type: VaultActivityEvent["type"];
+      moveEventType: string;
+      // 온체인 필드(snake_case)를 ActivityFeed가 기대하는 mock 스타일 키로 옮긴다.
+      mapPayload: (raw: Record<string, unknown>) => Record<string, unknown>;
+    }> = [
+      {
+        type: "DeepBookOrderExecuted",
+        moveEventType: `${AGENT_MARKET_PACKAGE_ID}::deepbook_executor::DeepBookOrderExecuted<${fiat}, ${crypto}>`,
+        mapPayload: (raw) => raw,
+      },
+      {
+        type: "KillSwitchTriggered",
+        moveEventType: `${AGENT_MARKET_PACKAGE_ID}::investment_vault::KillSwitchTriggered<${fiat}, ${crypto}>`,
+        mapPayload: (raw) => raw,
+      },
+      {
+        type: "EmergencyLiquidated",
+        moveEventType: `${AGENT_MARKET_PACKAGE_ID}::investment_vault::EmergencyLiquidated<${fiat}, ${crypto}>`,
+        mapPayload: (raw) => ({
+          ...raw,
+          cryptoLiquidated: raw.crypto_sold,
+          fiatReceived: raw.fiat_received,
+        }),
+      },
+      {
+        type: "EmergencyFiatWithdrawn",
+        moveEventType: `${AGENT_MARKET_PACKAGE_ID}::investment_vault::EmergencyFiatWithdrawn<${fiat}, ${crypto}>`,
+        mapPayload: (raw) => ({ ...raw, fiatWithdrawn: raw.fiat_withdrawn }),
+      },
+    ];
 
-      return page.data
-        .filter((event) => {
-          const fields = event.parsedJson as { vault_id?: unknown } | undefined;
-          // 같은 패키지를 쓰는 다른 사용자의 Vault 이벤트도 함께 오므로 걸러낸다.
-          return typeof fields?.vault_id === "string" && fields.vault_id === vaultId;
-        })
-        .map((event) => ({
-          id: `${event.id.txDigest}:${event.id.eventSeq}`,
-          type: "DeepBookOrderExecuted" as const,
-          timestamp: Number(event.timestampMs ?? 0),
-          payload: (event.parsedJson ?? {}) as Record<string, unknown>,
-        }));
-    } catch (error) {
-      // 활동 내역은 부가 정보다. 조회가 실패해도 잔액·정책 화면까지 막지 않는다.
-      if (isBrowser()) {
-        console.warn("[SuiVaultSource] 활동 내역 조회 실패:", error);
-      }
-      return [];
-    }
+    const results = await Promise.all(
+      eventSources.map(async ({ type, moveEventType, mapPayload }) => {
+        try {
+          const page = await this.client.queryEvents!({
+            query: { MoveEventType: moveEventType },
+            limit: 50,
+            order: "descending",
+          });
+          return page.data
+            .filter((event) => {
+              const fields = event.parsedJson as { vault_id?: unknown } | undefined;
+              // 같은 패키지를 쓰는 다른 사용자의 Vault 이벤트도 함께 오므로 걸러낸다.
+              return typeof fields?.vault_id === "string" && fields.vault_id === vaultId;
+            })
+            .map((event) => ({
+              id: `${event.id.txDigest}:${event.id.eventSeq}`,
+              type,
+              timestamp: Number(event.timestampMs ?? 0),
+              payload: mapPayload((event.parsedJson ?? {}) as Record<string, unknown>),
+            }));
+        } catch (error) {
+          // 활동 내역은 부가 정보다. 이벤트 종류 하나가 실패해도 나머지와
+          // 잔액·정책 화면까지 막지 않는다.
+          if (isBrowser()) {
+            console.warn(`[SuiVaultSource] ${type} 조회 실패:`, error);
+          }
+          return [];
+        }
+      })
+    );
+
+    return results.flat().sort((a, b) => b.timestamp - a.timestamp);
   }
 
   subscribe(callback: VaultSubscriber): () => void {
