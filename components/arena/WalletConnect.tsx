@@ -83,10 +83,29 @@ export function WalletConnectProvider({ children }: { children: React.ReactNode 
     if (!wallet) return;
     setConnectingId(walletName);
     setConnectError(null);
+
+    // 확장 팝업이 아예 안 뜨거나(포커스를 못 받거나) 사용자가 팝업을 놓치면
+    // connect() Promise가 성공도 실패도 안 하고 그냥 무한 대기한다 — 실제로
+    // Aside 브라우저에서 6초+ 재현됨(콘솔 에러도, 성공도 없이 "연결 중…"만 계속).
+    // 이 경우 예전엔 사용자가 영원히 로딩 스피너만 보게 됐다. 타임아웃을 걸어
+    // "확장 팝업을 확인하라"는 실행 가능한 안내로 바꾼다.
+    let settled = false;
+    const timeoutId = setTimeout(() => {
+      if (settled) return;
+      setConnectingId(null);
+      setConnectError(
+        `${walletName} 확장이 응답하지 않아요. 브라우저 오른쪽 위 확장 아이콘(퍼즐 모양)을 눌러 ${walletName} 팝업이 떠 있는지 확인하고 승인해 주세요. 안 보이면 확장을 고정해서 다시 시도해 보세요.`
+      );
+    }, 12_000);
+
     connectMutate(
       { wallet },
       {
-        onSettled: () => setConnectingId(null),
+        onSettled: () => {
+          settled = true;
+          clearTimeout(timeoutId);
+          setConnectingId(null);
+        },
         // account effect가 성공 시 콜백을 이어가므로 여기선 실패만 처리한다.
         // 예전엔 실패해도 버튼만 조용히 원상복구돼서 "아무 반응 없음"으로 보였다 —
         // 이제 실제 에러를 모달에 그대로 보여준다.
