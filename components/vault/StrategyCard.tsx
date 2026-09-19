@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { AgentCharacter } from "@/components/arena/characters";
+import { CopyableAddress } from "@/components/vault/CopyableAddress";
 import { formatUsdc } from "@/components/vault/format";
+import { pseudoVaultAddress } from "@/lib/vault/pseudoAddress";
 import type { VaultState } from "@/lib/vault/types";
 
 /** /vault 목록 페이지의 전략 카드. 볼트 보유 여부에 따라 잔액 요약과 CTA가 바뀐다. */
@@ -33,7 +35,14 @@ export function StrategyCard({
         </div>
       </div>
 
-      <p className="mt-3 flex-1 text-[12px] leading-relaxed text-muted-light">{tagline}</p>
+      <p className="mt-3 text-[12px] leading-relaxed text-muted-light">{tagline}</p>
+
+      <CopyableAddress
+        address={vaultState?.vaultId ?? pseudoVaultAddress(agentId)}
+        label={vaultState?.vaultId ? "볼트 주소" : "배분 예정 주소"}
+      />
+
+      <div className="flex-1" />
 
       {vaultState && (
         <div className="mt-3 rounded-xl border border-white/10 bg-black/20 px-3 py-2">
