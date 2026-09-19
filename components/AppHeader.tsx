@@ -52,13 +52,16 @@ export function AppHeader() {
               지갑 연결
             </button>
           )}
-          <Link
-            href="/?onboarding=reset"
+          {/* next/link는 같은 라우트("/")로의 쿼리스트링 변경만으로는 리마운트를
+              보장하지 않아 ArenaHome의 마운트 이펙트가 다시 안 돈다 — brand 링크와
+              같이 절대경로 <a>로 강제 풀 리로드해 온보딩 이펙트를 확실히 재실행한다. */}
+          <a
+            href="https://thezonebio.com/agora/?onboarding=reset"
             className="hd-restart"
             title="처음 보는 온보딩 화면을 다시 봅니다"
           >
             처음부터
-          </Link>
+          </a>
         </div>
       </div>
     </header>
