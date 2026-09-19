@@ -21,10 +21,17 @@ export function walrusBlobUrl(blobId: string): string {
   return `${AGGREGATOR}/v1/blobs/${blobId}`;
 }
 
+// epochs=1은 며칠~1주 안에 만료된다 — "위변조 불가능한 감사 기록"이라 부르려면
+// 데모 기간(9/19) 내내는 살아있어야 하니 10 에폭으로 올린다. Walrus는 Arweave처럼
+// "한 번 내면 영구 보관"이 아니라 에폭이 만료되면 갱신(재결제)해야 계속 남는
+// 구조라는 것 자체가 정직한 한계 — 피칭할 때 "영구"라고 하면 안 되고 "갱신 가능한
+// 탈중앙 보관"이라고 해야 한다.
+const DEFAULT_EPOCHS = 10;
+
 /** JSON 직렬화 가능한 값을 Walrus에 blob으로 저장한다. epochs는 보관 기간(에폭 수). */
 export async function storeJsonBlob(
   data: unknown,
-  epochs = 1
+  epochs = DEFAULT_EPOCHS
 ): Promise<WalrusStoreResult> {
   const body = JSON.stringify(data);
   const res = await fetch(`${PUBLISHER}/v1/blobs?epochs=${epochs}`, {
