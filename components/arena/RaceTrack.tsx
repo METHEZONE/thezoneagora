@@ -1,9 +1,8 @@
 "use client";
 
-// 레인 = 에이전트 수(10). 각 레인은 고정 높이의 얇은 줄이고, 러너는 그 줄 안에 딱 맞는
-// 가로형 칩(아바타+이름+수익률)으로 그린다 — 예전 세로 스택(아바타 위에 이름/수익률을
-// 쌓는 방식)은 레인이 늘어나며(5→10) 레인 높이보다 콘텐츠가 커져 다음 레인과 겹쳤다.
-// 가로 칩은 세로로 자라지 않으므로 레인이 몇 개든 겹칠 수 없다.
+// design/agora-arena.html의 renderRace() 포팅 — 캐릭터가 실제로 달리는 원래 느낌을 그대로 두고,
+// 레인이 5→10개로 늘어난 만큼 크기만 줄였다(캐릭터 58→40px, 레인 86→68px). 세로 스택(캐릭터 위
+// 순위뱃지, 아래 이름 pill·수익률) 구조는 그대로라 "뛰어가는 캐릭터" 느낌이 그대로 유지된다.
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -129,21 +128,25 @@ export function RaceTrack({
           const pos = 16 + ((a.ret - min) / span) * 66;
           const running = runningIds.has(a.id);
           return (
-            <div className="lane" key={a.id}>
-              <div className="lane-glow" style={rank === 1 ? { opacity: 1 } : undefined} />
+            <div className={`lane${rank === 1 ? " leadlane" : ""}`} key={a.id}>
+              <div className="lane-glow" />
               <Link
                 href={`/agent/${a.id}`}
                 className={`racer${running ? " running" : ""}${rank === 1 ? " lead" : ""}`}
-                style={{ left: `${pos}%`, "--kc": KIND_COLOR[a.kind] } as React.CSSProperties}
+                style={{ left: `${pos}%` }}
                 aria-label={`${a.name} 상세 보기`}
                 prefetch={false}
               >
-                <span className="racer-rank num">{rank}</span>
-                <span className="racer-avatar">
-                  <AgentCharacter agentId={a.id} size={22} bob={false} label={a.name} />
-                </span>
-                <span className="racer-name">{a.name}</span>
-                <span className={`racer-ret num ${a.ret >= 0 ? "up" : "dn"}`}>{fmtPct(a.ret)}</span>
+                <div className="char">
+                  <AgentCharacter agentId={a.id} size={40} running={running} label={a.name} />
+                  <span className="rankbadge num">{rank}</span>
+                  <span className="speed">
+                    <span />
+                    <span />
+                  </span>
+                </div>
+                <span className="nm">{a.name}</span>
+                <span className={`rt num ${a.ret >= 0 ? "up" : "dn"}`}>{fmtPct(a.ret)}</span>
               </Link>
             </div>
           );
