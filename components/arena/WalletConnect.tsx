@@ -33,6 +33,7 @@ export function WalletConnectProvider({ children }: { children: React.ReactNode 
   const { mutate: disconnectMutate } = useDisconnectWallet();
   const [open, setOpen] = useState(false);
   const [connectingId, setConnectingId] = useState<string | null>(null);
+  const [connectError, setConnectError] = useState<string | null>(null);
   const pendingCb = useRef<((connected: boolean) => void) | null>(null);
   const wasConnected = useRef(false);
 
@@ -55,19 +56,41 @@ export function WalletConnectProvider({ children }: { children: React.ReactNode 
       return;
     }
     pendingCb.current = onDone ?? null;
+    setConnectError(null);
     setOpen(true);
+  }
+
+  // 실패 원인을 사람이 읽을 수 있게 다듬는다 — 지갑 확장이 잠겨있거나, 사용자가
+  // 확장 팝업에서 거절했거나, 확장이 아예 설치는 됐지만 세팅(계정 생성)이 안 된
+  // 경우가 전부 dapp-kit 쪽에서는 구분 없는 rejection으로만 넘어온다.
+  function describeWalletError(err: unknown): string {
+    const raw = err instanceof Error ? err.message : String(err);
+    const lower = raw.toLowerCase();
+    if (lower.includes("reject") || lower.includes("denied") || lower.includes("cancel")) {
+      return "지갑 확장에서 연결 요청을 거절했어요. 확장 팝업에서 다시 승인해 주세요.";
+    }
+    if (lower.includes("lock")) {
+      return "지갑이 잠겨 있어요. 확장 아이콘을 눌러 잠금 해제 후 다시 시도해 주세요.";
+    }
+    if (lower.includes("no accounts") || lower.includes("not initialized") || lower.includes("no wallet")) {
+      return "지갑에 계정이 없어요. 확장에서 계정을 먼저 만들거나 가져온 뒤 다시 시도해 주세요.";
+    }
+    return `연결에 실패했어요 (${raw || "알 수 없는 오류"}). 확장 아이콘을 눌러 팝업이 떠 있는지 확인해 주세요.`;
   }
 
   function handlePick(walletName: string) {
     const wallet = wallets.find((w) => w.name === walletName);
     if (!wallet) return;
     setConnectingId(walletName);
+    setConnectError(null);
     connectMutate(
       { wallet },
       {
         onSettled: () => setConnectingId(null),
         // account effect가 성공 시 콜백을 이어가므로 여기선 실패만 처리한다.
-        onError: () => setConnectingId(null),
+        // 예전엔 실패해도 버튼만 조용히 원상복구돼서 "아무 반응 없음"으로 보였다 —
+        // 이제 실제 에러를 모달에 그대로 보여준다.
+        onError: (err) => setConnectError(describeWalletError(err)),
       }
     );
   }
@@ -75,6 +98,7 @@ export function WalletConnectProvider({ children }: { children: React.ReactNode 
   function handleSkip() {
     setOpen(false);
     setConnectingId(null);
+    setConnectError(null);
     const cb = pendingCb.current;
     pendingCb.current = null;
     if (cb) setTimeout(() => cb(false), 150);
@@ -110,6 +134,11 @@ export function WalletConnectProvider({ children }: { children: React.ReactNode 
           <p className="sub" style={{ marginTop: -10 }}>
             브라우저에서 감지된 Sui 지갑이 없습니다 — 확장 프로그램을 설치하거나 데모로
             둘러보세요.
+          </p>
+        )}
+        {connectError && (
+          <p className="sub" style={{ marginTop: -6, color: "var(--neg)", fontWeight: 600 }}>
+            {connectError}
           </p>
         )}
         {wallets.map((wallet) => (
