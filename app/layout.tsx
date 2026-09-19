@@ -45,6 +45,15 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko" className={`${display.variable} ${sans.variable} ${mono.variable}`}>
+      <head>
+        {/* 한국어 본문용 Pretendard (dynamic subset). next/font는 한글 서브셋을 지원하지 않아 CDN으로 얹는다. */}
+        <link
+          rel="stylesheet"
+          as="style"
+          crossOrigin="anonymous"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"
+        />
+      </head>
       <body>
         <Providers>
           {children}

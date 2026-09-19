@@ -17,7 +17,9 @@ body {
 }
 
 body {
-  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  /* 한국어는 Pretendard(레이아웃에서 CDN 로드) — 라틴은 Onest가 먼저 잡고, 한글 글리프는 Pretendard로 폴백 */
+  font-family: var(--font-sans), "Pretendard Variable", Pretendard, ui-sans-serif, system-ui, sans-serif;
+  letter-spacing: -0.01em;
   /* fixed gradient mesh background, GPU friendly (no scroll repaint) */
   background-color: #070a12;
   background-image:

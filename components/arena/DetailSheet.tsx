@@ -10,6 +10,8 @@ import { burst } from "@/components/arena/confetti";
 import { useWalletConnect } from "@/components/arena/WalletConnect";
 import { usePrefersReducedMotion } from "@/components/arena/useReducedMotion";
 import type { ArenaAgent } from "@/components/arena/useArenaAgents";
+import { useReplayBoard } from "@/lib/backtest/client";
+import { RISK_LABEL } from "@/components/agent/meta";
 
 const CHIPS = [100, 500, 1000, 2500];
 const MONTHLY_FEE = 2;
@@ -83,6 +85,9 @@ export function DetailSheet({
   const delegateAreaRef = useRef<HTMLDivElement>(null);
   const lastAgentRef = useRef<ArenaAgent | null>(null);
 
+  // 시트 요약 숫자는 느린 시계(30일 리플레이)에서 — 브라우저마다 다른 라이브 상태가 아니라
+  // 누가 봐도 같은 숫자를 보여준다. 로딩 전엔 라이브 값으로 폴백.
+  const board = useReplayBoard("30d");
   const ranked = [...agents].sort((a, b) => b.score - a.score);
   const liveAgent = agents.find((a) => a.id === openAgentId) ?? null;
   if (liveAgent) lastAgentRef.current = liveAgent;
@@ -126,6 +131,13 @@ export function DetailSheet({
 
   const agent = displayAgent;
   const risk = Math.round(amount * 0.08);
+  const replay = board.data?.agents.find((a) => a.agentId === agent.id) ?? null;
+  const replayRank = board.data
+    ? [...board.data.agents].sort((a, b) => b.score.total - a.score.total).findIndex((a) => a.agentId === agent.id) + 1
+    : null;
+  const ret = replay ? replay.metrics.roiPct : agent.ret;
+  const mdd = replay ? replay.metrics.mddPct : agent.mdd;
+  const hist = replay ? replay.spark : agent.hist;
 
   function handleDelegateClick() {
     // 지갑 연결 여부와 무관하게 데모(위임 시뮬레이션)는 항상 진행된다.
@@ -169,23 +181,41 @@ export function DetailSheet({
               </div>
             </div>
             <div className="dt-rank">
-              <div className="r num">#{rank}</div>
-              <div className="k">AGORA {agent.score}점</div>
+              <div className="r num">#{replayRank ?? rank}</div>
+              <div className="k">{replay ? `AGORA ${replay.score.total}점 · 30일` : "지금 · 라이브 순위"}</div>
             </div>
+          </div>
+
+          <div className="dt-links">
+            <Link href={`/agent/${agent.id}`} className="btn ghost sm" onClick={onClose}>
+              전적 자세히 보기 →
+            </Link>
+            <Link href={`/agent/${agent.id}/backtest`} className="btn ghost sm" onClick={onClose}>
+              내 금액으로 백테스트
+            </Link>
           </div>
 
           <div className="dt-stats">
             <div className="dst">
-              <div className={`v num ${agent.ret >= 0 ? "up" : "dn"}`}>{fmtPct(agent.ret)}</div>
-              <div className="k">시즌 수익률</div>
+              <div className={`v num ${ret >= 0 ? "up" : "dn"}`}>{fmtPct(ret)}</div>
+              <div className="k">{replay ? "30일 수익률" : "시즌 수익률"}</div>
             </div>
             <div className="dst">
-              <div className="v num dn">−{agent.mdd.toFixed(1)}%</div>
+              <div className="v num dn">−{mdd.toFixed(1)}%</div>
               <div className="k">최대 낙폭 (MDD)</div>
             </div>
             <div className="dst">
-              <div className={`v num ${agent.sharpe >= 0 ? "up" : "dn"}`}>{agent.sharpe.toFixed(2)}</div>
-              <div className="k">Sharpe (연환산)</div>
+              {replay ? (
+                <>
+                  <div className={`v num ${replay.metrics.pnl >= 0 ? "up" : "dn"}`}>{fmtUsd(replay.metrics.finalEquity)}</div>
+                  <div className="k">$10,000 넣었으면 · 리스크 {RISK_LABEL[replay.riskGrade]}</div>
+                </>
+              ) : (
+                <>
+                  <div className={`v num ${agent.sharpe >= 0 ? "up" : "dn"}`}>{agent.sharpe.toFixed(2)}</div>
+                  <div className="k">Sharpe (연환산)</div>
+                </>
+              )}
             </div>
             <div className="dst">
               <div className="v num">{MONTHLY_FEE} USDC</div>
@@ -195,10 +225,10 @@ export function DetailSheet({
 
           <div className="equity">
             <h4>
-              <span>EQUITY CURVE · SEASON 1</span>
+              <span>{replay ? "EQUITY CURVE · 최근 30일 · 실제 시세 리플레이" : "EQUITY CURVE · SEASON 1"}</span>
               <span className="num">$10,000 기준</span>
             </h4>
-            <EquityCurve hist={agent.hist} color={agent.accent} reduced={reduced} />
+            <EquityCurve hist={hist} color={agent.accent} reduced={reduced} />
           </div>
 
           <div className="safety">

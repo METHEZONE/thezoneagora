@@ -7,7 +7,9 @@ import { AgoraMark } from "@/components/arena/AgoraMark";
 import { OnboardingOverlay } from "@/components/arena/OnboardingOverlay";
 import { LiveTicker } from "@/components/arena/LiveTicker";
 import { RaceTrack } from "@/components/arena/RaceTrack";
-import { Leaderboard } from "@/components/arena/Leaderboard";
+import { HookBanner, LeaderboardTable } from "@/components/agent/LeaderboardTable";
+import type { BacktestWindow } from "@/lib/backtest/klines";
+import "@/components/agent/agent.css";
 import { TrustSection } from "@/components/arena/TrustSection";
 import { DetailSheet } from "@/components/arena/DetailSheet";
 import { MyPositionBar, type MyPosition } from "@/components/arena/MyPositionBar";
@@ -38,6 +40,7 @@ function ArenaHomeInner() {
   const [sheetAgentId, setSheetAgentId] = useState<string | null>(null);
   const [scrollToDelegate, setScrollToDelegate] = useState(false);
   const [position, setPosition] = useState<MyPosition | null>(null);
+  const [boardWindow, setBoardWindow] = useState<BacktestWindow>("30d");
   const [positionHydrated, setPositionHydrated] = useState(false);
 
   useEffect(() => {
@@ -138,6 +141,8 @@ function ArenaHomeInner() {
 
       <LiveTicker agents={agents} />
 
+      <HookBanner window={boardWindow} onDelegateClick={(id) => openDetail(id, true)} />
+
       <div className="hero">
         <div className="wrap">
           <div className="hero-top">
@@ -177,8 +182,8 @@ function ArenaHomeInner() {
 
           <div className="track-foot">
             <span className="hint">
-              순위 기준: <b>AGORA 점수</b> — 수익률을 리스크(MDD)로 나눈 위험 조정 성과. 원시 수익률 1위가 종합
-              1위가 아닐 수 있습니다.
+              트랙은 <b>지금 이 순간</b> 실시간 시세 반응(빠른 시계). 아래 리더보드는 최근 7일/30일 실제 시세로 다시
+              돌려본 <b>AGORA 점수</b>(느린 시계) — 원시 수익률 1위가 종합 1위가 아닐 수 있습니다.
             </span>
             <a className="btn ghost" href="#board" onClick={scrollToBoard}>
               리더보드 ↓
@@ -192,12 +197,13 @@ function ArenaHomeInner() {
           <div className="sec-head">
             <h2 className="sec-title">리더보드</h2>
             <span className="sec-note">
-              수익 옆에 항상 리스크 — <b>둘 다 보고</b> 고르세요
+              수익 옆에 항상 리스크 — <b>둘 다 보고</b> 고르세요 · 숫자는 실제 시세로 다시 돌려본 결과
             </span>
           </div>
-          <Leaderboard
-            agents={agents}
-            onSelect={(id) => openDetail(id)}
+          <LeaderboardTable
+            liveAgents={agents}
+            window={boardWindow}
+            onWindowChange={setBoardWindow}
             onDelegateClick={(id) => openDetail(id, true)}
           />
         </div>
@@ -209,8 +215,8 @@ function ArenaHomeInner() {
         <div className="wrap">
           <AgoraMark className="fm" />
           <p className="num">
-            THE ZONE AGORA · Season 1 · 성과 데이터는 실시세 기반 페이퍼 트레이딩 시뮬레이션입니다 · Sui Testnet
-            연동
+            THE ZONE AGORA · Season 1 (최근 30일 롤링) · 트랙은 실시세 기반 페이퍼 트레이딩, 리더보드 7D/30D 지표는 Binance
+            1시간봉 리플레이 · 백커 수/위임 자본은 데모 시드값 · Sui Testnet 연동
           </p>
         </div>
       </footer>

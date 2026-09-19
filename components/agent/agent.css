@@ -1,0 +1,446 @@
+/*
+ * components/agent/* 스타일. arena.css의 변수(--orange/--black/--ivory/--sd/--line/--mut/--pos/--neg)를
+ * 그대로 쓰고, 모두 .agora-arena 스코프 아래에 둔다. 클래스 접두사 ag-.
+ */
+
+.agora-arena .up { color: var(--pos); }
+.agora-arena .dn { color: var(--neg); }
+.agora-arena .btn.sm {
+  min-height: 34px;
+  padding: 6px 12px;
+  font-size: 0.78rem;
+  border-radius: 10px;
+}
+
+/* ─── 훅 배너 ─────────────────────────────────────────────────────────────── */
+.agora-arena .ag-hook {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 18px auto 0;
+  max-width: 1160px;
+  padding: 10px 14px 10px 16px;
+  border: 1px solid rgba(255, 90, 31, 0.35);
+  background: linear-gradient(90deg, rgba(255, 90, 31, 0.12), rgba(255, 90, 31, 0.03));
+  border-radius: 14px;
+  font-size: 0.92rem;
+}
+.agora-arena .ag-hook-txt { display: inline-flex; align-items: center; gap: 8px; flex-wrap: wrap; color: var(--ivory); }
+.agora-arena .ag-hook-lead { color: var(--orange); font-weight: 800; letter-spacing: -0.01em; }
+.agora-arena .ag-hook-cta { display: inline-flex; gap: 8px; flex-shrink: 0; }
+@media (max-width: 760px) {
+  .agora-arena .ag-hook { flex-direction: column; align-items: stretch; margin: 12px 20px 0; }
+  .agora-arena .ag-hook-cta .btn { flex: 1; }
+}
+
+/* ─── 리더보드 컨트롤/집계 ───────────────────────────────────────────────── */
+.agora-arena .ag-board { display: grid; gap: 16px; }
+.agora-arena .ag-board-controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.agora-arena .ag-tabs { display: inline-flex; gap: 4px; padding: 4px; background: var(--sd); border: 1px solid var(--line); border-radius: 12px; }
+.agora-arena .ag-tab {
+  border: 0;
+  background: transparent;
+  color: var(--mut);
+  padding: 7px 14px;
+  border-radius: 9px;
+  font: 700 0.84rem var(--body);
+  cursor: pointer;
+  transition: background 0.18s, color 0.18s;
+}
+.agora-arena .ag-tab.on { background: var(--ivory); color: var(--black); }
+.agora-arena .ag-tabs-page { margin: 26px 0 18px; }
+.agora-arena .ag-tabs-page .ag-tab { padding: 9px 20px; font-size: 0.92rem; }
+
+.agora-arena .ag-seg { display: inline-flex; border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+.agora-arena .ag-seg-btn {
+  border: 0;
+  background: transparent;
+  color: var(--mut);
+  padding: 7px 12px;
+  font: 600 0.8rem var(--body);
+  cursor: pointer;
+  border-right: 1px solid var(--line);
+}
+.agora-arena .ag-seg-btn:last-child { border-right: 0; }
+.agora-arena .ag-seg-btn.on { background: var(--sd2); color: var(--ivory); }
+
+.agora-arena .ag-agg {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.agora-arena .ag-agg-cell {
+  padding: 14px 16px;
+  background: var(--sd);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.agora-arena .ag-agg-cell .k { font-size: 0.74rem; color: var(--mut2); letter-spacing: 0.02em; }
+.agora-arena .ag-agg-cell .v { font: 800 1.35rem var(--disp); letter-spacing: -0.02em; margin-top: 4px; }
+.agora-arena .ag-agg-cell .v small { font-size: 0.8rem; color: var(--mut2); font-weight: 600; }
+.agora-arena .ag-agg-cell .s { font-size: 0.74rem; color: var(--mut2); margin-top: 4px; }
+@media (max-width: 900px) { .agora-arena .ag-agg { grid-template-columns: repeat(2, 1fr); } }
+
+/* ─── 리더보드 테이블 ─────────────────────────────────────────────────────── */
+.agora-arena .ag-table {
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--sd);
+  overflow: hidden;
+}
+.agora-arena .ag-thead,
+.agora-arena .ag-row {
+  display: grid;
+  grid-template-columns: 36px minmax(180px, 1.5fr) 72px minmax(150px, 1.1fr) minmax(120px, 0.9fr) minmax(130px, 1fr) minmax(110px, 0.9fr) 80px 176px;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px;
+}
+.agora-arena .ag-thead {
+  height: 40px;
+  font-size: 0.72rem;
+  color: var(--mut2);
+  letter-spacing: 0.04em;
+  border-bottom: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.18);
+}
+.agora-arena .ag-row {
+  min-height: 78px;
+  border-bottom: 1px solid var(--line2);
+  transition: background 0.18s;
+}
+.agora-arena .ag-row:last-child { border-bottom: 0; }
+.agora-arena .ag-row:hover { background: rgba(255, 255, 255, 0.025); }
+.agora-arena .ag-row.first { box-shadow: inset 3px 0 0 var(--orange); }
+.agora-arena .ag-rank { font: 800 1.05rem var(--disp); color: var(--mut); }
+.agora-arena .ag-row.first .ag-rank { color: var(--orange); }
+
+.agora-arena .ag-agent { display: inline-flex; align-items: center; gap: 12px; color: inherit; text-decoration: none; min-width: 0; }
+.agora-arena .ag-agent-txt { display: grid; gap: 3px; min-width: 0; }
+.agora-arena .ag-agent-name { font: 800 1rem var(--disp); letter-spacing: -0.01em; display: inline-flex; align-items: center; gap: 6px; }
+.agora-arena .ag-agent:hover .ag-agent-name { text-decoration: underline; text-decoration-color: var(--mut2); }
+.agora-arena .ag-agent-sub { display: inline-flex; gap: 6px; align-items: center; }
+.agora-arena .ag-live-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--pos); box-shadow: 0 0 0 3px rgba(36, 199, 122, 0.18); animation: ag-pulse 1.8s infinite; }
+@keyframes ag-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }
+.agora-arena .ag-chip {
+  --c: var(--orange);
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  color: var(--c);
+  background: color-mix(in srgb, var(--c) 14%, transparent);
+  border: 1px solid color-mix(in srgb, var(--c) 35%, transparent);
+  white-space: nowrap;
+}
+.agora-arena .ag-sym { font-size: 0.72rem; color: var(--mut2); }
+
+.agora-arena .ag-cell-ret { display: grid; gap: 2px; }
+.agora-arena .ag-big { font: 800 1.15rem var(--disp); letter-spacing: -0.02em; }
+.agora-arena .ag-cell-money { display: grid; line-height: 1.25; }
+.agora-arena .ag-cell-money b { font: 800 1.05rem var(--disp); letter-spacing: -0.02em; color: var(--ivory); }
+.agora-arena .ag-cell-money small { font-size: 0.74rem; }
+.agora-arena .ag-cell-win { display: grid; line-height: 1.25; }
+.agora-arena .ag-cell-win b { font-weight: 700; }
+.agora-arena .ag-cell-win small, .agora-arena .ag-cell-backers small { font-size: 0.7rem; color: var(--mut2); }
+.agora-arena .ag-cell-backers { display: grid; line-height: 1.2; }
+.agora-arena .ag-cell-backers b { font-weight: 700; color: var(--mut); }
+.agora-arena .ag-cell-cta { display: inline-flex; gap: 6px; justify-content: flex-end; }
+
+@media (max-width: 1100px) {
+  .agora-arena .ag-thead { display: none; }
+  .agora-arena .ag-row {
+    grid-template-columns: 28px 1fr auto;
+    grid-template-areas:
+      "rank agent score"
+      "ret ret money"
+      "risk risk win"
+      "cta cta cta";
+    row-gap: 8px;
+    padding: 14px 16px;
+  }
+  .agora-arena .ag-rank { grid-area: rank; }
+  .agora-arena .ag-agent { grid-area: agent; }
+  .agora-arena .ag-cell-score { grid-area: score; justify-self: end; }
+  .agora-arena .ag-cell-ret { grid-area: ret; }
+  .agora-arena .ag-cell-money { grid-area: money; text-align: right; }
+  .agora-arena .ag-cell-risk { grid-area: risk; }
+  .agora-arena .ag-cell-win { grid-area: win; text-align: right; }
+  .agora-arena .ag-cell-backers { display: none; }
+  .agora-arena .ag-cell-cta { grid-area: cta; }
+  .agora-arena .ag-cell-cta .btn { flex: 1; }
+}
+
+.agora-arena .ag-foot-note { font-size: 0.76rem; color: var(--mut2); margin: 0; line-height: 1.6; }
+.agora-arena .ag-skeleton { padding: 8px 16px; display: grid; gap: 8px; }
+.agora-arena .ag-skel-row, .agora-arena .ag-skel-line, .agora-arena .ag-skel-ring {
+  background: linear-gradient(90deg, var(--sd2), var(--line), var(--sd2));
+  background-size: 200% 100%;
+  animation: ag-shimmer 1.4s infinite;
+  border-radius: 10px;
+}
+.agora-arena .ag-skel-row { height: 66px; }
+.agora-arena .ag-skel-line { height: 44px; width: 320px; margin-top: 6px; }
+.agora-arena .ag-skel-ring { width: 84px; height: 84px; border-radius: 50%; }
+@keyframes ag-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+.agora-arena .ag-error {
+  padding: 12px 16px;
+  border: 1px solid rgba(240, 79, 95, 0.4);
+  background: rgba(240, 79, 95, 0.08);
+  color: var(--ivory);
+  border-radius: 12px;
+  font-size: 0.86rem;
+}
+
+/* ─── 점수 링 / 분해 ──────────────────────────────────────────────────────── */
+.agora-arena .ag-score { position: relative; display: inline-grid; place-items: center; cursor: help; }
+.agora-arena .ag-score svg { position: absolute; inset: 0; }
+.agora-arena .ag-score b { position: relative; font-family: var(--disp); font-weight: 800; letter-spacing: -0.02em; }
+.agora-arena .ag-score-pop {
+  position: absolute;
+  z-index: 30;
+  top: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 260px;
+  padding: 12px 14px;
+  background: var(--black);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+  cursor: default;
+  text-align: left;
+}
+.agora-arena .ag-score-pop-head { display: flex; justify-content: space-between; font-size: 0.78rem; color: var(--mut); margin-bottom: 8px; }
+.agora-arena .ag-score-pop-head b { color: var(--ivory); }
+.agora-arena .ag-bd-row { display: grid; grid-template-columns: 62px 1fr 48px; align-items: center; gap: 8px; font-size: 0.78rem; margin: 5px 0; }
+.agora-arena .ag-bd-row .k { color: var(--mut); }
+.agora-arena .ag-bd-row .bar { height: 6px; background: var(--line2); border-radius: 4px; overflow: hidden; }
+.agora-arena .ag-bd-row .bar i { display: block; height: 100%; border-radius: 4px; transition: width 0.8s var(--ease); }
+.agora-arena .ag-bd-row .v { text-align: right; color: var(--ivory); font-weight: 700; }
+.agora-arena .ag-bd-row .v small { color: var(--mut2); font-weight: 500; }
+.agora-arena .ag-bd-note { font-size: 0.72rem; color: var(--mut2); margin: 8px 0 0; line-height: 1.5; }
+.agora-arena .ag-bd-inline .ag-bd-row { grid-template-columns: 80px 1fr 56px; font-size: 0.86rem; margin: 9px 0; }
+.agora-arena .ag-bd-inline .ag-bd-row .bar { height: 8px; }
+
+/* ─── 리스크 배지 ────────────────────────────────────────────────────────── */
+.agora-arena .ag-risk {
+  --rc: var(--warn);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 4px 10px 4px 8px;
+  border-radius: 999px;
+  border: 1px solid color-mix(in srgb, var(--rc) 40%, transparent);
+  background: color-mix(in srgb, var(--rc) 10%, transparent);
+  color: var(--ivory);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.agora-arena .ag-risk i { width: 8px; height: 8px; border-radius: 50%; background: var(--rc); }
+.agora-arena .ag-risk b { color: var(--mut); font-weight: 600; }
+
+/* ─── 에이전트 페이지 ───────────────────────────────────────────────────── */
+.agora-arena .ag-page { padding: 18px 0 120px; }
+.agora-arena .ag-crumb { display: flex; gap: 8px; font-size: 0.8rem; color: var(--mut2); margin-bottom: 18px; }
+.agora-arena .ag-crumb a { color: var(--mut); text-decoration: none; }
+.agora-arena .ag-crumb a:hover { color: var(--ivory); }
+
+.agora-arena .ag-hero {
+  display: grid;
+  grid-template-columns: 140px 1fr auto;
+  gap: 24px;
+  align-items: center;
+  padding: 24px;
+  background: var(--sd);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+.agora-arena .ag-hero-char { display: grid; place-items: center; }
+.agora-arena .ag-hero-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.agora-arena .ag-hero-title h1 { margin: 0; font: 800 2.1rem var(--disp); letter-spacing: -0.035em; }
+.agora-arena .ag-hero-oneliner { margin: 10px 0 4px; font-size: 1.02rem; color: var(--ivory); line-height: 1.55; }
+.agora-arena .ag-hero-tag { margin: 0; font-size: 0.82rem; color: var(--mut2); }
+.agora-arena .ag-hero-ctas { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.agora-arena .ag-hero-side { display: grid; justify-items: center; gap: 10px; min-width: 150px; }
+.agora-arena .ag-hero-rank { text-align: center; display: grid; line-height: 1.15; }
+.agora-arena .ag-hero-rank b { font: 800 1.6rem var(--disp); letter-spacing: -0.03em; }
+.agora-arena .ag-hero-rank small { font-size: 0.7rem; color: var(--mut2); }
+@media (max-width: 860px) {
+  .agora-arena .ag-hero { grid-template-columns: 1fr; text-align: center; }
+  .agora-arena .ag-hero-title { justify-content: center; }
+  .agora-arena .ag-hero-ctas { justify-content: center; }
+}
+
+.agora-arena .ag-record { display: grid; gap: 18px; }
+.agora-arena .ag-record-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.agora-arena .ag-record-risk { display: flex; align-items: center; gap: 10px; margin-top: 10px; font-size: 0.88rem; color: var(--mut); flex-wrap: wrap; }
+
+.agora-arena .ag-bt-eyebrow { font-size: 0.74rem; color: var(--mut2); letter-spacing: 0.06em; text-transform: uppercase; }
+.agora-arena .ag-bt-money { display: flex; align-items: baseline; gap: 14px; margin-top: 6px; flex-wrap: wrap; }
+.agora-arena .ag-bt-money .from { font: 700 1.6rem var(--disp); color: var(--mut); letter-spacing: -0.03em; }
+.agora-arena .ag-bt-money .arrow { color: var(--mut2); font-size: 1.4rem; }
+.agora-arena .ag-bt-money .to { font: 800 2.6rem var(--disp); letter-spacing: -0.04em; }
+.agora-arena .ag-bt-roi { font: 800 1.2rem var(--disp); }
+.agora-arena .ag-bt-sub { margin-top: 4px; color: var(--mut); font-size: 0.9rem; }
+
+.agora-arena .ag-chart-wrap { background: var(--sd); border: 1px solid var(--line); border-radius: 16px; padding: 12px 12px 6px; }
+.agora-arena .ag-chart { width: 100%; }
+.agora-arena .ag-chart-legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 0.74rem; color: var(--mut); padding: 4px 6px 8px; }
+.agora-arena .ag-chart-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.agora-arena .ag-chart-legend i { width: 16px; height: 3px; border-radius: 2px; display: inline-block; }
+.agora-arena .ag-chart-legend i.dash { background: repeating-linear-gradient(90deg, #7f8a99 0 4px, transparent 4px 7px); }
+.agora-arena .ag-chart-legend i.area { height: 8px; background: rgba(185, 176, 165, 0.25); border-top: 1px solid rgba(185, 176, 165, 0.6); }
+.agora-arena .ag-chart-legend .buy { color: var(--pos); }
+.agora-arena .ag-chart-legend .sell { color: var(--neg); }
+
+.agora-arena .ag-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 900px) { .agora-arena .ag-cards { grid-template-columns: 1fr; } }
+.agora-arena .ag-card { background: var(--sd); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; }
+.agora-arena .ag-card header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.agora-arena .ag-card h3 { margin: 0; font: 800 0.95rem var(--disp); letter-spacing: -0.01em; }
+.agora-arena .ag-card-head { font: 800 1.1rem var(--disp); letter-spacing: -0.02em; }
+.agora-arena .ag-card-sentence { margin: 4px 0 10px; font-size: 0.9rem; color: var(--ivory); line-height: 1.55; }
+.agora-arena .ag-mrow { display: flex; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--line2); font-size: 0.86rem; }
+.agora-arena .ag-mrow .k { color: var(--mut); }
+.agora-arena .ag-mrow .v { color: var(--ivory); font-weight: 600; text-align: right; }
+.agora-arena .ag-mrow .v small { font-weight: 500; font-size: 0.78rem; }
+.agora-arena .ag-two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 900px) { .agora-arena .ag-two { grid-template-columns: 1fr; } }
+
+/* ─── 백테스트 폼 ─────────────────────────────────────────────────────────── */
+.agora-arena .ag-bt { display: grid; gap: 18px; }
+.agora-arena .ag-bt-form {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 18px;
+  align-items: end;
+  padding: 18px 20px;
+  background: var(--sd);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+}
+@media (max-width: 900px) { .agora-arena .ag-bt-form { grid-template-columns: 1fr; } }
+.agora-arena .ag-bt-field label { display: block; font-size: 0.74rem; color: var(--mut2); margin-bottom: 8px; letter-spacing: 0.02em; }
+.agora-arena .ag-bt-presets { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.agora-arena .ag-preset {
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ivory);
+  padding: 9px 14px;
+  border-radius: 10px;
+  font: 700 0.9rem var(--body);
+  cursor: pointer;
+}
+.agora-arena .ag-preset.on { background: var(--ivory); color: var(--black); border-color: var(--ivory); }
+.agora-arena .ag-custom { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--line); border-radius: 10px; padding: 0 10px; color: var(--mut); }
+.agora-arena .ag-custom input { width: 110px; background: transparent; border: 0; color: var(--ivory); font: 700 0.9rem var(--body); padding: 9px 0; outline: none; }
+.agora-arena .ag-bt-run { min-width: 180px; }
+
+.agora-arena .ag-bt-headline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 22px 24px;
+  background: linear-gradient(135deg, rgba(255, 90, 31, 0.1), transparent 60%), var(--sd);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+}
+.agora-arena .ag-bt-hl-right { display: grid; justify-items: center; gap: 6px; }
+.agora-arena .ag-bt-score-k { font-size: 0.7rem; color: var(--mut2); letter-spacing: 0.06em; }
+
+/* ─── Time Machine ────────────────────────────────────────────────────────── */
+.agora-arena .ag-tm { background: var(--sd); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; display: grid; gap: 14px; }
+.agora-arena .ag-tm-top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-end; flex-wrap: wrap; }
+.agora-arena .ag-tm-eyebrow { font-size: 0.7rem; color: var(--orange); letter-spacing: 0.08em; font-weight: 700; }
+.agora-arena .ag-tm-when { font: 800 1.5rem var(--disp); letter-spacing: -0.03em; display: flex; align-items: baseline; gap: 10px; }
+.agora-arena .ag-tm-when small { font: 500 0.78rem var(--body); color: var(--mut2); }
+.agora-arena .ag-tm-kpis { display: flex; gap: 22px; }
+.agora-arena .ag-tm-kpi .k { font-size: 0.7rem; color: var(--mut2); }
+.agora-arena .ag-tm-kpi .v { font: 800 1.1rem var(--disp); letter-spacing: -0.02em; }
+.agora-arena .ag-tm-kpi .v small { font-size: 0.8rem; margin-left: 4px; }
+.agora-arena .ag-tm-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.agora-arena .ag-tm-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ivory);
+  font-size: 1.05rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.agora-arena .ag-tm-btn.play { background: var(--ivory); color: var(--black); border-color: var(--ivory); width: 46px; }
+.agora-arena .ag-tm-btn.play.on { background: var(--orange); border-color: var(--orange); }
+.agora-arena .ag-tm-slider { flex: 1; min-width: 160px; -webkit-appearance: none; appearance: none; height: 6px; border-radius: 4px; background: linear-gradient(90deg, var(--orange) var(--fill, 0%), var(--line) var(--fill, 0%)); outline: none; }
+.agora-arena .ag-tm-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: var(--ivory); border: 2px solid var(--orange); cursor: grab; }
+
+/* ─── 거래 로그 ────────────────────────────────────────────────────────────── */
+.agora-arena .ag-log { background: var(--sd); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.agora-arena .ag-log-head { display: flex; justify-content: space-between; align-items: center; padding: 14px 18px; border-bottom: 1px solid var(--line); flex-wrap: wrap; gap: 8px; }
+.agora-arena .ag-log-head h3 { margin: 0; font: 800 0.95rem var(--disp); display: flex; gap: 10px; align-items: baseline; }
+.agora-arena .ag-log-head h3 span { font: 500 0.76rem var(--body); color: var(--mut2); }
+.agora-arena .ag-switch { display: inline-flex; align-items: center; gap: 8px; font-size: 0.78rem; color: var(--mut); cursor: pointer; }
+.agora-arena .ag-switch input { accent-color: var(--orange); }
+.agora-arena .ag-log-cols, .agora-arena .ag-log-row {
+  display: grid;
+  grid-template-columns: 90px 1.4fr 1fr 1fr 1.4fr 1fr;
+  gap: 12px;
+  padding: 0 18px;
+  align-items: center;
+  font-size: 0.84rem;
+}
+.agora-arena .ag-log-cols { height: 34px; font-size: 0.7rem; color: var(--mut2); letter-spacing: 0.04em; background: rgba(0, 0, 0, 0.18); }
+.agora-arena .ag-log-body { max-height: 420px; overflow: auto; }
+.agora-arena .ag-log-row { min-height: 44px; border-top: 1px solid var(--line2); cursor: pointer; transition: background 0.15s, opacity 0.2s; }
+.agora-arena .ag-log-row:hover { background: rgba(255, 255, 255, 0.03); }
+.agora-arena .ag-log-row.future { opacity: 0.3; }
+.agora-arena .ag-log-row.active { background: rgba(255, 90, 31, 0.12); box-shadow: inset 3px 0 0 var(--orange); }
+.agora-arena .ag-log-row.rejected { color: var(--mut2); }
+.agora-arena .ag-log-empty { padding: 28px 18px; color: var(--mut2); font-size: 0.86rem; text-align: center; }
+.agora-arena .ag-side { font-weight: 800; }
+.agora-arena .ag-side.buy { color: var(--pos); }
+.agora-arena .ag-side.sell { color: var(--neg); }
+.agora-arena .ag-side.rej { color: var(--mut2); font-weight: 600; }
+.agora-arena .ag-rej-reason { display: block; font-size: 0.7rem; color: var(--mut2); }
+@media (max-width: 860px) {
+  .agora-arena .ag-log-cols { display: none; }
+  .agora-arena .ag-log-row { grid-template-columns: 1fr 1fr; padding: 10px 16px; row-gap: 4px; }
+}
+
+.agora-arena .ag-disclaimer { font-size: 0.76rem; color: var(--mut2); margin: 0; line-height: 1.6; }
+
+/* ─── 스티키 바 ────────────────────────────────────────────────────────────── */
+.agora-arena .ag-sticky {
+  position: sticky;
+  bottom: 16px;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 12px 14px 12px 20px;
+  background: rgba(17, 16, 15, 0.86);
+  backdrop-filter: blur(14px);
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+}
+.agora-arena .ag-sticky-txt { display: inline-flex; align-items: baseline; gap: 10px; flex-wrap: wrap; font-size: 0.92rem; color: var(--mut); }
+.agora-arena .ag-sticky-txt b { font: 800 1.35rem var(--disp); letter-spacing: -0.03em; }
+.agora-arena .ag-sticky-ctas { display: inline-flex; gap: 8px; }
+@media (max-width: 760px) {
+  .agora-arena .ag-sticky { flex-direction: column; align-items: stretch; bottom: 8px; }
+  .agora-arena .ag-sticky-ctas .btn { flex: 1; }
+}

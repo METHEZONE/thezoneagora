@@ -38,3 +38,5 @@ yarn-error.log*
 /.omc/sessions/
 /.omc/artifacts/
 /.omc/project-memory.json
+.next-dev*/
+.next-build/

@@ -25,8 +25,15 @@ export function OnboardingWizard() {
   const agentName = AGENTS.find((a) => a.id === strategyId)?.name ?? strategyId;
   const { owner, hasVault, loading, actions } = useVault(strategyId);
 
+  // 백테스트/전적 페이지에서 "이 결과로 맡기기"로 넘어오면 금액이 프리필된다 (?amount=10000).
+  const amountParam = searchParams.get("amount");
+  const prefilled =
+    amountParam && /^\d+$/.test(amountParam) && Number(amountParam) >= MIN_DEPOSIT_USDC
+      ? String(Math.min(Number(amountParam), 1_000_000))
+      : "";
+
   const [step, setStep] = useState<Step>(1);
-  const [depositInput, setDepositInput] = useState("");
+  const [depositInput, setDepositInput] = useState(prefilled);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [completed, setCompleted] = useState(false);
@@ -102,6 +109,8 @@ export function OnboardingWizard() {
             minUsdc={MIN_DEPOSIT_USDC}
             valid={depositValid}
             onNext={() => setStep(3)}
+            owner={owner}
+            prefilled={prefilled !== "" && depositInput === prefilled}
           />
         )}
 
