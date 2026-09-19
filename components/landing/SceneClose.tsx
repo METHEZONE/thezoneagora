@@ -36,8 +36,8 @@ export function SceneClose() {
         <footer className="ag-footer">
           <span>THE ZONE AGORA</span>
           <span className="legal">
-            MINT 기록은 2026.06.01부터 06.23까지의 보관된 스냅샷이며 라이브가
-            아닙니다. 과거 성과는 미래 수익을 보장하지 않습니다. 아레나의 모든
+            MINT 기록은 2026.04.17부터 09.19까지의 보관된 스냅샷(155일, 879건)이며
+            라이브가 아닙니다. 과거 성과는 미래 수익을 보장하지 않습니다. 아레나의 모든
             거래는 실제 자금이 아닌 페이퍼 트레이딩입니다.
           </span>
         </footer>

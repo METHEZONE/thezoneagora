@@ -53,7 +53,7 @@ export function SceneRisk() {
           <div>
             <div className="ag-risk-stat">
               <div className="v ag-dn">{MDD_LABEL}</div>
-              <div className="k">최대 낙폭 · 2026년 6월 일별 곡선 기준</div>
+              <div className="k">최대 낙폭 · 2026년 4~9월 일별 곡선 기준</div>
             </div>
             <div className="ag-risk-stat">
               <div className="v">{RECENT_WIN_RATE_PCT.toFixed(1)}%</div>

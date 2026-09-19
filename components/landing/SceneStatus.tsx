@@ -13,8 +13,8 @@ const ROWS: { what: string; detail: string; st: string; cls: "on" | "archive" | 
     cls: "on",
   },
   {
-    what: "MINT 6월 기록",
-    detail: "2026.06.01 ~ 06.23 · 일별 곡선, 서브 전략 10개, 최근 체결 40건",
+    what: "MINT 4~9월 기록",
+    detail: "2026.04.17 ~ 09.19 · 일별 곡선, 서브 전략 10개, 최근 체결 40건",
     st: "보관된 기록",
     cls: "archive",
   },

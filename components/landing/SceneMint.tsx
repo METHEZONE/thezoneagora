@@ -187,10 +187,10 @@ function MintChart({
         )}
       </div>
       <div className="ag-mint-xaxis" aria-hidden="true">
-        <span>06.01</span>
+        <span>04.17</span>
         <span>06.08</span>
-        <span>06.15</span>
-        <span>06.23</span>
+        <span>07.29</span>
+        <span>09.19</span>
       </div>
     </div>
   );
@@ -223,9 +223,9 @@ function TapeList({ reveal }: { reveal: number }) {
 function ChapterHead() {
   return (
     <div className="ag-mint-head">
-      <h2 className="ag-mint-title">MINT가 달린 23일</h2>
+      <h2 className="ag-mint-title">MINT가 달린 155일</h2>
       <p className="ag-mint-archive">
-        2026.06.01 ~ 06.23 · <b>보관된 기록</b> · 지금 도는 라이브가 아니며, 미래
+        2026.04.17 ~ 09.19 · <b>보관된 기록</b> · 지금 도는 라이브가 아니며, 미래
         수익의 약속도 아닙니다
       </p>
     </div>
@@ -249,7 +249,7 @@ function StaticChapter() {
               <span className={FINAL_ROI_PCT >= 0 ? "ag-up" : "ag-dn"}>{ROI_LABEL}</span>
             </div>
             <div className="ag-mint-summary">
-              시작 <b>${fmtUsd(START.equity)}</b>, 23일 뒤 <b>${fmtUsd(END.equity)}</b>. 기준
+              시작 <b>${fmtUsd(START.equity)}</b>, 155일 뒤 <b>${fmtUsd(END.equity)}</b>. 기준
               $10,000 대비 <b>{ROI_LABEL}</b>, 그 사이 최대 낙폭은 <b>{MDD_LABEL}</b>
               였습니다 (일별 곡선 기준).
             </div>

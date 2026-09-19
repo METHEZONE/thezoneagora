@@ -1,771 +1,1702 @@
 {
-  "generatedAt": "2026-06-23T08:47:06Z",
+  "generatedAt": "2026-09-19T04:30:28.163613Z",
   "seasonId": "s1",
   "initialCapital": 10000.0,
   "equityCurve": [
     {
       "dayIndex": 0,
-      "ts": "2026-06-01T00:00:00Z",
-      "equity": 9938.15,
-      "pnl": -61.85,
-      "roiPct": -0.6185
+      "ts": "2026-04-17T00:00:00Z",
+      "equity": 9984.39,
+      "pnl": -15.61,
+      "roiPct": -0.1561
     },
     {
       "dayIndex": 1,
-      "ts": "2026-06-02T00:00:00Z",
-      "equity": 10317.54,
-      "pnl": 317.54,
-      "roiPct": 3.1754
+      "ts": "2026-04-18T00:00:00Z",
+      "equity": 10272.76,
+      "pnl": 272.76,
+      "roiPct": 2.7276
     },
     {
       "dayIndex": 2,
-      "ts": "2026-06-03T00:00:00Z",
-      "equity": 12228.95,
-      "pnl": 2228.95,
-      "roiPct": 22.2895
+      "ts": "2026-04-19T00:00:00Z",
+      "equity": 12572.23,
+      "pnl": 2572.23,
+      "roiPct": 25.7223
     },
     {
       "dayIndex": 3,
-      "ts": "2026-06-04T00:00:00Z",
-      "equity": 11623.73,
-      "pnl": 1623.73,
-      "roiPct": 16.2373
+      "ts": "2026-04-20T00:00:00Z",
+      "equity": 12069.99,
+      "pnl": 2069.99,
+      "roiPct": 20.6999
     },
     {
       "dayIndex": 4,
-      "ts": "2026-06-05T00:00:00Z",
-      "equity": 10743.01,
-      "pnl": 743.01,
-      "roiPct": 7.4301
+      "ts": "2026-04-21T00:00:00Z",
+      "equity": 11852.88,
+      "pnl": 1852.88,
+      "roiPct": 18.5288
     },
     {
       "dayIndex": 5,
-      "ts": "2026-06-06T00:00:00Z",
-      "equity": 11483.54,
-      "pnl": 1483.54,
-      "roiPct": 14.8354
+      "ts": "2026-04-22T00:00:00Z",
+      "equity": 9103.24,
+      "pnl": -896.76,
+      "roiPct": -8.9676
     },
     {
       "dayIndex": 6,
-      "ts": "2026-06-07T00:00:00Z",
-      "equity": 12888.21,
-      "pnl": 2888.21,
-      "roiPct": 28.8821
+      "ts": "2026-04-23T00:00:00Z",
+      "equity": 9499.04,
+      "pnl": -500.96,
+      "roiPct": -5.0096
     },
     {
       "dayIndex": 7,
-      "ts": "2026-06-08T00:00:00Z",
-      "equity": 13221.72,
-      "pnl": 3221.72,
-      "roiPct": 32.2172
+      "ts": "2026-04-24T00:00:00Z",
+      "equity": 9428.37,
+      "pnl": -571.63,
+      "roiPct": -5.7163
     },
     {
       "dayIndex": 8,
-      "ts": "2026-06-09T00:00:00Z",
-      "equity": 13221.72,
-      "pnl": 3221.72,
-      "roiPct": 32.2172
+      "ts": "2026-04-25T00:00:00Z",
+      "equity": 9236.02,
+      "pnl": -763.98,
+      "roiPct": -7.6398
     },
     {
       "dayIndex": 9,
-      "ts": "2026-06-10T00:00:00Z",
-      "equity": 13399.77,
-      "pnl": 3399.77,
-      "roiPct": 33.9977
+      "ts": "2026-04-26T00:00:00Z",
+      "equity": 9082.48,
+      "pnl": -917.52,
+      "roiPct": -9.1752
     },
     {
       "dayIndex": 10,
-      "ts": "2026-06-11T00:00:00Z",
-      "equity": 13583.78,
-      "pnl": 3583.78,
-      "roiPct": 35.8378
+      "ts": "2026-04-27T00:00:00Z",
+      "equity": 9095.51,
+      "pnl": -904.49,
+      "roiPct": -9.0449
     },
     {
       "dayIndex": 11,
-      "ts": "2026-06-12T00:00:00Z",
-      "equity": 13758.47,
-      "pnl": 3758.47,
-      "roiPct": 37.5847
+      "ts": "2026-04-28T00:00:00Z",
+      "equity": 9039.08,
+      "pnl": -960.92,
+      "roiPct": -9.6092
     },
     {
       "dayIndex": 12,
-      "ts": "2026-06-13T00:00:00Z",
-      "equity": 13658.7,
-      "pnl": 3658.7,
-      "roiPct": 36.587
+      "ts": "2026-04-29T00:00:00Z",
+      "equity": 9435.62,
+      "pnl": -564.38,
+      "roiPct": -5.6438
     },
     {
       "dayIndex": 13,
-      "ts": "2026-06-14T00:00:00Z",
-      "equity": 13013.86,
-      "pnl": 3013.86,
-      "roiPct": 30.1386
+      "ts": "2026-04-30T00:00:00Z",
+      "equity": 9561.91,
+      "pnl": -438.09,
+      "roiPct": -4.3809
     },
     {
       "dayIndex": 14,
-      "ts": "2026-06-15T00:00:00Z",
-      "equity": 12870.21,
-      "pnl": 2870.21,
-      "roiPct": 28.7021
+      "ts": "2026-05-01T00:00:00Z",
+      "equity": 9460.82,
+      "pnl": -539.18,
+      "roiPct": -5.3918
     },
     {
       "dayIndex": 15,
-      "ts": "2026-06-16T00:00:00Z",
-      "equity": 13186.94,
-      "pnl": 3186.94,
-      "roiPct": 31.8694
+      "ts": "2026-05-02T00:00:00Z",
+      "equity": 9729.29,
+      "pnl": -270.71,
+      "roiPct": -2.7071
     },
     {
       "dayIndex": 16,
-      "ts": "2026-06-17T00:00:00Z",
-      "equity": 14072.49,
-      "pnl": 4072.49,
-      "roiPct": 40.7249
+      "ts": "2026-05-03T00:00:00Z",
+      "equity": 9674.54,
+      "pnl": -325.46,
+      "roiPct": -3.2546
     },
     {
       "dayIndex": 17,
-      "ts": "2026-06-18T00:00:00Z",
-      "equity": 13898.79,
-      "pnl": 3898.79,
-      "roiPct": 38.9879
+      "ts": "2026-05-04T00:00:00Z",
+      "equity": 9545.14,
+      "pnl": -454.86,
+      "roiPct": -4.5486
     },
     {
       "dayIndex": 18,
-      "ts": "2026-06-19T00:00:00Z",
-      "equity": 14117.98,
-      "pnl": 4117.98,
-      "roiPct": 41.1798
+      "ts": "2026-05-05T00:00:00Z",
+      "equity": 9549.85,
+      "pnl": -450.15,
+      "roiPct": -4.5015
     },
     {
       "dayIndex": 19,
-      "ts": "2026-06-20T00:00:00Z",
-      "equity": 14585.17,
-      "pnl": 4585.17,
-      "roiPct": 45.8517
+      "ts": "2026-05-06T00:00:00Z",
+      "equity": 10997.68,
+      "pnl": 997.68,
+      "roiPct": 9.9768
     },
     {
       "dayIndex": 20,
-      "ts": "2026-06-21T00:00:00Z",
-      "equity": 14521.56,
-      "pnl": 4521.56,
-      "roiPct": 45.2156
+      "ts": "2026-05-07T00:00:00Z",
+      "equity": 11311.81,
+      "pnl": 1311.81,
+      "roiPct": 13.1181
     },
     {
       "dayIndex": 21,
-      "ts": "2026-06-22T00:00:00Z",
-      "equity": 13895.69,
-      "pnl": 3895.69,
-      "roiPct": 38.9569
+      "ts": "2026-05-08T00:00:00Z",
+      "equity": 11395.64,
+      "pnl": 1395.64,
+      "roiPct": 13.9564
     },
     {
       "dayIndex": 22,
+      "ts": "2026-05-09T00:00:00Z",
+      "equity": 11803.34,
+      "pnl": 1803.34,
+      "roiPct": 18.0334
+    },
+    {
+      "dayIndex": 23,
+      "ts": "2026-05-10T00:00:00Z",
+      "equity": 11831.94,
+      "pnl": 1831.94,
+      "roiPct": 18.3194
+    },
+    {
+      "dayIndex": 24,
+      "ts": "2026-05-11T00:00:00Z",
+      "equity": 11694.58,
+      "pnl": 1694.58,
+      "roiPct": 16.9458
+    },
+    {
+      "dayIndex": 25,
+      "ts": "2026-05-12T00:00:00Z",
+      "equity": 11335.77,
+      "pnl": 1335.77,
+      "roiPct": 13.3577
+    },
+    {
+      "dayIndex": 26,
+      "ts": "2026-05-13T00:00:00Z",
+      "equity": 11989.99,
+      "pnl": 1989.99,
+      "roiPct": 19.8999
+    },
+    {
+      "dayIndex": 27,
+      "ts": "2026-05-14T00:00:00Z",
+      "equity": 11719.62,
+      "pnl": 1719.62,
+      "roiPct": 17.1962
+    },
+    {
+      "dayIndex": 28,
+      "ts": "2026-05-15T00:00:00Z",
+      "equity": 11719.62,
+      "pnl": 1719.62,
+      "roiPct": 17.1962
+    },
+    {
+      "dayIndex": 29,
+      "ts": "2026-05-16T00:00:00Z",
+      "equity": 11719.62,
+      "pnl": 1719.62,
+      "roiPct": 17.1962
+    },
+    {
+      "dayIndex": 30,
+      "ts": "2026-05-17T00:00:00Z",
+      "equity": 11719.62,
+      "pnl": 1719.62,
+      "roiPct": 17.1962
+    },
+    {
+      "dayIndex": 31,
+      "ts": "2026-05-18T00:00:00Z",
+      "equity": 11391.19,
+      "pnl": 1391.19,
+      "roiPct": 13.9119
+    },
+    {
+      "dayIndex": 32,
+      "ts": "2026-05-19T00:00:00Z",
+      "equity": 11384.74,
+      "pnl": 1384.74,
+      "roiPct": 13.8474
+    },
+    {
+      "dayIndex": 33,
+      "ts": "2026-05-20T00:00:00Z",
+      "equity": 11430.72,
+      "pnl": 1430.72,
+      "roiPct": 14.3072
+    },
+    {
+      "dayIndex": 34,
+      "ts": "2026-05-21T00:00:00Z",
+      "equity": 11273.7,
+      "pnl": 1273.7,
+      "roiPct": 12.737
+    },
+    {
+      "dayIndex": 35,
+      "ts": "2026-05-22T00:00:00Z",
+      "equity": 11085.23,
+      "pnl": 1085.23,
+      "roiPct": 10.8523
+    },
+    {
+      "dayIndex": 36,
+      "ts": "2026-05-23T00:00:00Z",
+      "equity": 12805.95,
+      "pnl": 2805.95,
+      "roiPct": 28.0595
+    },
+    {
+      "dayIndex": 37,
+      "ts": "2026-05-24T00:00:00Z",
+      "equity": 12727.46,
+      "pnl": 2727.46,
+      "roiPct": 27.2746
+    },
+    {
+      "dayIndex": 38,
+      "ts": "2026-05-25T00:00:00Z",
+      "equity": 12312.72,
+      "pnl": 2312.72,
+      "roiPct": 23.1272
+    },
+    {
+      "dayIndex": 39,
+      "ts": "2026-05-26T00:00:00Z",
+      "equity": 12318.82,
+      "pnl": 2318.82,
+      "roiPct": 23.1882
+    },
+    {
+      "dayIndex": 40,
+      "ts": "2026-05-27T00:00:00Z",
+      "equity": 12318.82,
+      "pnl": 2318.82,
+      "roiPct": 23.1882
+    },
+    {
+      "dayIndex": 41,
+      "ts": "2026-05-28T00:00:00Z",
+      "equity": 15028.01,
+      "pnl": 5028.01,
+      "roiPct": 50.2801
+    },
+    {
+      "dayIndex": 42,
+      "ts": "2026-05-29T00:00:00Z",
+      "equity": 16756.44,
+      "pnl": 6756.44,
+      "roiPct": 67.5644
+    },
+    {
+      "dayIndex": 43,
+      "ts": "2026-05-30T00:00:00Z",
+      "equity": 15772.37,
+      "pnl": 5772.37,
+      "roiPct": 57.7237
+    },
+    {
+      "dayIndex": 44,
+      "ts": "2026-05-31T00:00:00Z",
+      "equity": 15812.18,
+      "pnl": 5812.18,
+      "roiPct": 58.1218
+    },
+    {
+      "dayIndex": 45,
+      "ts": "2026-06-01T00:00:00Z",
+      "equity": 15714.38,
+      "pnl": 5714.38,
+      "roiPct": 57.1438
+    },
+    {
+      "dayIndex": 46,
+      "ts": "2026-06-02T00:00:00Z",
+      "equity": 16314.27,
+      "pnl": 6314.27,
+      "roiPct": 63.1427
+    },
+    {
+      "dayIndex": 47,
+      "ts": "2026-06-03T00:00:00Z",
+      "equity": 19336.63,
+      "pnl": 9336.63,
+      "roiPct": 93.3663
+    },
+    {
+      "dayIndex": 48,
+      "ts": "2026-06-04T00:00:00Z",
+      "equity": 18379.65,
+      "pnl": 8379.65,
+      "roiPct": 83.7965
+    },
+    {
+      "dayIndex": 49,
+      "ts": "2026-06-05T00:00:00Z",
+      "equity": 16987.03,
+      "pnl": 6987.03,
+      "roiPct": 69.8703
+    },
+    {
+      "dayIndex": 50,
+      "ts": "2026-06-06T00:00:00Z",
+      "equity": 18157.97,
+      "pnl": 8157.97,
+      "roiPct": 81.5797
+    },
+    {
+      "dayIndex": 51,
+      "ts": "2026-06-07T00:00:00Z",
+      "equity": 20379.06,
+      "pnl": 10379.06,
+      "roiPct": 103.7906
+    },
+    {
+      "dayIndex": 52,
+      "ts": "2026-06-08T00:00:00Z",
+      "equity": 20906.42,
+      "pnl": 10906.42,
+      "roiPct": 109.0641
+    },
+    {
+      "dayIndex": 53,
+      "ts": "2026-06-09T00:00:00Z",
+      "equity": 20906.42,
+      "pnl": 10906.42,
+      "roiPct": 109.0641
+    },
+    {
+      "dayIndex": 54,
+      "ts": "2026-06-10T00:00:00Z",
+      "equity": 21187.94,
+      "pnl": 11187.94,
+      "roiPct": 111.8794
+    },
+    {
+      "dayIndex": 55,
+      "ts": "2026-06-11T00:00:00Z",
+      "equity": 21478.91,
+      "pnl": 11478.91,
+      "roiPct": 114.7891
+    },
+    {
+      "dayIndex": 56,
+      "ts": "2026-06-12T00:00:00Z",
+      "equity": 21755.14,
+      "pnl": 11755.14,
+      "roiPct": 117.5514
+    },
+    {
+      "dayIndex": 57,
+      "ts": "2026-06-13T00:00:00Z",
+      "equity": 21597.38,
+      "pnl": 11597.38,
+      "roiPct": 115.9738
+    },
+    {
+      "dayIndex": 58,
+      "ts": "2026-06-14T00:00:00Z",
+      "equity": 20577.75,
+      "pnl": 10577.75,
+      "roiPct": 105.7775
+    },
+    {
+      "dayIndex": 59,
+      "ts": "2026-06-15T00:00:00Z",
+      "equity": 20350.6,
+      "pnl": 10350.6,
+      "roiPct": 103.5059
+    },
+    {
+      "dayIndex": 60,
+      "ts": "2026-06-16T00:00:00Z",
+      "equity": 20851.43,
+      "pnl": 10851.43,
+      "roiPct": 108.5143
+    },
+    {
+      "dayIndex": 61,
+      "ts": "2026-06-17T00:00:00Z",
+      "equity": 22251.67,
+      "pnl": 12251.67,
+      "roiPct": 122.5167
+    },
+    {
+      "dayIndex": 62,
+      "ts": "2026-06-18T00:00:00Z",
+      "equity": 21977.01,
+      "pnl": 11977.01,
+      "roiPct": 119.7701
+    },
+    {
+      "dayIndex": 63,
+      "ts": "2026-06-19T00:00:00Z",
+      "equity": 22323.6,
+      "pnl": 12323.6,
+      "roiPct": 123.236
+    },
+    {
+      "dayIndex": 64,
+      "ts": "2026-06-20T00:00:00Z",
+      "equity": 23062.33,
+      "pnl": 13062.33,
+      "roiPct": 130.6233
+    },
+    {
+      "dayIndex": 65,
+      "ts": "2026-06-21T00:00:00Z",
+      "equity": 22961.74,
+      "pnl": 12961.74,
+      "roiPct": 129.6174
+    },
+    {
+      "dayIndex": 66,
+      "ts": "2026-06-22T00:00:00Z",
+      "equity": 21972.11,
+      "pnl": 11972.11,
+      "roiPct": 119.7211
+    },
+    {
+      "dayIndex": 67,
       "ts": "2026-06-23T00:00:00Z",
-      "equity": 13578.06,
-      "pnl": 3578.06,
-      "roiPct": 35.7806
+      "equity": 21469.86,
+      "pnl": 11469.86,
+      "roiPct": 114.6986
+    },
+    {
+      "dayIndex": 68,
+      "ts": "2026-06-24T00:00:00Z",
+      "equity": 21340.02,
+      "pnl": 11340.02,
+      "roiPct": 113.4002
+    },
+    {
+      "dayIndex": 69,
+      "ts": "2026-06-25T00:00:00Z",
+      "equity": 21767.77,
+      "pnl": 11767.77,
+      "roiPct": 117.6777
+    },
+    {
+      "dayIndex": 70,
+      "ts": "2026-06-26T00:00:00Z",
+      "equity": 21425.34,
+      "pnl": 11425.34,
+      "roiPct": 114.2534
+    },
+    {
+      "dayIndex": 71,
+      "ts": "2026-06-27T00:00:00Z",
+      "equity": 21290.55,
+      "pnl": 11290.55,
+      "roiPct": 112.9055
+    },
+    {
+      "dayIndex": 72,
+      "ts": "2026-06-28T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 73,
+      "ts": "2026-06-29T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 74,
+      "ts": "2026-06-30T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 75,
+      "ts": "2026-07-01T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 76,
+      "ts": "2026-07-02T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 77,
+      "ts": "2026-07-03T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 78,
+      "ts": "2026-07-04T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 79,
+      "ts": "2026-07-05T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 80,
+      "ts": "2026-07-06T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 81,
+      "ts": "2026-07-07T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 82,
+      "ts": "2026-07-08T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 83,
+      "ts": "2026-07-09T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 84,
+      "ts": "2026-07-10T00:00:00Z",
+      "equity": 21294.47,
+      "pnl": 11294.47,
+      "roiPct": 112.9447
+    },
+    {
+      "dayIndex": 85,
+      "ts": "2026-07-11T00:00:00Z",
+      "equity": 21141.15,
+      "pnl": 11141.15,
+      "roiPct": 111.4115
+    },
+    {
+      "dayIndex": 86,
+      "ts": "2026-07-12T00:00:00Z",
+      "equity": 20688.34,
+      "pnl": 10688.34,
+      "roiPct": 106.8834
+    },
+    {
+      "dayIndex": 87,
+      "ts": "2026-07-13T00:00:00Z",
+      "equity": 19697.45,
+      "pnl": 9697.45,
+      "roiPct": 96.9745
+    },
+    {
+      "dayIndex": 88,
+      "ts": "2026-07-14T00:00:00Z",
+      "equity": 19364.56,
+      "pnl": 9364.56,
+      "roiPct": 93.6456
+    },
+    {
+      "dayIndex": 89,
+      "ts": "2026-07-15T00:00:00Z",
+      "equity": 19364.56,
+      "pnl": 9364.56,
+      "roiPct": 93.6456
+    },
+    {
+      "dayIndex": 90,
+      "ts": "2026-07-16T00:00:00Z",
+      "equity": 19364.56,
+      "pnl": 9364.56,
+      "roiPct": 93.6456
+    },
+    {
+      "dayIndex": 91,
+      "ts": "2026-07-17T00:00:00Z",
+      "equity": 19364.56,
+      "pnl": 9364.56,
+      "roiPct": 93.6456
+    },
+    {
+      "dayIndex": 92,
+      "ts": "2026-07-18T00:00:00Z",
+      "equity": 19337.68,
+      "pnl": 9337.68,
+      "roiPct": 93.3768
+    },
+    {
+      "dayIndex": 93,
+      "ts": "2026-07-19T00:00:00Z",
+      "equity": 19439.63,
+      "pnl": 9439.63,
+      "roiPct": 94.3963
+    },
+    {
+      "dayIndex": 94,
+      "ts": "2026-07-20T00:00:00Z",
+      "equity": 18453.35,
+      "pnl": 8453.35,
+      "roiPct": 84.5335
+    },
+    {
+      "dayIndex": 95,
+      "ts": "2026-07-21T00:00:00Z",
+      "equity": 19258.92,
+      "pnl": 9258.92,
+      "roiPct": 92.5892
+    },
+    {
+      "dayIndex": 96,
+      "ts": "2026-07-22T00:00:00Z",
+      "equity": 19302.56,
+      "pnl": 9302.56,
+      "roiPct": 93.0256
+    },
+    {
+      "dayIndex": 97,
+      "ts": "2026-07-23T00:00:00Z",
+      "equity": 18362.59,
+      "pnl": 8362.59,
+      "roiPct": 83.6259
+    },
+    {
+      "dayIndex": 98,
+      "ts": "2026-07-24T00:00:00Z",
+      "equity": 18670.94,
+      "pnl": 8670.94,
+      "roiPct": 86.7094
+    },
+    {
+      "dayIndex": 99,
+      "ts": "2026-07-25T00:00:00Z",
+      "equity": 18268.75,
+      "pnl": 8268.75,
+      "roiPct": 82.6875
+    },
+    {
+      "dayIndex": 100,
+      "ts": "2026-07-26T00:00:00Z",
+      "equity": 18268.75,
+      "pnl": 8268.75,
+      "roiPct": 82.6875
+    },
+    {
+      "dayIndex": 101,
+      "ts": "2026-07-27T00:00:00Z",
+      "equity": 18268.75,
+      "pnl": 8268.75,
+      "roiPct": 82.6875
+    },
+    {
+      "dayIndex": 102,
+      "ts": "2026-07-28T00:00:00Z",
+      "equity": 20332.86,
+      "pnl": 10332.86,
+      "roiPct": 103.3286
+    },
+    {
+      "dayIndex": 103,
+      "ts": "2026-07-29T00:00:00Z",
+      "equity": 20699.41,
+      "pnl": 10699.41,
+      "roiPct": 106.9941
+    },
+    {
+      "dayIndex": 104,
+      "ts": "2026-07-30T00:00:00Z",
+      "equity": 19665.4,
+      "pnl": 9665.4,
+      "roiPct": 96.654
+    },
+    {
+      "dayIndex": 105,
+      "ts": "2026-07-31T00:00:00Z",
+      "equity": 19204.4,
+      "pnl": 9204.4,
+      "roiPct": 92.044
+    },
+    {
+      "dayIndex": 106,
+      "ts": "2026-08-01T00:00:00Z",
+      "equity": 19250.57,
+      "pnl": 9250.57,
+      "roiPct": 92.5057
+    },
+    {
+      "dayIndex": 107,
+      "ts": "2026-08-02T00:00:00Z",
+      "equity": 22041.28,
+      "pnl": 12041.28,
+      "roiPct": 120.4128
+    },
+    {
+      "dayIndex": 108,
+      "ts": "2026-08-03T00:00:00Z",
+      "equity": 21531.28,
+      "pnl": 11531.28,
+      "roiPct": 115.3128
+    },
+    {
+      "dayIndex": 109,
+      "ts": "2026-08-04T00:00:00Z",
+      "equity": 21634.33,
+      "pnl": 11634.33,
+      "roiPct": 116.3433
+    },
+    {
+      "dayIndex": 110,
+      "ts": "2026-08-05T00:00:00Z",
+      "equity": 20969.46,
+      "pnl": 10969.46,
+      "roiPct": 109.6946
+    },
+    {
+      "dayIndex": 111,
+      "ts": "2026-08-06T00:00:00Z",
+      "equity": 20291.81,
+      "pnl": 10291.81,
+      "roiPct": 102.9181
+    },
+    {
+      "dayIndex": 112,
+      "ts": "2026-08-07T00:00:00Z",
+      "equity": 20524.38,
+      "pnl": 10524.38,
+      "roiPct": 105.2438
+    },
+    {
+      "dayIndex": 113,
+      "ts": "2026-08-08T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 114,
+      "ts": "2026-08-09T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 115,
+      "ts": "2026-08-10T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 116,
+      "ts": "2026-08-11T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 117,
+      "ts": "2026-08-12T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 118,
+      "ts": "2026-08-13T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 119,
+      "ts": "2026-08-14T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 120,
+      "ts": "2026-08-15T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 121,
+      "ts": "2026-08-16T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 122,
+      "ts": "2026-08-17T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 123,
+      "ts": "2026-08-18T00:00:00Z",
+      "equity": 21334.23,
+      "pnl": 11334.23,
+      "roiPct": 113.3423
+    },
+    {
+      "dayIndex": 124,
+      "ts": "2026-08-19T00:00:00Z",
+      "equity": 21114.81,
+      "pnl": 11114.81,
+      "roiPct": 111.1481
+    },
+    {
+      "dayIndex": 125,
+      "ts": "2026-08-20T00:00:00Z",
+      "equity": 20385.61,
+      "pnl": 10385.61,
+      "roiPct": 103.8561
+    },
+    {
+      "dayIndex": 126,
+      "ts": "2026-08-21T00:00:00Z",
+      "equity": 21461.6,
+      "pnl": 11461.6,
+      "roiPct": 114.616
+    },
+    {
+      "dayIndex": 127,
+      "ts": "2026-08-22T00:00:00Z",
+      "equity": 26357.49,
+      "pnl": 16357.49,
+      "roiPct": 163.5749
+    },
+    {
+      "dayIndex": 128,
+      "ts": "2026-08-23T00:00:00Z",
+      "equity": 25629.37,
+      "pnl": 15629.37,
+      "roiPct": 156.2937
+    },
+    {
+      "dayIndex": 129,
+      "ts": "2026-08-24T00:00:00Z",
+      "equity": 25649.83,
+      "pnl": 15649.83,
+      "roiPct": 156.4983
+    },
+    {
+      "dayIndex": 130,
+      "ts": "2026-08-25T00:00:00Z",
+      "equity": 26282.32,
+      "pnl": 16282.32,
+      "roiPct": 162.8232
+    },
+    {
+      "dayIndex": 131,
+      "ts": "2026-08-26T00:00:00Z",
+      "equity": 25644.53,
+      "pnl": 15644.53,
+      "roiPct": 156.4453
+    },
+    {
+      "dayIndex": 132,
+      "ts": "2026-08-27T00:00:00Z",
+      "equity": 25401.91,
+      "pnl": 15401.91,
+      "roiPct": 154.0191
+    },
+    {
+      "dayIndex": 133,
+      "ts": "2026-08-28T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 134,
+      "ts": "2026-08-29T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 135,
+      "ts": "2026-08-30T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 136,
+      "ts": "2026-08-31T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 137,
+      "ts": "2026-09-01T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 138,
+      "ts": "2026-09-02T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 139,
+      "ts": "2026-09-03T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 140,
+      "ts": "2026-09-04T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 141,
+      "ts": "2026-09-05T00:00:00Z",
+      "equity": 25425.46,
+      "pnl": 15425.46,
+      "roiPct": 154.2546
+    },
+    {
+      "dayIndex": 142,
+      "ts": "2026-09-06T00:00:00Z",
+      "equity": 27162.37,
+      "pnl": 17162.37,
+      "roiPct": 171.6237
+    },
+    {
+      "dayIndex": 143,
+      "ts": "2026-09-07T00:00:00Z",
+      "equity": 26094.78,
+      "pnl": 16094.78,
+      "roiPct": 160.9478
+    },
+    {
+      "dayIndex": 144,
+      "ts": "2026-09-08T00:00:00Z",
+      "equity": 24810.77,
+      "pnl": 14810.77,
+      "roiPct": 148.1077
+    },
+    {
+      "dayIndex": 145,
+      "ts": "2026-09-09T00:00:00Z",
+      "equity": 25103.76,
+      "pnl": 15103.76,
+      "roiPct": 151.0376
+    },
+    {
+      "dayIndex": 146,
+      "ts": "2026-09-10T00:00:00Z",
+      "equity": 24864.36,
+      "pnl": 14864.36,
+      "roiPct": 148.6436
+    },
+    {
+      "dayIndex": 147,
+      "ts": "2026-09-11T00:00:00Z",
+      "equity": 26713.26,
+      "pnl": 16713.26,
+      "roiPct": 167.1326
+    },
+    {
+      "dayIndex": 148,
+      "ts": "2026-09-12T00:00:00Z",
+      "equity": 26713.26,
+      "pnl": 16713.26,
+      "roiPct": 167.1326
+    },
+    {
+      "dayIndex": 149,
+      "ts": "2026-09-13T00:00:00Z",
+      "equity": 26713.26,
+      "pnl": 16713.26,
+      "roiPct": 167.1326
+    },
+    {
+      "dayIndex": 150,
+      "ts": "2026-09-14T00:00:00Z",
+      "equity": 26713.26,
+      "pnl": 16713.26,
+      "roiPct": 167.1326
+    },
+    {
+      "dayIndex": 151,
+      "ts": "2026-09-15T00:00:00Z",
+      "equity": 28426.39,
+      "pnl": 18426.39,
+      "roiPct": 184.2639
+    },
+    {
+      "dayIndex": 152,
+      "ts": "2026-09-16T00:00:00Z",
+      "equity": 33757.34,
+      "pnl": 23757.34,
+      "roiPct": 237.5734
+    },
+    {
+      "dayIndex": 153,
+      "ts": "2026-09-17T00:00:00Z",
+      "equity": 33798.31,
+      "pnl": 23798.31,
+      "roiPct": 237.9831
+    },
+    {
+      "dayIndex": 154,
+      "ts": "2026-09-18T00:00:00Z",
+      "equity": 31843.54,
+      "pnl": 21843.54,
+      "roiPct": 218.4354
+    },
+    {
+      "dayIndex": 155,
+      "ts": "2026-09-19T00:00:00Z",
+      "equity": 32119.07,
+      "pnl": 22119.07,
+      "roiPct": 221.1907
     }
   ],
   "strategySnapshots": [
     {
-      "strategy": "XRP-15m",
-      "asset": "XRP",
-      "tf": "15m",
-      "equityAtSeasonStart": 6162.21,
-      "currentEquity": 23455.83,
-      "seasonPnl": 17293.62,
-      "seasonRoiPct": 280.64,
-      "season1Trades": 25,
-      "season1Wins": 16,
-      "season1WinRate": 64.0
-    },
-    {
       "strategy": "ETH-15m",
       "asset": "ETH",
       "tf": "15m",
-      "equityAtSeasonStart": 36454.09,
-      "currentEquity": 58586.28,
-      "seasonPnl": 22132.19,
-      "seasonRoiPct": 60.71,
-      "season1Trades": 30,
-      "season1Wins": 16,
-      "season1WinRate": 53.3
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 122592.69,
+      "seasonPnl": 112592.69,
+      "seasonRoiPct": 1125.93,
+      "season1Trades": 121,
+      "season1Wins": 69,
+      "season1WinRate": 57.0
     },
     {
       "strategy": "ETH-30m",
       "asset": "ETH",
       "tf": "30m",
-      "equityAtSeasonStart": 42566.01,
-      "currentEquity": 67087.78,
-      "seasonPnl": 24521.77,
-      "seasonRoiPct": 57.61,
-      "season1Trades": 13,
-      "season1Wins": 9,
-      "season1WinRate": 69.2
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 91809.45,
+      "seasonPnl": 81809.45,
+      "seasonRoiPct": 818.09,
+      "season1Trades": 72,
+      "season1Wins": 39,
+      "season1WinRate": 54.2
     },
     {
-      "strategy": "ETH-1H",
-      "asset": "ETH",
-      "tf": "1H",
-      "equityAtSeasonStart": 11145.06,
-      "currentEquity": 12998.92,
-      "seasonPnl": 1853.86,
-      "seasonRoiPct": 16.63,
-      "season1Trades": 6,
-      "season1Wins": 3,
-      "season1WinRate": 50.0
-    },
-    {
-      "strategy": "DOGE-30m",
-      "asset": "DOGE",
-      "tf": "30m",
-      "equityAtSeasonStart": 5653.52,
-      "currentEquity": 5360.65,
-      "seasonPnl": -292.87,
-      "seasonRoiPct": -5.18,
-      "season1Trades": 15,
-      "season1Wins": 7,
-      "season1WinRate": 46.7
-    },
-    {
-      "strategy": "BTC-15m",
-      "asset": "BTC",
-      "tf": "15m",
-      "equityAtSeasonStart": 9769.12,
-      "currentEquity": 9002.54,
-      "seasonPnl": -766.58,
-      "seasonRoiPct": -7.85,
-      "season1Trades": 21,
-      "season1Wins": 6,
-      "season1WinRate": 28.6
-    },
-    {
-      "strategy": "XRP-30m",
+      "strategy": "XRP-15m",
       "asset": "XRP",
-      "tf": "30m",
-      "equityAtSeasonStart": 13862.46,
-      "currentEquity": 12749.33,
-      "seasonPnl": -1113.13,
-      "seasonRoiPct": -8.03,
-      "season1Trades": 13,
-      "season1Wins": 6,
-      "season1WinRate": 46.2
-    },
-    {
-      "strategy": "BTC-30m",
-      "asset": "BTC",
-      "tf": "30m",
-      "equityAtSeasonStart": 5950.52,
-      "currentEquity": 5132.16,
-      "seasonPnl": -818.36,
-      "seasonRoiPct": -13.75,
-      "season1Trades": 10,
-      "season1Wins": 3,
-      "season1WinRate": 30.0
+      "tf": "15m",
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 28754.39,
+      "seasonPnl": 18754.39,
+      "seasonRoiPct": 187.54,
+      "season1Trades": 131,
+      "season1Wins": 49,
+      "season1WinRate": 37.4
     },
     {
       "strategy": "BTC-1H",
       "asset": "BTC",
       "tf": "1H",
-      "equityAtSeasonStart": 12297.07,
-      "currentEquity": 10334.85,
-      "seasonPnl": -1962.22,
-      "seasonRoiPct": -15.96,
-      "season1Trades": 8,
-      "season1Wins": 3,
-      "season1WinRate": 37.5
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 17655.83,
+      "seasonPnl": 7655.83,
+      "seasonRoiPct": 76.56,
+      "season1Trades": 54,
+      "season1Wins": 37,
+      "season1WinRate": 68.5
+    },
+    {
+      "strategy": "ETH-1H",
+      "asset": "ETH",
+      "tf": "1H",
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 14310.33,
+      "seasonPnl": 4310.33,
+      "seasonRoiPct": 43.1,
+      "season1Trades": 44,
+      "season1Wins": 23,
+      "season1WinRate": 52.3
     },
     {
       "strategy": "DOGE-15m",
       "asset": "DOGE",
       "tf": "15m",
-      "equityAtSeasonStart": 14261.7,
-      "currentEquity": 9990.28,
-      "seasonPnl": -4271.42,
-      "seasonRoiPct": -29.95,
-      "season1Trades": 23,
-      "season1Wins": 7,
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 12317.76,
+      "seasonPnl": 2317.76,
+      "seasonRoiPct": 23.18,
+      "season1Trades": 132,
+      "season1Wins": 58,
+      "season1WinRate": 43.9
+    },
+    {
+      "strategy": "DOGE-30m",
+      "asset": "DOGE",
+      "tf": "30m",
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 11378.85,
+      "seasonPnl": 1378.85,
+      "seasonRoiPct": 13.79,
+      "season1Trades": 73,
+      "season1Wins": 31,
+      "season1WinRate": 42.5
+    },
+    {
+      "strategy": "XRP-30m",
+      "asset": "XRP",
+      "tf": "30m",
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 8694.19,
+      "seasonPnl": -1305.81,
+      "seasonRoiPct": -13.06,
+      "season1Trades": 63,
+      "season1Wins": 28,
+      "season1WinRate": 44.4
+    },
+    {
+      "strategy": "BTC-15m",
+      "asset": "BTC",
+      "tf": "15m",
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 7711.56,
+      "seasonPnl": -2288.44,
+      "seasonRoiPct": -22.88,
+      "season1Trades": 110,
+      "season1Wins": 48,
+      "season1WinRate": 43.6
+    },
+    {
+      "strategy": "BTC-30m",
+      "asset": "BTC",
+      "tf": "30m",
+      "equityAtSeasonStart": 10000.0,
+      "currentEquity": 5965.63,
+      "seasonPnl": -4034.37,
+      "seasonRoiPct": -40.34,
+      "season1Trades": 79,
+      "season1Wins": 24,
       "season1WinRate": 30.4
     }
   ],
   "recentTrades": [
     {
-      "ts": "2026-06-23T17:30:24Z",
-      "strategy": "DOGE-30m",
+      "ts": "2026-09-19T04:30:28.163613Z",
+      "strategy": "XRP-15m",
       "action": "exit",
       "side": "short",
-      "entry": 0.08216,
-      "exit": 0.07994,
+      "entry": 1.3865,
+      "exit": 1.3998,
       "leverage": 10,
-      "pnl": 1123.67,
-      "equity": 5360.65,
-      "reason": "Full exit \u2013 pressure \u2264-0.95 (2nd)"
-    },
-    {
-      "ts": "2026-06-23T17:00:21Z",
-      "strategy": "DOGE-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 0.0803,
-      "exit": 0.08021,
-      "leverage": 10,
-      "pnl": -164.59,
-      "equity": 9990.28,
+      "pnl": -3227.8,
+      "equity": 28754.39,
       "reason": "Stop-loss hit"
     },
     {
-      "ts": "2026-06-23T17:00:14Z",
-      "strategy": "ETH-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 1691.31,
-      "exit": 1686.57,
-      "leverage": 15,
-      "pnl": -3053.54,
-      "equity": 58586.28,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-23T15:30:12Z",
-      "strategy": "DOGE-30m",
-      "action": "partial",
-      "side": "short",
-      "entry": 0.08216,
-      "exit": 0.08167,
-      "leverage": 10,
-      "pnl": 112.68,
-      "equity": 4236.98,
-      "reason": "Partial 50% \u2013 pressure \u2264-0.95"
-    },
-    {
-      "ts": "2026-06-23T15:30:11Z",
-      "strategy": "DOGE-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 0.08213,
-      "exit": 0.08087,
-      "leverage": 10,
-      "pnl": 1318.96,
-      "equity": 10205.9,
-      "reason": "Full exit \u2013 pressure \u2264-0.95 (2nd)"
-    },
-    {
-      "ts": "2026-06-23T15:15:42Z",
-      "strategy": "DOGE-15m",
-      "action": "partial",
-      "side": "short",
-      "entry": 0.08213,
-      "exit": 0.08167,
-      "leverage": 10,
-      "pnl": 221.02,
-      "equity": 8886.94,
-      "reason": "Partial 50% \u2013 pressure \u2264-0.95"
-    },
-    {
-      "ts": "2026-06-23T10:00:33Z",
+      "ts": "2026-09-19T03:00:41.335171Z",
       "strategy": "XRP-30m",
       "action": "exit",
       "side": "short",
-      "entry": 1.1468,
-      "exit": 1.1286,
-      "leverage": 7,
-      "pnl": 1238.47,
-      "equity": 12749.33,
-      "reason": "TP at prev day close"
-    },
-    {
-      "ts": "2026-06-23T09:45:59Z",
-      "strategy": "ETH-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 1732.69,
-      "exit": 1727.4,
-      "leverage": 15,
-      "pnl": 2290.66,
-      "equity": 62105.61,
-      "reason": "TP at prev day close"
-    },
-    {
-      "ts": "2026-06-23T09:30:31Z",
-      "strategy": "DOGE-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 0.08239,
-      "exit": 0.0822,
+      "entry": 1.384,
+      "exit": 1.3865,
       "leverage": 10,
-      "pnl": -251.45,
-      "equity": 8709.47,
+      "pnl": -205.25,
+      "equity": 8694.19,
       "reason": "Stop-loss hit"
     },
     {
-      "ts": "2026-06-23T09:30:29Z",
-      "strategy": "XRP-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 1.1305,
-      "exit": 1.1286,
-      "leverage": 10,
-      "pnl": 273.7,
-      "equity": 23455.83,
-      "reason": "TP at prev day close"
-    },
-    {
-      "ts": "2026-06-23T07:30:15Z",
-      "strategy": "DOGE-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 0.0836,
-      "exit": 0.08218,
-      "leverage": 10,
-      "pnl": 1274.57,
-      "equity": 9005.95,
-      "reason": "TP at prev day close"
-    },
-    {
-      "ts": "2026-06-23T07:00:06Z",
-      "strategy": "ETH-1H",
-      "action": "exit",
-      "side": "long",
-      "entry": 1734.17,
-      "exit": 1732.35,
-      "leverage": 15,
-      "pnl": -309.32,
-      "equity": 12998.92,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-23T01:00:24Z",
-      "strategy": "ETH-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 1762.74,
-      "exit": 1751.06,
-      "leverage": 15,
-      "pnl": -7212.98,
-      "equity": 60266.95,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-22T23:30:18Z",
-      "strategy": "DOGE-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 0.08477,
-      "exit": 0.08439,
-      "leverage": 10,
-      "pnl": -407.47,
-      "equity": 7770.23,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-22T23:30:13Z",
-      "strategy": "BTC-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 65376.6,
-      "exit": 64966.1,
-      "leverage": 5,
-      "pnl": -315.85,
-      "equity": 9002.54,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-22T10:30:38Z",
-      "strategy": "XRP-30m",
-      "action": "exit",
-      "side": "short",
-      "entry": 1.14,
-      "exit": 1.144,
-      "leverage": 10,
-      "pnl": -482.4,
-      "equity": 11551.29,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-22T10:00:35Z",
-      "strategy": "BTC-30m",
-      "action": "exit",
-      "side": "short",
-      "entry": 63278.9,
-      "exit": 63765.9,
-      "leverage": 5,
-      "pnl": -219.31,
-      "equity": 5132.16,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-22T09:30:38Z",
-      "strategy": "DOGE-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 0.08222,
-      "exit": 0.08255,
-      "leverage": 10,
-      "pnl": -388.5,
-      "equity": 8218.8,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-22T09:00:30Z",
-      "strategy": "ETH-30m",
-      "action": "exit",
-      "side": "long",
-      "entry": 1732.89,
-      "exit": 1712.24,
-      "leverage": 8,
-      "pnl": -7398.92,
-      "equity": 67087.78,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-22T00:30:08Z",
-      "strategy": "ETH-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 1731.66,
-      "exit": 1730.268225,
-      "leverage": 15,
-      "pnl": 308.35,
-      "equity": 67989.85,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-21T20:31:02Z",
-      "strategy": "XRP-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 1.15,
-      "exit": 1.147,
-      "leverage": 10,
-      "pnl": -747.52,
-      "equity": 23298.62,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-21T19:15:22Z",
-      "strategy": "BTC-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 64090.7,
-      "exit": 64212.9,
-      "leverage": 5,
-      "pnl": -113.78,
-      "equity": 9341.74,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-20T01:15:54Z",
-      "strategy": "ETH-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 1694.61,
-      "exit": 1710.14,
-      "leverage": 15,
-      "pnl": 7843.35,
-      "equity": 68192.95,
-      "reason": "TP at prev day close"
-    },
-    {
-      "ts": "2026-06-19T22:45:50Z",
-      "strategy": "DOGE-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 0.08246,
-      "exit": 0.08269,
-      "leverage": 10,
-      "pnl": -294.21,
-      "equity": 8650.55,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-19T22:45:46Z",
-      "strategy": "BTC-15m",
-      "action": "exit",
-      "side": "long",
-      "entry": 62800.0,
-      "exit": 62920.8,
-      "leverage": 5,
-      "pnl": 66.99,
-      "equity": 9479.22,
-      "reason": "TP at prev day close"
-    },
-    {
-      "ts": "2026-06-19T22:00:11Z",
-      "strategy": "XRP-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 1.127,
-      "exit": 1.126412,
-      "leverage": 10,
-      "pnl": 5.15,
-      "equity": 24166.98,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-19T14:00:57Z",
+      "ts": "2026-09-19T00:00:52.917718Z",
       "strategy": "BTC-1H",
       "action": "exit",
       "side": "long",
-      "entry": 62922.3,
-      "exit": 62569.1,
+      "entry": 77346.1,
+      "exit": 80049.9,
       "leverage": 5,
-      "pnl": -325.86,
-      "equity": 10334.85,
-      "reason": "Stop-loss hit"
+      "pnl": 2594.8,
+      "equity": 17655.83,
+      "reason": "Full exit – pressure ≥0.95 (2nd)"
     },
     {
-      "ts": "2026-06-19T12:30:57Z",
-      "strategy": "DOGE-30m",
+      "ts": "2026-09-19T00:00:49.693953Z",
+      "strategy": "ETH-1H",
       "action": "exit",
       "side": "long",
-      "entry": 0.08264,
-      "exit": 0.08347,
-      "leverage": 10,
-      "pnl": 361.12,
-      "equity": 4145.03,
-      "reason": "TP at prev day close"
+      "entry": 2477.96,
+      "exit": 2553.83,
+      "leverage": 12,
+      "pnl": 3798.97,
+      "equity": 14310.33,
+      "reason": "Full exit – pressure ≥0.95 (2nd)"
     },
     {
-      "ts": "2026-06-19T10:30:47Z",
+      "ts": "2026-09-18T23:30:32.104273Z",
       "strategy": "BTC-30m",
       "action": "exit",
       "side": "long",
-      "entry": 62659.0,
-      "exit": 62920.8,
+      "entry": 77769.2,
+      "exit": 80049.9,
       "leverage": 5,
-      "pnl": 96.88,
-      "equity": 5364.88,
-      "reason": "TP at prev day close"
+      "pnl": 751.52,
+      "equity": 5965.63,
+      "reason": "Full exit – pressure ≥0.95 (2nd)"
     },
     {
-      "ts": "2026-06-19T09:30:46Z",
-      "strategy": "XRP-15m",
+      "ts": "2026-09-18T23:00:17.364729Z",
+      "strategy": "DOGE-15m",
       "action": "exit",
       "side": "short",
-      "entry": 1.169,
-      "exit": 1.146,
-      "leverage": 10,
-      "pnl": 3907.11,
-      "equity": 24283.25,
-      "reason": "TP at prev day close"
-    },
-    {
-      "ts": "2026-06-18T13:01:01Z",
-      "strategy": "ETH-1H",
-      "action": "exit",
-      "side": "short",
-      "entry": 1769.41,
-      "exit": 1749.66,
+      "entry": 0.08574,
+      "exit": 0.08671,
       "leverage": 9,
-      "pnl": 1174.02,
-      "equity": 13408.8,
-      "reason": "TP at prev day close"
+      "pnl": -1465.42,
+      "equity": 12317.76,
+      "reason": "Stop-loss hit"
     },
     {
-      "ts": "2026-06-18T01:30:59Z",
-      "strategy": "XRP-15m",
-      "action": "exit",
+      "ts": "2026-09-18T23:00:14.213736Z",
+      "strategy": "BTC-1H",
+      "action": "partial",
       "side": "long",
-      "entry": 1.207,
-      "exit": 1.217,
-      "leverage": 10,
-      "pnl": 1479.11,
-      "equity": 20478.53,
-      "reason": "TP at prev day close"
+      "entry": 77346.1,
+      "exit": 78011.8,
+      "leverage": 5,
+      "pnl": 299.18,
+      "equity": 15061.03,
+      "reason": "Partial 50% – pressure ≥0.95"
     },
     {
-      "ts": "2026-06-18T01:00:59Z",
-      "strategy": "XRP-30m",
-      "action": "exit",
-      "side": "short",
-      "entry": 1.201,
-      "exit": 1.209,
-      "leverage": 10,
-      "pnl": -932.88,
-      "equity": 12094.16,
-      "reason": "Stop-loss hit"
-    },
-    {
-      "ts": "2026-06-18T00:00:50Z",
-      "strategy": "ETH-15m",
-      "action": "exit",
+      "ts": "2026-09-18T23:00:13.164182Z",
+      "strategy": "BTC-30m",
+      "action": "partial",
       "side": "long",
-      "entry": 1760.7,
-      "exit": 1754.74,
-      "leverage": 15,
-      "pnl": -3762.74,
-      "equity": 60805.65,
-      "reason": "Stop-loss hit"
+      "entry": 77769.2,
+      "exit": 78147.9,
+      "leverage": 5,
+      "pnl": 56.34,
+      "equity": 5214.11,
+      "reason": "Partial 50% – pressure ≥0.95"
     },
     {
-      "ts": "2026-06-17T22:15:22Z",
-      "strategy": "XRP-15m",
-      "action": "exit",
-      "side": "short",
-      "entry": 1.19,
-      "exit": 1.197,
-      "leverage": 10,
-      "pnl": -1301.79,
-      "equity": 19094.9,
-      "reason": "Stop-loss hit"
+      "ts": "2026-09-18T23:00:11.129286Z",
+      "strategy": "ETH-1H",
+      "action": "partial",
+      "side": "long",
+      "entry": 2477.96,
+      "exit": 2501.39,
+      "leverage": 12,
+      "pnl": 536.0,
+      "equity": 10511.36,
+      "reason": "Partial 50% – pressure ≥0.95"
     },
     {
-      "ts": "2026-06-17T22:00:52Z",
+      "ts": "2026-09-18T22:45:36.501513Z",
       "strategy": "BTC-15m",
       "action": "exit",
       "side": "short",
-      "entry": 64573.3,
-      "exit": 64886.2,
+      "entry": 78014.5,
+      "exit": 78342.8,
       "leverage": 5,
-      "pnl": -259.13,
-      "equity": 9435.82,
+      "pnl": -185.91,
+      "equity": 7711.56,
       "reason": "Stop-loss hit"
     },
     {
-      "ts": "2026-06-17T21:30:49Z",
+      "ts": "2026-09-18T19:15:39.338130Z",
       "strategy": "ETH-15m",
       "action": "exit",
       "side": "short",
-      "entry": 1790.8,
-      "exit": 1763.96,
+      "entry": 2502.39,
+      "exit": 2513.57,
       "leverage": 15,
-      "pnl": 11613.88,
-      "equity": 65056.31,
-      "reason": "Full exit \u2013 pressure \u2264-0.95 (2nd)"
+      "pnl": -9870.63,
+      "equity": 122592.69,
+      "reason": "Stop-loss hit"
     },
     {
-      "ts": "2026-06-17T20:15:23Z",
+      "ts": "2026-09-18T14:30:13.282964Z",
+      "strategy": "BTC-30m",
+      "action": "exit",
+      "side": "short",
+      "entry": 77244.2,
+      "exit": 77392.4,
+      "leverage": 5,
+      "pnl": -63.29,
+      "equity": 5170.69,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-18T14:01:02.583605Z",
+      "strategy": "DOGE-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 0.084,
+      "exit": 0.08445,
+      "leverage": 10,
+      "pnl": -861.4,
+      "equity": 13845.48,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-18T04:00:57.701728Z",
+      "strategy": "ETH-30m",
+      "action": "exit",
+      "side": "long",
+      "entry": 2461.45,
+      "exit": 2451.49,
+      "leverage": 15,
+      "pnl": -6719.26,
+      "equity": 91809.45,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-17T21:15:45.746397Z",
+      "strategy": "XRP-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 1.2911,
+      "exit": 1.2976,
+      "leverage": 10,
+      "pnl": -1883.16,
+      "equity": 32142.9,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-17T04:00:45.540310Z",
+      "strategy": "XRP-15m",
+      "action": "exit",
+      "side": "long",
+      "entry": 1.2742,
+      "exit": 1.2828,
+      "leverage": 7,
+      "pnl": 1433.26,
+      "equity": 34197.05,
+      "reason": "TP at prev day close"
+    },
+    {
+      "ts": "2026-09-17T03:45:07.879861Z",
       "strategy": "DOGE-15m",
       "action": "exit",
       "side": "long",
-      "entry": 0.08611,
-      "exit": 0.08592,
+      "entry": 0.07885,
+      "exit": 0.08005,
       "leverage": 10,
-      "pnl": -250.07,
-      "equity": 8989.72,
+      "pnl": 1896.42,
+      "equity": 14780.79,
+      "reason": "TP at prev day close"
+    },
+    {
+      "ts": "2026-09-17T02:00:02.014841Z",
+      "strategy": "DOGE-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 0.07893,
+      "exit": 0.07925,
+      "leverage": 10,
+      "pnl": -617.87,
+      "equity": 12949.11,
       "reason": "Stop-loss hit"
     },
     {
-      "ts": "2026-06-17T20:00:55Z",
+      "ts": "2026-09-16T11:01:00.535644Z",
+      "strategy": "BTC-30m",
+      "action": "exit",
+      "side": "short",
+      "entry": 75882.4,
+      "exit": 75611.2,
+      "leverage": 5,
+      "pnl": 79.43,
+      "equity": 5247.1,
+      "reason": "TP at prev day close"
+    },
+    {
+      "ts": "2026-09-16T11:00:59.494473Z",
+      "strategy": "BTC-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 75734.3,
+      "exit": 75611.2,
+      "leverage": 5,
+      "pnl": 44.3,
+      "equity": 7917.27,
+      "reason": "TP at prev day close"
+    },
+    {
+      "ts": "2026-09-16T11:00:57.492935Z",
+      "strategy": "ETH-30m",
+      "action": "exit",
+      "side": "short",
+      "entry": 2434.42,
+      "exit": 2397.08,
+      "leverage": 15,
+      "pnl": 18073.14,
+      "equity": 99273.25,
+      "reason": "TP at prev day close"
+    },
+    {
+      "ts": "2026-09-16T04:31:03.707192Z",
+      "strategy": "BTC-30m",
+      "action": "exit",
+      "side": "long",
+      "entry": 76474.1,
+      "exit": 75911.3,
+      "leverage": 5,
+      "pnl": -211.91,
+      "equity": 5180.63,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-16T02:45:44.102693Z",
+      "strategy": "BTC-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 76914.2,
+      "exit": 76589.2187,
+      "leverage": 5,
+      "pnl": 144.32,
+      "equity": 7892.7,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-16T00:00:58.749733Z",
+      "strategy": "ETH-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 2477.5,
+      "exit": 2415.58,
+      "leverage": 15,
+      "pnl": 35859.44,
+      "equity": 133464.3,
+      "reason": "Full exit – pressure ≤-0.95 (2nd)"
+    },
+    {
+      "ts": "2026-09-15T23:45:21.283381Z",
+      "strategy": "ETH-15m",
+      "action": "partial",
+      "side": "short",
+      "entry": 2477.5,
+      "exit": 2437.83,
+      "leverage": 15,
+      "pnl": 10172.01,
+      "equity": 97604.85,
+      "reason": "Partial 50% – pressure ≤-0.95"
+    },
+    {
+      "ts": "2026-09-15T22:30:40.119777Z",
+      "strategy": "DOGE-30m",
+      "action": "exit",
+      "side": "short",
+      "entry": 0.08339,
+      "exit": 0.082913,
+      "leverage": 10,
+      "pnl": 564.25,
+      "equity": 11378.85,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T12:00:42.998337Z",
+      "strategy": "ETH-1H",
+      "action": "exit",
+      "side": "long",
+      "entry": 2507.17,
+      "exit": 2514.19,
+      "leverage": 15,
+      "pnl": 334.68,
+      "equity": 10035.58,
+      "reason": "TP at prev day close"
+    },
+    {
+      "ts": "2026-09-15T10:15:55.351572Z",
+      "strategy": "DOGE-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 0.08422,
+      "exit": 0.0836,
+      "leverage": 10,
+      "pnl": 875.52,
+      "equity": 13635.16,
+      "reason": "TP at prev day close"
+    },
+    {
+      "ts": "2026-09-15T08:15:22.777082Z",
+      "strategy": "ETH-15m",
+      "action": "exit",
+      "side": "long",
+      "entry": 2522.82,
+      "exit": 2530.85874,
+      "leverage": 11,
+      "pnl": 2528.49,
+      "equity": 88093.55,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T08:00:53.952371Z",
+      "strategy": "ETH-30m",
+      "action": "exit",
+      "side": "long",
+      "entry": 2598.19,
+      "exit": 2538.61,
+      "leverage": 4,
+      "pnl": -8461.04,
+      "equity": 81813.71,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T06:45:05.602455Z",
+      "strategy": "DOGE-15m",
+      "action": "exit",
+      "side": "long",
+      "entry": 0.08384,
+      "exit": 0.084617,
+      "leverage": 10,
+      "pnl": 1033.13,
+      "equity": 12823.75,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T06:30:29.364712Z",
+      "strategy": "BTC-30m",
+      "action": "exit",
+      "side": "long",
+      "entry": 79404.6,
+      "exit": 78956.3,
+      "leverage": 5,
+      "pnl": -171.39,
+      "equity": 5406.05,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T05:31:09.002746Z",
+      "strategy": "ETH-15m",
+      "action": "partial",
+      "side": "long",
+      "entry": 2522.82,
+      "exit": 2564.36,
+      "leverage": 11,
+      "pnl": 6907.06,
+      "equity": 85565.06,
+      "reason": "Partial 50% – pressure ≥0.95"
+    },
+    {
+      "ts": "2026-09-15T05:15:33.183069Z",
+      "strategy": "XRP-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 1.4615,
+      "exit": 1.4765,
+      "leverage": 10,
+      "pnl": -3965.74,
+      "equity": 32878.86,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T03:46:04.346152Z",
       "strategy": "XRP-15m",
       "action": "exit",
       "side": "long",
-      "entry": 1.196,
-      "exit": 1.195,
+      "entry": 1.4021,
+      "exit": 1.4537,
+      "leverage": 9,
+      "pnl": 9118.95,
+      "equity": 37029.76,
+      "reason": "Full exit – pressure ≥0.95 (2nd)"
+    },
+    {
+      "ts": "2026-09-15T03:30:25.372143Z",
+      "strategy": "XRP-15m",
+      "action": "partial",
+      "side": "long",
+      "entry": 1.4021,
+      "exit": 1.434,
+      "leverage": 9,
+      "pnl": 2540.39,
+      "equity": 27910.81,
+      "reason": "Partial 50% – pressure ≥0.95"
+    },
+    {
+      "ts": "2026-09-15T01:27:10.682062Z",
+      "strategy": "DOGE-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 0.08375,
+      "exit": 0.08418,
       "leverage": 10,
-      "pnl": -277.6,
-      "equity": 20499.18,
+      "pnl": -707.53,
+      "equity": 11849.87,
       "reason": "Stop-loss hit"
     },
     {
-      "ts": "2026-06-17T19:00:51Z",
-      "strategy": "BTC-15m",
+      "ts": "2026-09-15T01:27:10.014085Z",
+      "strategy": "XRP-30m",
+      "action": "exit",
+      "side": "short",
+      "entry": 1.3377,
+      "exit": 1.358,
+      "leverage": 7,
+      "pnl": -1102.38,
+      "equity": 8944.16,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T01:27:09.343212Z",
+      "strategy": "XRP-15m",
+      "action": "exit",
+      "side": "short",
+      "entry": 1.3719,
+      "exit": 1.3765,
+      "leverage": 10,
+      "pnl": -1021.29,
+      "equity": 25485.1,
+      "reason": "Stop-loss hit"
+    },
+    {
+      "ts": "2026-09-15T01:27:08.012814Z",
+      "strategy": "BTC-30m",
       "action": "exit",
       "side": "long",
-      "entry": 65016.4,
-      "exit": 64886.7,
+      "entry": 78109.3,
+      "exit": 77707.4,
       "leverage": 5,
-      "pnl": -122.77,
-      "equity": 9719.24,
+      "pnl": -162.41,
+      "equity": 5591.42,
       "reason": "Stop-loss hit"
     }
   ],
@@ -785,7 +1716,7 @@
     {
       "id": "KXHIGHCHI-26JUN15-B74.5-no-2026-06-15",
       "ticker": "KXHIGHCHI-26JUN15-B74.5",
-      "title": "Will the high temp in Chicago be 74-75\u00b0 on Jun 15, 2026?",
+      "title": "Will the high temp in Chicago be 74-75° on Jun 15, 2026?",
       "city": "Chicago",
       "date": "2026-06-15",
       "side": "no",
@@ -805,7 +1736,7 @@
     {
       "id": "KXHIGHCHI-26JUN15-B76.5-no-2026-06-15",
       "ticker": "KXHIGHCHI-26JUN15-B76.5",
-      "title": "Will the high temp in Chicago be 76-77\u00b0 on Jun 15, 2026?",
+      "title": "Will the high temp in Chicago be 76-77° on Jun 15, 2026?",
       "city": "Chicago",
       "date": "2026-06-15",
       "side": "no",
@@ -825,7 +1756,7 @@
     {
       "id": "KXHIGHCHI-26JUN15-B78.5-yes-2026-06-15",
       "ticker": "KXHIGHCHI-26JUN15-B78.5",
-      "title": "Will the high temp in Chicago be 78-79\u00b0 on Jun 15, 2026?",
+      "title": "Will the high temp in Chicago be 78-79° on Jun 15, 2026?",
       "city": "Chicago",
       "date": "2026-06-15",
       "side": "yes",
@@ -845,7 +1776,7 @@
     {
       "id": "KXHIGHCHI-26JUN15-T74-yes-2026-06-15",
       "ticker": "KXHIGHCHI-26JUN15-T74",
-      "title": "Will the high temp in Chicago be <74\u00b0 on Jun 15, 2026?",
+      "title": "Will the high temp in Chicago be <74° on Jun 15, 2026?",
       "city": "Chicago",
       "date": "2026-06-15",
       "side": "yes",
@@ -865,7 +1796,7 @@
     {
       "id": "KXHIGHNY-26JUN15-B78.5-no-2026-06-15",
       "ticker": "KXHIGHNY-26JUN15-B78.5",
-      "title": "Will the **high temp in NYC** be 78-79\u00b0 on Jun 15, 2026?",
+      "title": "Will the **high temp in NYC** be 78-79° on Jun 15, 2026?",
       "city": "NYC",
       "date": "2026-06-15",
       "side": "no",
@@ -885,7 +1816,7 @@
     {
       "id": "KXHIGHNY-26JUN15-B80.5-yes-2026-06-15",
       "ticker": "KXHIGHNY-26JUN15-B80.5",
-      "title": "Will the **high temp in NYC** be 80-81\u00b0 on Jun 15, 2026?",
+      "title": "Will the **high temp in NYC** be 80-81° on Jun 15, 2026?",
       "city": "NYC",
       "date": "2026-06-15",
       "side": "yes",
@@ -905,7 +1836,7 @@
     {
       "id": "KXHIGHNY-26JUN15-B82.5-yes-2026-06-15",
       "ticker": "KXHIGHNY-26JUN15-B82.5",
-      "title": "Will the **high temp in NYC** be 82-83\u00b0 on Jun 15, 2026?",
+      "title": "Will the **high temp in NYC** be 82-83° on Jun 15, 2026?",
       "city": "NYC",
       "date": "2026-06-15",
       "side": "yes",
@@ -925,7 +1856,7 @@
     {
       "id": "KXHIGHNY-26JUN15-B84.5-yes-2026-06-15",
       "ticker": "KXHIGHNY-26JUN15-B84.5",
-      "title": "Will the **high temp in NYC** be 84-85\u00b0 on Jun 15, 2026?",
+      "title": "Will the **high temp in NYC** be 84-85° on Jun 15, 2026?",
       "city": "NYC",
       "date": "2026-06-15",
       "side": "yes",
@@ -945,7 +1876,7 @@
     {
       "id": "KXHIGHNY-26JUN15-T78-no-2026-06-15",
       "ticker": "KXHIGHNY-26JUN15-T78",
-      "title": "Will the **high temp in NYC** be <78\u00b0 on Jun 15, 2026?",
+      "title": "Will the **high temp in NYC** be <78° on Jun 15, 2026?",
       "city": "NYC",
       "date": "2026-06-15",
       "side": "no",
@@ -965,7 +1896,7 @@
     {
       "id": "KXHIGHNY-26JUN15-T85-yes-2026-06-15",
       "ticker": "KXHIGHNY-26JUN15-T85",
-      "title": "Will the **high temp in NYC** be >85\u00b0 on Jun 15, 2026?",
+      "title": "Will the **high temp in NYC** be >85° on Jun 15, 2026?",
       "city": "NYC",
       "date": "2026-06-15",
       "side": "yes",
@@ -985,7 +1916,7 @@
     {
       "id": "3f40e5f2-1964-47",
       "ticker": "KXHIGHCHI-26JUN21-B73.5",
-      "title": "Will the high temp in Chicago be 73-74\u00b0 on Jun 21, 2026?",
+      "title": "Will the high temp in Chicago be 73-74° on Jun 21, 2026?",
       "city": "Chicago",
       "date": "2026-06-21",
       "side": "no",
@@ -1008,7 +1939,7 @@
     {
       "id": "420ca66b-a804-46",
       "ticker": "KXHIGHCHI-26JUN21-B71.5",
-      "title": "Will the high temp in Chicago be 71-72\u00b0 on Jun 21, 2026?",
+      "title": "Will the high temp in Chicago be 71-72° on Jun 21, 2026?",
       "city": "Chicago",
       "date": "2026-06-21",
       "side": "no",
@@ -1031,7 +1962,7 @@
     {
       "id": "0f16384a-5ddd-4f",
       "ticker": "KXHIGHNY-26JUN21-T80",
-      "title": "Will the **high temp in NYC** be <80\u00b0 on Jun 21, 2026?",
+      "title": "Will the **high temp in NYC** be <80° on Jun 21, 2026?",
       "city": "NYC",
       "date": "2026-06-21",
       "side": "no",
@@ -1054,7 +1985,7 @@
     {
       "id": "8bcd99c4-526b-4c",
       "ticker": "KXHIGHCHI-26JUN21-B75.5",
-      "title": "Will the high temp in Chicago be 75-76\u00b0 on Jun 21, 2026?",
+      "title": "Will the high temp in Chicago be 75-76° on Jun 21, 2026?",
       "city": "Chicago",
       "date": "2026-06-21",
       "side": "no",
@@ -1077,7 +2008,7 @@
     {
       "id": "1b66e212-9f4d-44",
       "ticker": "KXHIGHCHI-26JUN21-B69.5",
-      "title": "Will the high temp in Chicago be 69-70\u00b0 on Jun 21, 2026?",
+      "title": "Will the high temp in Chicago be 69-70° on Jun 21, 2026?",
       "city": "Chicago",
       "date": "2026-06-21",
       "side": "yes",
@@ -1100,7 +2031,7 @@
     {
       "id": "cbeb8e6a-aa78-4d",
       "ticker": "KXHIGHCHI-26JUN21-T69",
-      "title": "Will the high temp in Chicago be <69\u00b0 on Jun 21, 2026?",
+      "title": "Will the high temp in Chicago be <69° on Jun 21, 2026?",
       "city": "Chicago",
       "date": "2026-06-21",
       "side": "yes",
@@ -1123,7 +2054,7 @@
     {
       "id": "3c952f05-c0ec-44",
       "ticker": "KXHIGHNY-26JUN21-B80.5",
-      "title": "Will the **high temp in NYC** be 80-81\u00b0 on Jun 21, 2026?",
+      "title": "Will the **high temp in NYC** be 80-81° on Jun 21, 2026?",
       "city": "NYC",
       "date": "2026-06-21",
       "side": "no",
@@ -1146,7 +2077,7 @@
     {
       "id": "754657b6-4068-40",
       "ticker": "KXHIGHNY-26JUN21-B82.5",
-      "title": "Will the **high temp in NYC** be 82-83\u00b0 on Jun 21, 2026?",
+      "title": "Will the **high temp in NYC** be 82-83° on Jun 21, 2026?",
       "city": "NYC",
       "date": "2026-06-21",
       "side": "no",
@@ -1169,7 +2100,7 @@
     {
       "id": "9fe68f28-e495-40",
       "ticker": "KXHIGHNY-26JUN21-B84.5",
-      "title": "Will the **high temp in NYC** be 84-85\u00b0 on Jun 21, 2026?",
+      "title": "Will the **high temp in NYC** be 84-85° on Jun 21, 2026?",
       "city": "NYC",
       "date": "2026-06-21",
       "side": "yes",
@@ -1192,7 +2123,7 @@
     {
       "id": "f35e8841-f2f0-41",
       "ticker": "KXHIGHNY-26JUN20-B82.5",
-      "title": "Will the **high temp in NYC** be 82-83\u00b0 on Jun 20, 2026?",
+      "title": "Will the **high temp in NYC** be 82-83° on Jun 20, 2026?",
       "city": "NYC",
       "date": "2026-06-20",
       "side": "yes",

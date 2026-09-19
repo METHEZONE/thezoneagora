@@ -1,4 +1,4 @@
-// MINT 아카이브(lib/data/mint/mint-real-data.json, generatedAt 2026-06-23)에서
+// MINT 아카이브(lib/data/mint/mint-real-data.json, generatedAt 2026-09-19)에서
 // 랜딩이 쓰는 모든 수치를 파생한다. 여기 없는 숫자는 랜딩에 등장하지 않는다.
 
 import raw from "@/lib/data/mint/mint-real-data.json";
@@ -80,7 +80,7 @@ export const KALSHI = {
 // ---- 스크럽 테이프: 일별 마감 + 굵직한 실제 체결을 시간순으로 섞는다 ----
 
 export interface TapeEvent {
-  /** 시즌 시작(06-01 00:00) 기준 경과 일수. 스크럽 진행도와 비교한다. */
+  /** 시즌 시작(04-17 00:00) 기준 경과 일수. 스크럽 진행도와 비교한다. */
   t: number;
   kind: "day" | "trade";
   date: string;
@@ -91,7 +91,7 @@ export interface TapeEvent {
   note: string;
 }
 
-const SEASON_START_MS = Date.parse("2026-06-01T00:00:00Z");
+const SEASON_START_MS = Date.parse("2026-04-17T00:00:00Z");
 const DAY_MS = 86_400_000;
 
 const dayEvents: TapeEvent[] = DAYS.slice(1).map((d, i) => ({
@@ -110,7 +110,7 @@ const tradeEvents: TapeEvent[] = [...raw.recentTrades]
   .sort((a, b) => Math.abs(b.pnl) - Math.abs(a.pnl))
   .slice(0, 10)
   .map((t) => ({
-    // 마지막 날(06.23) 체결은 곡선 끝점(22.0)을 넘으므로 끝점으로 클램프해 스크럽 끝에서 드러난다.
+    // 마지막 날(09.19) 체결은 곡선 끝점(155.0)을 넘으므로 끝점으로 클램프해 스크럽 끝에서 드러난다.
     t: Math.min((Date.parse(t.ts) - SEASON_START_MS) / DAY_MS, LAST_DAY),
     kind: "trade" as const,
     date: t.ts.slice(5, 10).replace("-", "."),

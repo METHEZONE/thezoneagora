@@ -7,7 +7,7 @@ import { STRATEGY_META } from "@/lib/strategyMeta";
 
 // lightweight-charts requires unix timestamps; we map dayIndex → epoch seconds
 // starting from a fixed base so the x-axis is stable.
-const BASE_TS = 1748736000; // 2026-06-01 00:00:00 UTC in seconds
+const BASE_TS = 1776384000; // 2026-04-17 00:00:00 UTC in seconds
 const DAY_S = 86400;
 const REF_SERIES_KEY = "__ref__";
 
@@ -206,7 +206,7 @@ export function EquityCurveChart({ agents }: { agents: AgentSnapshot[] }) {
       </div>
 
       <footer className="border-t border-line/40 px-5 py-3 text-[11px] text-muted sm:px-6">
-        가로축: 시즌 시작일 기준 경과일(D-0 = 2026년 6월 1일). 세로축: 포트폴리오 자산.
+        가로축: 시즌 시작일 기준 경과일(D-0 = 2026년 4월 17일). 세로축: 포트폴리오 자산.
         점선 = $10,000 기준선. 굵은 선 = MINT(실거래 데이터). 각 곡선의 끝부분은
         실시간 시세 틱으로 계속 연장됩니다.
       </footer>
