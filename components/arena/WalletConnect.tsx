@@ -39,13 +39,19 @@ export function WalletConnectProvider({ children }: { children: React.ReactNode 
 
   useEffect(() => {
     const isConnected = !!account;
-    if (isConnected && !wasConnected.current && pendingCb.current) {
+    // 예전엔 pendingCb가 있을 때만 모달을 닫았다 — 헤더의 "지갑 연결" 버튼은
+    // requestConnect()를 콜백 없이 호출하므로(pendingCb=null) 실제로는 연결에
+    // 성공해도 모달이 영원히 열린 채로 남아있었다(주소가 헤더에 바뀌어도 모달은
+    // 그대로). 콜백 유무와 무관하게 새로 연결되면 항상 모달을 닫는다.
+    if (isConnected && !wasConnected.current) {
+      setOpen(false);
       const cb = pendingCb.current;
       pendingCb.current = null;
-      setOpen(false);
-      const t = setTimeout(() => cb(true), 300);
-      wasConnected.current = isConnected;
-      return () => clearTimeout(t);
+      if (cb) {
+        const t = setTimeout(() => cb(true), 300);
+        wasConnected.current = isConnected;
+        return () => clearTimeout(t);
+      }
     }
     wasConnected.current = isConnected;
   }, [account]);
