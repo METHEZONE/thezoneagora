@@ -10,7 +10,8 @@ import { useAnyBacktest, useReplayBoard } from "@/lib/backtest/client";
 import { WINDOWS, type BacktestWindow } from "@/lib/backtest/klines";
 import { isMintArchive, type MintArchiveResult } from "@/lib/backtest/mintArchive";
 import { AGENTS } from "@/lib/data/seed/seasons";
-import { AGENT_NAME, KIND_COLOR, STRATEGY_LABEL, STRATEGY_ONELINER, WINDOW_LABEL, WINDOW_SHORT, riskSentence } from "@/components/agent/meta";
+import { AGENT_NAME, STRATEGY_LABEL, STRATEGY_ONELINER, WINDOW_LABEL, WINDOW_SHORT, riskSentence } from "@/components/agent/meta";
+import { HeroBadges } from "@/components/agent/HeroBadges";
 import { MetricCards } from "@/components/agent/MetricCards";
 import { Pnl, RiskBadge, ScoreBreakdownInline, ScoreRing, usd } from "@/components/agent/primitives";
 import { AltEquityChart } from "@/components/agent/alt/AltEquityChart";
@@ -66,14 +67,14 @@ export function MintArchivePage() {
           <div className="ag-hero-main">
             <div className="ag-hero-title">
               <h1>{name}</h1>
-              <span className="tag real">REAL · 아카이브</span>
-              <span className="ag-kind num big" style={{ "--kc": KIND_COLOR.crypto } as React.CSSProperties}>
-                CRYPTO
-              </span>
-              <span className="ag-chip" style={{ "--c": accent } as React.CSSProperties}>
-                {STRATEGY_LABEL["mk2-portfolio"]}
-              </span>
             </div>
+            <HeroBadges
+              kind="crypto"
+              strategyLabel={STRATEGY_LABEL["mk2-portfolio"]}
+              accent={accent}
+              sourceLabel="OKX 실기록 아카이브"
+              real
+            />
             <p className="ag-hero-oneliner">{STRATEGY_ONELINER["mk2-portfolio"]}</p>
             {seed?.tagline && <p className="ag-hero-tag">{seed.tagline}</p>}
             <div className="ag-hero-ctas">

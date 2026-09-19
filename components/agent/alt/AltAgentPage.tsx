@@ -12,9 +12,6 @@ import type { AltAgentConfig, AltResult } from "@/lib/altstrat/types";
 import { AGENTS } from "@/lib/data/seed/seasons";
 import {
   AGENT_NAME,
-  KIND_COLOR,
-  KIND_LABEL,
-  KIND_SHORT,
   STRATEGY_LABEL,
   STRATEGY_ONELINER,
   WINDOW_LABEL,
@@ -22,6 +19,7 @@ import {
   riskSentence,
   symbolLabel,
 } from "@/components/agent/meta";
+import { HeroBadges } from "@/components/agent/HeroBadges";
 import { MetricCards } from "@/components/agent/MetricCards";
 import { Pnl, RiskBadge, ScoreBreakdownInline, ScoreRing, usd } from "@/components/agent/primitives";
 import { PolyView } from "@/components/agent/alt/PolyView";
@@ -72,7 +70,6 @@ export function AltAgentPage({ cfg }: { cfg: AltAgentConfig }) {
 
   const r = bt.data && bt.data.kind !== "crypto" ? (bt.data as AltResult) : null;
   const m = r?.metrics;
-  const kindColor = KIND_COLOR[cfg.kind];
 
   return (
     <div className="ag-page">
@@ -90,16 +87,13 @@ export function AltAgentPage({ cfg }: { cfg: AltAgentConfig }) {
           <div className="ag-hero-main">
             <div className="ag-hero-title">
               <h1>{name}</h1>
-              <span className="ag-kind num big" style={{ "--kc": kindColor } as React.CSSProperties}>
-                {KIND_SHORT[cfg.kind]}
-              </span>
-              <span className="ag-chip" style={{ "--c": accent } as React.CSSProperties}>
-                {STRATEGY_LABEL[cfg.strategy] ?? cfg.strategy}
-              </span>
-              <span className="ag-sym num">
-                {symbolLabel(cfg.venue)} · {KIND_LABEL[cfg.kind]} · 페이퍼
-              </span>
             </div>
+            <HeroBadges
+              kind={cfg.kind}
+              strategyLabel={STRATEGY_LABEL[cfg.strategy] ?? cfg.strategy}
+              accent={accent}
+              sourceLabel={`${symbolLabel(cfg.venue)} · 페이퍼 시뮬레이션`}
+            />
             <p className="ag-hero-oneliner">{STRATEGY_ONELINER[cfg.strategy]}</p>
             {seed?.tagline && <p className="ag-hero-tag">{seed.tagline}</p>}
             <div className="ag-hero-ctas">

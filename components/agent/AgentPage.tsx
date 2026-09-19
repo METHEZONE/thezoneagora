@@ -23,6 +23,7 @@ import {
   WINDOW_SHORT,
   riskSentence,
 } from "@/components/agent/meta";
+import { HeroBadges } from "@/components/agent/HeroBadges";
 import { PriceEquityChart } from "@/components/agent/PriceEquityChart";
 import { MetricCards } from "@/components/agent/MetricCards";
 import { TradeLog } from "@/components/agent/TradeLog";
@@ -92,11 +93,13 @@ function CryptoAgentPage({ agentId, initialTab = "record" }: { agentId: string; 
           <div className="ag-hero-main">
             <div className="ag-hero-title">
               <h1>{name}</h1>
-              <span className="ag-chip" style={{ "--c": accent } as React.CSSProperties}>
-                {STRATEGY_LABEL[cfg.strategy]}
-              </span>
-              <span className="ag-sym num">{SYMBOL_LABEL[cfg.symbol]} 실시간 시세 · 페이퍼 트레이딩</span>
             </div>
+            <HeroBadges
+              kind="crypto"
+              strategyLabel={STRATEGY_LABEL[cfg.strategy]}
+              accent={accent}
+              sourceLabel={`${SYMBOL_LABEL[cfg.symbol]} 실시간 시세 · 페이퍼`}
+            />
             <p className="ag-hero-oneliner">{STRATEGY_ONELINER[cfg.strategy]}</p>
             {seed?.tagline && <p className="ag-hero-tag">{seed.tagline}</p>}
             <div className="ag-hero-ctas">

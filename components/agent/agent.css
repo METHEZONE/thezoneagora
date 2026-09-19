@@ -249,7 +249,7 @@
 .agora-arena .ag-risk b { color: var(--mut); font-weight: 600; }
 
 /* ─── 에이전트 페이지 ───────────────────────────────────────────────────── */
-.agora-arena .ag-page { padding: 18px 0 120px; }
+.agora-arena .ag-page { padding: 18px 0 120px; overflow-x: hidden; }
 .agora-arena .ag-crumb { display: flex; gap: 8px; font-size: 0.8rem; color: var(--mut2); margin-bottom: 18px; }
 .agora-arena .ag-crumb a { color: var(--mut); text-decoration: none; }
 .agora-arena .ag-crumb a:hover { color: var(--ivory); }
@@ -266,7 +266,14 @@
 }
 .agora-arena .ag-hero-char { display: grid; place-items: center; }
 .agora-arena .ag-hero-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.agora-arena .ag-hero-title h1 { margin: 0; font: 800 2.1rem var(--disp); letter-spacing: -0.035em; }
+.agora-arena .ag-hero-title h1 { margin: 0; font: 800 2.1rem var(--disp); letter-spacing: -0.035em; overflow-wrap: anywhere; }
+.agora-arena .ag-hero-badges { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 10px; row-gap: 6px; }
+@media (max-width: 860px) {
+  .agora-arena .ag-hero-badges { justify-content: center; }
+}
+@media (max-width: 420px) {
+  .agora-arena .ag-hero-title h1 { font-size: 1.6rem; }
+}
 .agora-arena .ag-hero-oneliner { margin: 10px 0 4px; font-size: 1.02rem; color: var(--ivory); line-height: 1.55; }
 .agora-arena .ag-hero-tag { margin: 0; font-size: 0.82rem; color: var(--mut2); }
 .agora-arena .ag-hero-ctas { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
@@ -472,7 +479,7 @@
 .agora-arena .alt-status.open { color: var(--orange); border-color: rgba(255, 90, 31, 0.45); }
 .agora-arena .alt-status.reject { color: var(--mut2); border-style: dashed; }
 
-.agora-arena .alt-table { border: 1px solid var(--line); border-radius: 16px; background: var(--sd); overflow: hidden; }
+.agora-arena .alt-table { border: 1px solid var(--line); border-radius: 16px; background: var(--sd); overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; }
 .agora-arena .alt-thead, .agora-arena .alt-row {
   display: grid;
   gap: 10px;
@@ -489,13 +496,15 @@
 .agora-arena .alt-q { display: grid; line-height: 1.3; min-width: 0; }
 .agora-arena .alt-q small { color: var(--mut2); font-size: 0.72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .agora-arena .alt-q b { color: var(--ivory); }
-.agora-arena .poly-log .alt-thead, .agora-arena .poly-log .alt-row { grid-template-columns: 74px 1.8fr 56px 130px 80px 90px 90px; }
-.agora-arena .wx-log .alt-thead, .agora-arena .wx-log .alt-row { grid-template-columns: 74px 1.1fr 84px 150px 120px 70px 90px 80px; }
-.agora-arena .stk-log .alt-thead, .agora-arena .stk-log .alt-row { grid-template-columns: 74px 110px 1.4fr 150px 90px 130px 90px; }
-.agora-arena .stk-table .alt-thead, .agora-arena .stk-table .alt-row { grid-template-columns: 1.3fr 70px 150px 60px 1fr; padding: 9px 12px; }
-@media (max-width: 900px) {
+.agora-arena .poly-log .alt-thead, .agora-arena .poly-log .alt-row { grid-template-columns: 74px 260px 56px 130px 80px 90px 90px; min-width: 780px; }
+.agora-arena .wx-log .alt-thead, .agora-arena .wx-log .alt-row { grid-template-columns: 74px 150px 84px 150px 120px 70px 90px 80px; min-width: 820px; }
+.agora-arena .stk-log .alt-thead, .agora-arena .stk-log .alt-row { grid-template-columns: 74px 110px 220px 150px 90px 130px 90px; min-width: 860px; }
+.agora-arena .stk-table .alt-thead, .agora-arena .stk-table .alt-row { grid-template-columns: 1.4fr 70px 150px 60px 130px; min-width: 560px; padding: 9px 12px; }
+.agora-arena .mint-strats .alt-thead, .agora-arena .mint-strats .alt-row { grid-template-columns: 180px 210px 110px 130px; min-width: 620px; }
+.agora-arena .mint-log .alt-thead, .agora-arena .mint-log .alt-row { grid-template-columns: 74px 130px 120px 150px 90px 110px 180px; min-width: 840px; }
+@media (max-width: 720px) {
   .agora-arena .alt-thead { display: none; }
-  .agora-arena .alt-row { grid-template-columns: 1fr 1fr !important; }
+  .agora-arena .alt-row { grid-template-columns: 1fr 1fr !important; min-width: 0 !important; }
   .agora-arena .alt-q { grid-column: 1 / -1; }
 }
 
@@ -583,10 +592,21 @@
 .ar-header .wallet-chip.demo { border-color: rgba(255, 90, 31, 0.5); color: var(--orange); }
 .ar-header .wallet-chip.demo .dot { background: var(--orange); }
 
-/* MINT 아카이브 */
-.agora-arena .mint-strats .alt-thead, .agora-arena .mint-strats .alt-row { grid-template-columns: 1.2fr 1.4fr 110px 130px; }
-.agora-arena .mint-log .alt-thead, .agora-arena .mint-log .alt-row { grid-template-columns: 74px 1fr 120px 150px 90px 110px 1fr; }
+/* MINT 아카이브 (컬럼 폭은 위쪽 .alt-table 섹션에서 min-width와 함께 정의) */
 .agora-arena .mint-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
 .agora-arena .mint-roi { display: grid; gap: 4px; }
 .agora-arena .mint-roi .bar { display: block; height: 5px; background: var(--line2); border-radius: 3px; overflow: hidden; }
 .agora-arena .mint-roi .bar b { display: block; height: 100%; border-radius: 3px; }
+
+
+/* 방어적 오버플로 방지 — 좁은 화면에서 칩/배지 텍스트가 박스 밖으로 새지 않도록. */
+.agora-arena .ag-chip,
+.agora-arena .ag-sym,
+.agora-arena .ag-hero-tag,
+.agora-arena .poly-q,
+.agora-arena .wx-q,
+.agora-arena .alt-q,
+.agora-arena .ag-hero-oneliner {
+  overflow-wrap: anywhere;
+}
+.agora-arena .ag-chip { max-width: 100%; white-space: normal; line-height: 1.3; }

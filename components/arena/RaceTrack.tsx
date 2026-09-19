@@ -1,7 +1,9 @@
 "use client";
 
-// design/agora-arena.html의 renderRace() 포팅 — 레인 = 에이전트 수(10), 위치는 수익률을 16%~82%로 정규화.
-// 숫자는 ArenaHome이 mergeBoard()로 덧입힌 느린 시계(선택한 창) 값이라 아래 리더보드와 항상 같다.
+// 레인 = 에이전트 수(10). 각 레인은 고정 높이의 얇은 줄이고, 러너는 그 줄 안에 딱 맞는
+// 가로형 칩(아바타+이름+수익률)으로 그린다 — 예전 세로 스택(아바타 위에 이름/수익률을
+// 쌓는 방식)은 레인이 늘어나며(5→10) 레인 높이보다 콘텐츠가 커져 다음 레인과 겹쳤다.
+// 가로 칩은 세로로 자라지 않으므로 레인이 몇 개든 겹칠 수 없다.
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -9,7 +11,7 @@ import { AgentCharacter } from "@/components/arena/characters";
 import { fmtPct } from "@/components/arena/format";
 import type { ArenaAgent } from "@/components/arena/useArenaAgents";
 import { WINDOWS, type BacktestWindow } from "@/lib/backtest/klines";
-import { KIND_COLOR, KIND_LABEL, KIND_ORDER, KIND_SHORT, WINDOW_LABEL, WINDOW_SHORT } from "@/components/agent/meta";
+import { KIND_COLOR, KIND_LABEL, KIND_ORDER, WINDOW_LABEL, WINDOW_SHORT } from "@/components/agent/meta";
 import type { AgentKind } from "@/lib/backtest/engine";
 
 export function RaceWindowSeg({
@@ -59,7 +61,6 @@ export function RaceTrack({
   const min = Math.min(...rets, 0);
   const max = Math.max(...rets, 0);
   const span = max - min || 1;
-  const dense = shown.length > 6;
 
   const prevRet = useRef<Record<string, number>>({});
   const [runningIds, setRunningIds] = useState<Set<string>>(new Set());
@@ -119,7 +120,7 @@ export function RaceTrack({
         </div>
       </div>
 
-      <div className={`track${dense ? " dense" : ""}${loading ? " is-loading" : ""}`} id="track">
+      <div className={`track${loading ? " is-loading" : ""}`} id="track">
         <div className="finish" />
         <div className="finish-label">FINISH</div>
         <div className="zero-line" style={{ left: `${16 + ((0 - min) / span) * 66}%` }} title="0%" />
@@ -128,28 +129,21 @@ export function RaceTrack({
           const pos = 16 + ((a.ret - min) / span) * 66;
           const running = runningIds.has(a.id);
           return (
-            <div className={`lane${rank === 1 ? " leadlane" : ""}`} key={a.id}>
-              <div className="lane-glow" />
-              <span className="lane-kind num" style={{ "--kc": KIND_COLOR[a.kind] } as React.CSSProperties}>
-                {KIND_SHORT[a.kind]}
-              </span>
+            <div className="lane" key={a.id}>
+              <div className="lane-glow" style={rank === 1 ? { opacity: 1 } : undefined} />
               <Link
                 href={`/agent/${a.id}`}
                 className={`racer${running ? " running" : ""}${rank === 1 ? " lead" : ""}`}
-                style={{ left: `${pos}%` }}
+                style={{ left: `${pos}%`, "--kc": KIND_COLOR[a.kind] } as React.CSSProperties}
                 aria-label={`${a.name} 상세 보기`}
                 prefetch={false}
               >
-                <div className="char">
-                  <AgentCharacter agentId={a.id} size={dense ? 46 : 58} running={running} label={a.name} />
-                  <span className="rankbadge num">{rank}</span>
-                  <span className="speed">
-                    <span />
-                    <span />
-                  </span>
-                </div>
-                <span className="nm">{a.name}</span>
-                <span className={`rt num ${a.ret >= 0 ? "up" : "dn"}`}>{fmtPct(a.ret)}</span>
+                <span className="racer-rank num">{rank}</span>
+                <span className="racer-avatar">
+                  <AgentCharacter agentId={a.id} size={22} bob={false} label={a.name} />
+                </span>
+                <span className="racer-name">{a.name}</span>
+                <span className={`racer-ret num ${a.ret >= 0 ? "up" : "dn"}`}>{fmtPct(a.ret)}</span>
               </Link>
             </div>
           );

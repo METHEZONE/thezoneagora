@@ -538,148 +538,131 @@ body.agora-locked {
 }
 .agora-arena .lane {
   position: relative;
-  height: 86px;
+  height: 46px;
   border-bottom: 1px dashed var(--line2);
 }
 .agora-arena .lane:last-child {
   border-bottom: none;
 }
-@media (max-width: 700px) {
-  .agora-arena .lane {
-    height: 72px;
-  }
+.agora-arena .lane-glow {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255, 90, 31, 0.06));
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s;
 }
+
+/* 가로형 러너 칩 — 세로로 자라지 않으므로 레인이 10개든 겹치지 않는다. */
 .agora-arena .racer {
+  --kc: var(--mut2);
   position: absolute;
   top: 50%;
   left: 10%;
   transform: translate(-50%, -50%);
-  display: flex;
-  flex-direction: column;
+  display: inline-flex;
   align-items: center;
-  gap: 2px;
-  transition: left 1.6s var(--ease);
-  cursor: pointer;
-  z-index: 2;
-  -webkit-tap-highlight-color: transparent;
-  background: none;
-  border: none;
-  padding: 0;
-  color: inherit;
-}
-.agora-arena .racer .char {
-  width: 58px;
-  height: 58px;
-  position: relative;
-  transition: transform 0.4s var(--spring);
-}
-@media (max-width: 700px) {
-  .agora-arena .racer .char {
-    width: 46px;
-    height: 46px;
-  }
-}
-.agora-arena .racer:hover .char {
-  transform: scale(1.12);
-}
-.agora-arena .racer .char svg {
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.agora-arena .racer .nm {
-  font: 700 0.66rem var(--body);
-  letter-spacing: 0.06em;
-  white-space: nowrap;
+  gap: 7px;
+  height: 34px;
+  padding: 0 12px 0 5px;
   background: var(--black);
   border: 1px solid var(--line);
-  border-radius: 14px;
-  padding: 2px 9px;
-}
-.agora-arena .racer .rt {
-  font: 700 0.68rem var(--body);
+  border-radius: 999px;
   white-space: nowrap;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  transition: left 1.6s var(--ease), transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+  z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.22);
+  -webkit-tap-highlight-color: transparent;
 }
-.agora-arena .racer .rt.up {
-  color: var(--pos);
-}
-.agora-arena .racer .rt.dn {
-  color: var(--neg);
-}
-.agora-arena .speed {
+.agora-arena .racer::before {
+  content: "";
   position: absolute;
-  right: 100%;
-  top: 38%;
-  width: 26px;
-  height: 14px;
-  opacity: 0;
-  transition: opacity 0.3s;
+  inset: -1px;
+  border-radius: 999px;
+  border: 1px solid var(--kc);
+  opacity: 0.55;
+  pointer-events: none;
 }
-.agora-arena .racer.running .speed {
-  opacity: 0.8;
-}
-.agora-arena .speed span {
-  display: block;
-  height: 2px;
-  border-radius: 2px;
-  background: var(--mut2);
-  margin: 3px 0;
-  transform-origin: right;
-}
-.agora-arena .speed span:nth-child(1) {
-  width: 100%;
-  animation: ar-zoom 0.5s linear infinite;
-}
-.agora-arena .speed span:nth-child(2) {
-  width: 65%;
-  animation: ar-zoom 0.5s 0.12s linear infinite;
-}
-@keyframes ar-zoom {
-  from {
-    transform: scaleX(1);
-    opacity: 0.9;
-  }
-  to {
-    transform: scaleX(0.2);
-    opacity: 0;
-  }
-}
-.agora-arena .rankbadge {
-  position: absolute;
-  top: -9px;
-  right: -9px;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--sd2);
-  border: 1px solid var(--line);
-  color: var(--mut);
-  font: 800 0.66rem var(--body);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.4s var(--spring);
+.agora-arena .racer:hover {
+  border-color: var(--line2);
+  transform: translate(-50%, -50%) scale(1.05);
   z-index: 3;
 }
-.agora-arena .racer.lead .rankbadge {
-  background: var(--orange);
-  border-color: var(--orange);
-  color: var(--black);
-  transform: scale(1.15);
+.agora-arena .racer:focus-visible {
+  outline: 2px solid var(--orange);
+  outline-offset: 2px;
 }
-.agora-arena .racer.lead .nm {
-  border-color: rgba(255, 90, 31, 0.6);
+.agora-arena .racer.running {
+  box-shadow: 0 0 0 2px rgba(255, 90, 31, 0.35), 0 2px 10px rgba(0, 0, 0, 0.25);
 }
-.agora-arena .lane-glow {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  transition: opacity 0.8s;
-  pointer-events: none;
-  background: linear-gradient(90deg, transparent 60%, rgba(255, 90, 31, 0.05));
+.agora-arena .racer .racer-rank {
+  font: 800 0.68rem var(--body);
+  color: var(--mut2);
+  width: 13px;
+  text-align: center;
+  flex-shrink: 0;
 }
-.agora-arena .lane.leadlane .lane-glow {
-  opacity: 1;
+.agora-arena .racer.lead .racer-rank {
+  color: var(--orange);
+}
+.agora-arena .racer .racer-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.04);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.agora-arena .racer .racer-avatar svg {
+  width: 20px;
+  height: 20px;
+  overflow: visible;
+}
+.agora-arena .racer .racer-name {
+  font: 700 0.72rem var(--body);
+  letter-spacing: 0.02em;
+}
+.agora-arena .racer .racer-ret {
+  font: 800 0.74rem var(--body);
+}
+.agora-arena .racer .racer-ret.up {
+  color: var(--pos);
+}
+.agora-arena .racer .racer-ret.dn {
+  color: var(--neg);
+}
+.agora-arena .racer.lead {
+  border-color: rgba(255, 90, 31, 0.55);
+  box-shadow: 0 0 0 1px rgba(255, 90, 31, 0.35), 0 4px 14px rgba(255, 90, 31, 0.18);
+}
+@media (max-width: 700px) {
+  .agora-arena .lane {
+    height: 40px;
+  }
+  .agora-arena .racer {
+    height: 30px;
+    gap: 5px;
+    padding: 0 9px 0 4px;
+  }
+  .agora-arena .racer .racer-avatar {
+    width: 22px;
+    height: 22px;
+  }
+  .agora-arena .racer .racer-avatar svg {
+    width: 17px;
+    height: 17px;
+  }
+  .agora-arena .racer .racer-name {
+    font-size: 0.66rem;
+  }
+  .agora-arena .racer .racer-ret {
+    font-size: 0.68rem;
+  }
 }
 
 .agora-arena .track-foot {
@@ -1768,35 +1751,9 @@ body.agora-locked {
   color: var(--mut2);
   letter-spacing: 0.08em;
 }
-.agora-arena .track.dense { padding: 18px 0 14px; }
-.agora-arena .track.dense .lane { height: 66px; }
-.agora-arena .track.dense .racer .char { width: 46px; height: 46px; }
-.agora-arena .track.dense .racer .nm { font-size: 0.6rem; padding: 1px 7px; }
-.agora-arena .track.dense .racer .rt { font-size: 0.64rem; }
-.agora-arena .track.dense .rankbadge { transform: scale(0.9); }
 @media (max-width: 700px) {
-  .agora-arena .track.dense .lane { height: 58px; }
-  .agora-arena .track.dense .racer .char { width: 38px; height: 38px; }
   .agora-arena .track-window-k { display: none; }
 }
-.agora-arena .lane-kind {
-  --kc: var(--mut2);
-  position: absolute;
-  left: 14px;
-  top: 50%;
-  transform: translateY(-50%);
-  font: 700 0.58rem var(--body);
-  letter-spacing: 0.14em;
-  color: var(--kc);
-  opacity: 0.75;
-  pointer-events: none;
-  z-index: 1;
-}
-@media (max-width: 700px) {
-  .agora-arena .lane-kind { display: none; }
-}
-.agora-arena a.racer { text-decoration: none; }
-.agora-arena a.racer:focus-visible .char { outline: 2px solid var(--orange); outline-offset: 4px; border-radius: 50%; }
 
 /* 리더보드 종류 태그 */
 .agora-arena .ag-kind {
