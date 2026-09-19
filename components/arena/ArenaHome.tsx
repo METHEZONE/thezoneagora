@@ -44,6 +44,22 @@ function ArenaHomeInner() {
   const [positionHydrated, setPositionHydrated] = useState(false);
 
   useEffect(() => {
+    // 헤더의 "처음부터" 링크(/?onboarding=reset)로 들어온 경우 온보딩 완료 플래그를
+    // 지우고 게이트를 강제로 다시 연다. reduced-motion이어도 이때는 명시적 요청이므로
+    // 무시하지 않는다. 쿼리스트링은 히스토리에 남기지 않도록 바로 정리한다.
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("onboarding") === "reset") {
+      try {
+        window.localStorage.removeItem(ONBOARD_KEY);
+      } catch {
+        // ignore
+      }
+      params.delete("onboarding");
+      const qs = params.toString();
+      window.history.replaceState({}, "", window.location.pathname + (qs ? `?${qs}` : ""));
+      setOnboardingDone(false);
+      return;
+    }
     const done = window.localStorage.getItem(ONBOARD_KEY) === "1";
     setOnboardingDone(done || reduced);
   }, [reduced]);

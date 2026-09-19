@@ -52,6 +52,13 @@ export function AppHeader() {
               지갑 연결
             </button>
           )}
+          <Link
+            href="/?onboarding=reset"
+            className="hd-restart"
+            title="처음 보는 온보딩 화면을 다시 봅니다"
+          >
+            처음부터
+          </Link>
         </div>
       </div>
     </header>

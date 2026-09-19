@@ -294,6 +294,28 @@ body.agora-locked {
 .ar-header .wallet-chip .bal {
   color: var(--mut2);
 }
+.agora-arena .hd-restart,
+.ar-header .hd-restart {
+  font: 500 0.72rem var(--body);
+  color: var(--mut2);
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0.7;
+  transition: opacity 0.18s, color 0.18s;
+}
+.agora-arena .hd-restart:hover,
+.ar-header .hd-restart:hover {
+  opacity: 1;
+  color: var(--ivory);
+  text-decoration: underline;
+}
+@media (max-width: 640px) {
+  .agora-arena .hd-restart,
+  .ar-header .hd-restart {
+    display: none;
+  }
+}
+
 @media (max-width: 520px) {
   .agora-arena .wallet-chip .bal,
   .ar-header .wallet-chip .bal {
