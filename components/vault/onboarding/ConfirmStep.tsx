@@ -25,8 +25,11 @@ interface ConfirmStepProps {
   depositAmount: bigint;
   submitting: boolean;
   error: string | null;
+  /** 실제 온체인 생성이 막 실패해서 "임의 자금(데모)으로 대신 만들지" 제안할 때만 true. */
+  offerDemoFallback?: boolean;
   onBack: () => void;
   onConfirm: () => void;
+  onUseDemoInstead?: () => void;
 }
 
 export function ConfirmStep({
@@ -35,8 +38,10 @@ export function ConfirmStep({
   depositAmount,
   submitting,
   error,
+  offerDemoFallback = false,
   onBack,
   onConfirm,
+  onUseDemoInstead,
 }: ConfirmStepProps) {
   return (
     <motion.div
@@ -91,9 +96,25 @@ export function ConfirmStep({
       </div>
 
       {error && (
-        <p className="mt-4 rounded-[12px] border border-negative/30 bg-negative/10 px-4 py-3 text-[13px] text-negative">
-          {error}
-        </p>
+        <div className="mt-4 rounded-[12px] border border-negative/30 bg-negative/10 px-4 py-3">
+          <p className="text-[13px] text-negative">{error}</p>
+          {offerDemoFallback && onUseDemoInstead && (
+            <div className="mt-3 flex items-center justify-between gap-3 border-t border-negative/20 pt-3">
+              <p className="text-[12px] leading-relaxed text-muted-light">
+                지갑·네트워크 문제로 실제 생성이 막혔을 수 있어요. 대신 임의 자금(데모)으로
+                같은 흐름을 끝까지 체험해볼까요? 나중에 실제 지갑으로 다시 만들 수 있어요.
+              </p>
+              <button
+                type="button"
+                disabled={submitting}
+                onClick={onUseDemoInstead}
+                className="flex-shrink-0 whitespace-nowrap rounded-[10px] border border-white/20 px-3.5 py-2 text-[12px] font-semibold text-warm-ivory transition-colors duration-200 hover:border-agora-orange hover:text-agora-orange disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                데모로 만들기
+              </button>
+            </div>
+          )}
+        </div>
       )}
 
       <div className="mt-8 flex items-center justify-between">

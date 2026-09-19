@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useVault } from "@/lib/vault/useVault";
 import { AGENTS } from "@/lib/data/seed/seasons";
+import { getVaultDataSource } from "@/lib/vault";
+import { DEMO_OWNER, isDemoMode, setDemoMode } from "@/lib/vault/demo";
 import { StepIndicator } from "./StepIndicator";
 import { ConnectStep } from "./ConnectStep";
 import { DepositStep } from "./DepositStep";
@@ -36,6 +38,9 @@ export function OnboardingWizard() {
   const [depositInput, setDepositInput] = useState(prefilled);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // 실제(Sui 온체인) 생성이 막 실패했고 지금은 데모 모드가 아닐 때만 켠다 —
+  // "실패하면 임의 자금으로 대신 만들지" 물어보는 제안 배너용 플래그.
+  const [offerDemoFallback, setOfferDemoFallback] = useState(false);
   const [completed, setCompleted] = useState(false);
 
   // 이미 볼트가 있는 지갑은 온보딩을 건너뛴다. 지갑이 연결되면 자동으로 예치 단계로 이동한다.
@@ -67,6 +72,7 @@ export function OnboardingWizard() {
     if (!depositAmount) return;
     setSubmitting(true);
     setError(null);
+    setOfferDemoFallback(false);
     try {
       await actions.createVault({ depositAmount });
       setCompleted(true);
@@ -75,6 +81,32 @@ export function OnboardingWizard() {
       // 거부/RPC 실패/온체인 revert를 구분할 수 없었다. 원인 확인되면 지워도 된다.
       console.error("[Agora] createVault failed:", err);
       setError("볼트 생성에 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      // 이미 데모 모드였다면(=데모 볼트 생성 자체가 실패) 데모를 다시 제안할 이유가 없다.
+      setOfferDemoFallback(!isDemoMode());
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  // "그냥 임의로(데모) 만들어줘" — 실제 온체인 시도가 막혔을 때(지갑 문제, 테스트넷
+  // RPC 장애, USDC 잔고 부족 등 원인 불문) 곧바로 mock 볼트로 우회해 온보딩을 끝낸다.
+  // setDemoMode(true) 이후 useVault()의 source가 리렌더에서 Mock으로 바뀌긴 하지만
+  // 이 클릭 핸들러 안에서는 아직 그 리렌더 전이라 actions.createVault(연결된 real
+  // source)를 그대로 쓰면 안 된다 — getVaultDataSource()를 직접 다시 불러 확실히
+  // mock 인스턴스를 받는다.
+  const handleUseDemoInstead = async () => {
+    if (!depositAmount) return;
+    setSubmitting(true);
+    setError(null);
+    try {
+      setDemoMode(true);
+      const demoSource = getVaultDataSource();
+      await demoSource.createVault(owner ?? DEMO_OWNER, strategyId, { depositAmount });
+      setCompleted(true);
+    } catch (err) {
+      console.error("[Agora] demo fallback createVault failed:", err);
+      setError("데모 볼트 생성도 실패했습니다. 잠시 후 다시 시도해 주세요.");
+      setOfferDemoFallback(false);
     } finally {
       setSubmitting(false);
     }
@@ -124,8 +156,10 @@ export function OnboardingWizard() {
             depositAmount={depositAmount}
             submitting={submitting}
             error={error}
+            offerDemoFallback={offerDemoFallback}
             onBack={() => setStep(2)}
             onConfirm={handleCreateVault}
+            onUseDemoInstead={handleUseDemoInstead}
           />
         )}
       </div>
