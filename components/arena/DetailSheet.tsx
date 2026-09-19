@@ -183,8 +183,8 @@ export function DetailSheet({
               <div className="k">최대 낙폭 (MDD)</div>
             </div>
             <div className="dst">
-              <div className="v num">{agent.win}%</div>
-              <div className="k">승률</div>
+              <div className={`v num ${agent.sharpe >= 0 ? "up" : "dn"}`}>{agent.sharpe.toFixed(2)}</div>
+              <div className="k">Sharpe (연환산)</div>
             </div>
             <div className="dst">
               <div className="v num">{MONTHLY_FEE} USDC</div>

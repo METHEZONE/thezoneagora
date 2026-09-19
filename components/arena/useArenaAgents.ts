@@ -5,7 +5,12 @@
  * 화면에 필요한 형태(ArenaAgent)로 매핑한다.
  * - ret: 엔진 roiPct 그대로
  * - mdd: equitySeries에서 계산한 최대 낙폭(%)
- * - score(AGORA 점수): 50 + ret*3.2 - mdd*2.1, 1~99로 클램프
+ * - sharpe: equitySeries 틱 간격을 실측해 연환산한 진짜 Sharpe(무위험수익률 0 가정).
+ *   실제 자산운용사가 raw PnL이 아니라 변동성 대비 수익으로 전략을 평가하는 것과
+ *   같은 원칙 — lib/data/metrics.ts의 구 Derby v1 computeSharpe는 일봉(252일) 가정이라
+ *   틱 단위 라이브 곡선에는 못 쓴다.
+ * - score(AGORA 점수): 50 + sharpe*15, 1~99로 클램프 — "위험조정 성과" 원칙 그대로
+ *   Sharpe 기반으로 교체(예전엔 ret/mdd 선형조합 근사치였다).
  * - backers/aum/win: 그럴듯한 시드값 + 틱마다 소폭 증가(mock, 원본 tick()의 25% 확률 로직 재현)
  */
 
@@ -27,6 +32,8 @@ export interface ArenaAgent {
   accent: string;
   ret: number;
   mdd: number;
+  /** 연환산 Sharpe (무위험수익률 0). 변동성 대비 수익 — raw ROI보다 이걸로 줄 세운다. */
+  sharpe: number;
   win: number;
   backers: number;
   aum: number;
@@ -61,8 +68,36 @@ function computeMddPct(series: { equity: number }[]): number {
   return Math.max(0.5, Math.round(maxDd * 10) / 10);
 }
 
-function scoreOf(ret: number, mdd: number): number {
-  return Math.max(1, Math.min(99, Math.round(50 + ret * 3.2 - mdd * 2.1)));
+const MS_PER_YEAR = 365.25 * 24 * 60 * 60 * 1000;
+
+/** 틱 간격을 실측해 연환산하는 진짜 Sharpe. 일봉 가정(252일)이 아니라 실제
+ *  equitySeries의 평균 샘플 간격으로 연간 기간 수를 구한다 — PriceFeed가
+ *  7초든 30초든 이 값은 항상 올바르게 연환산된다. */
+function computeSharpe(series: { ts: number; equity: number }[]): number {
+  if (series.length < 3) return 0;
+  const returns: number[] = [];
+  for (let i = 1; i < series.length; i++) {
+    const prev = series[i - 1].equity;
+    if (prev > 0) returns.push(series[i].equity / prev - 1);
+  }
+  if (returns.length < 2) return 0;
+
+  const mean = returns.reduce((a, b) => a + b, 0) / returns.length;
+  const variance =
+    returns.reduce((a, b) => a + (b - mean) ** 2, 0) / (returns.length - 1);
+  const sd = Math.sqrt(variance);
+  if (sd === 0) return 0;
+
+  const spanMs = series[series.length - 1].ts - series[0].ts;
+  const avgIntervalMs = spanMs / (series.length - 1);
+  if (avgIntervalMs <= 0) return 0;
+  const periodsPerYear = MS_PER_YEAR / avgIntervalMs;
+
+  return (mean / sd) * Math.sqrt(periodsPerYear);
+}
+
+function scoreOf(sharpe: number): number {
+  return Math.max(1, Math.min(99, Math.round(50 + sharpe * 15)));
 }
 
 function buildAgent(
@@ -72,6 +107,7 @@ function buildAgent(
   const seed = SEED_AGENTS.find((a) => a.id === state.agentId);
   const ret = Math.round(state.roiPct * 100) / 100;
   const mdd = computeMddPct(state.equitySeries);
+  const sharpe = Math.round(computeSharpe(state.equitySeries) * 100) / 100;
   const hist =
     state.equitySeries.length >= 2
       ? state.equitySeries.map((p) => ((p.equity - 10_000) / 10_000) * 100)
@@ -85,11 +121,12 @@ function buildAgent(
     accent: characterFor(state.agentId).accent,
     ret,
     mdd,
+    sharpe,
     win: mock.win,
     backers: mock.backers,
     aum: mock.aum,
     hist,
-    score: scoreOf(ret, mdd),
+    score: scoreOf(sharpe),
   };
 }
 

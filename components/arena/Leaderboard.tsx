@@ -86,8 +86,8 @@ export function Leaderboard({
                   <div className="k">최대 낙폭</div>
                 </div>
                 <div className="lst">
-                  <div className="v num win">{a.win}%</div>
-                  <div className="k">승률</div>
+                  <div className={`v num ${a.sharpe >= 0 ? "up" : "dn"}`}>{a.sharpe.toFixed(2)}</div>
+                  <div className="k">Sharpe</div>
                 </div>
                 <div className="scorering">
                   <svg viewBox="0 0 52 52" width={52} height={52}>
