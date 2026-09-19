@@ -2,6 +2,7 @@ import { fetchKlinesForSymbols, KLINES_INTERVAL, KLINES_LIMIT } from "@/lib/live
 import { replayStrategy, type ReplaySignal } from "@/lib/live/replaySignal";
 import { requiredSymbolsFor, STRATEGY_CONFIGS, type StrategyConfig } from "@/lib/live/strategyLogic";
 import type { TickerSymbol } from "@/lib/live/types";
+import { storeJsonBlob } from "@/lib/walrus/client";
 
 export const DISCLAIMER =
   "실시간 시세 기반 페이퍼 트레이딩 시뮬레이션입니다 — 실제 자금 거래가 아닙니다. " +
@@ -33,21 +34,24 @@ export interface AgentSignalPayload {
   latest_signal: ReturnType<typeof serializeSignal> | null;
   recent_signals: ReturnType<typeof serializeSignal>[];
   disclaimer: string;
+  /** 이 조회 결과를 Walrus(Sui 탈중앙 스토리지)에 저장한 기록 — 위조 불가능한 감사
+   *  로그로 쓴다. 저장이 실패해도(네트워크 등) 시그널 조회 자체는 막지 않는다. */
+  walrus: { blob_id: string; url: string } | null;
 }
 
 function findConfig(agentId: string): StrategyConfig | null {
   return STRATEGY_CONFIGS.find((c) => c.agentId === agentId) ?? null;
 }
 
-function toPayload(
+async function toPayload(
   cfg: StrategyConfig,
   histories: Partial<Record<TickerSymbol, number[]>>
-): AgentSignalPayload {
+): Promise<AgentSignalPayload> {
   const result = replayStrategy(cfg, histories);
   const sorted = [...result.signals].sort((a, b) => b.index - a.index);
   const latest = sorted[0] ?? null;
 
-  return {
+  const payload: Omit<AgentSignalPayload, "walrus"> = {
     agent_id: result.agentId,
     strategy: result.strategy,
     symbol: result.symbol,
@@ -66,6 +70,19 @@ function toPayload(
     recent_signals: sorted.slice(0, 10).map(serializeSignal),
     disclaimer: DISCLAIMER,
   };
+
+  // 조회 결과를 Walrus에 감사 로그로 남긴다 — 나중에 "그때 정말 그 판단을 냈는지"를
+  // 위조 불가능하게 검증할 수 있다. 스토리지가 잠깐 막혀도 시그널 조회는 계속 돼야
+  // 하므로 실패는 삼키고 walrus를 null로 둔다.
+  let walrus: AgentSignalPayload["walrus"] = null;
+  try {
+    const stored = await storeJsonBlob(payload);
+    walrus = { blob_id: stored.blobId, url: stored.url };
+  } catch {
+    walrus = null;
+  }
+
+  return { ...payload, walrus };
 }
 
 /** 단일 에이전트 시그널 조회. agentId가 없으면 null. */
@@ -80,7 +97,7 @@ export async function buildAgentSignal(agentId: string): Promise<AgentSignalPayl
 export async function buildAllSignals(): Promise<AgentSignalPayload[]> {
   const allSymbols = STRATEGY_CONFIGS.flatMap(requiredSymbolsFor);
   const histories = await fetchKlinesForSymbols(allSymbols);
-  return STRATEGY_CONFIGS.map((cfg) => toPayload(cfg, histories));
+  return Promise.all(STRATEGY_CONFIGS.map((cfg) => toPayload(cfg, histories)));
 }
 
 export function listAgentIds(): string[] {
