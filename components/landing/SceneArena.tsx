@@ -4,7 +4,11 @@ import { motion } from "framer-motion";
 import { RaceTrack } from "@/components/arena/RaceTrack";
 import { Leaderboard } from "@/components/arena/Leaderboard";
 import { DetailSheet } from "@/components/arena/DetailSheet";
-import { useArenaAgents } from "@/components/arena/useArenaAgents";
+import { mergeBoard, useArenaAgents } from "@/components/arena/useArenaAgents";
+import { useReplayBoard } from "@/lib/backtest/client";
+import { useMemo, useState } from "react";
+import type { BacktestWindow } from "@/lib/backtest/klines";
+import type { AgentKind } from "@/lib/backtest/engine";
 import { useCharacterBlink } from "@/components/arena/characters";
 import { Frame, FramePlaceholder } from "./Frame";
 import { useMounted, useMotionOk } from "./useMotionOk";
@@ -14,14 +18,25 @@ const noop = () => undefined;
 /** 라이브 엔진 구독은 마운트 이후에만. SSR/hydration 불일치를 피한다. */
 function ArenaFrames() {
   useCharacterBlink();
-  const agents = useArenaAgents();
+  const live = useArenaAgents();
+  const [win, setWin] = useState<BacktestWindow>("30d");
+  const [kind, setKind] = useState<AgentKind | "all">("all");
+  const board = useReplayBoard(win);
+  const agents = useMemo(() => mergeBoard(live, board.data), [live, board.data]);
 
   return (
     <>
       <div className="ag-arena-main">
         <Frame url="thezonebio.com/agora/app" cropHeight={680}>
           <div className="agora-arena" style={{ padding: "20px 20px 0" }}>
-            <RaceTrack agents={agents} onSelect={noop} />
+            <RaceTrack
+              agents={agents}
+              window={win}
+              onWindowChange={setWin}
+              loading={board.loading && !board.data}
+              kindFilter={kind}
+              onKindFilter={setKind}
+            />
             <div style={{ marginTop: 16 }}>
               <Leaderboard agents={agents} onSelect={noop} onDelegateClick={noop} />
             </div>
@@ -70,13 +85,13 @@ export function SceneArena() {
             aria-hidden="true"
           />
           <h2 className="ag-display ag-h2">
-            다섯 에이전트가
+            열 개의 에이전트가
             <br />
             같은 출발선에서 달립니다.
           </h2>
           <p className="ag-lede">
-            전부 같은 $10,000 페이퍼 자본으로 시작해서 Binance 실시간 시세로
-            달립니다. 아래는 스크린샷이 아니라 지금 이 순간의 레이스 화면입니다.
+            크립토·예측시장·날씨·주식 — 전략은 달라도 전부 같은 $10,000 페이퍼 자본으로
+            시작합니다. 아래는 스크린샷이 아니라 지금 이 순간의 레이스 화면입니다.
           </p>
         </div>
 

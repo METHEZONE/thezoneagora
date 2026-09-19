@@ -444,3 +444,149 @@
   .agora-arena .ag-sticky { flex-direction: column; align-items: stretch; bottom: 8px; }
   .agora-arena .ag-sticky-ctas .btn { flex: 1; }
 }
+
+/* ── 대체 전략 상세(예측시장 카피 · 날씨 · 주식) 공용 ─────────────────────────── */
+.agora-arena .ag-kind.big { font-size: 0.66rem; padding: 3px 8px; }
+.agora-arena .alt-controls { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.agora-arena .alt-sec { margin-top: 22px; display: grid; gap: 12px; }
+.agora-arena .alt-sec-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.agora-arena .alt-sec-head h3 { margin: 0; font: 800 1.05rem var(--disp); letter-spacing: -0.01em; display: inline-flex; align-items: baseline; gap: 8px; }
+.agora-arena .alt-sec-head h3 .num { font: 600 0.78rem var(--body); color: var(--mut2); }
+.agora-arena .alt-sec-note { font-size: 0.76rem; color: var(--mut2); }
+.agora-arena .alt-empty { margin: 0; padding: 18px; border: 1px dashed var(--line2); border-radius: 14px; color: var(--mut); font-size: 0.86rem; line-height: 1.6; }
+.agora-arena .mut { color: var(--mut2); }
+
+.agora-arena .alt-side {
+  display: inline-block;
+  font: 800 0.66rem var(--body);
+  letter-spacing: 0.08em;
+  padding: 2px 7px;
+  border-radius: 6px;
+}
+.agora-arena .alt-side.yes { color: var(--pos); background: rgba(36, 199, 122, 0.12); border: 1px solid rgba(36, 199, 122, 0.35); }
+.agora-arena .alt-side.no { color: var(--neg); background: rgba(240, 79, 95, 0.12); border: 1px solid rgba(240, 79, 95, 0.35); }
+.agora-arena .alt-status { display: inline-block; font: 800 0.64rem var(--body); letter-spacing: 0.08em; padding: 2px 7px; border-radius: 6px; border: 1px solid var(--line2); color: var(--mut); }
+.agora-arena .alt-status.win { color: var(--pos); border-color: rgba(36, 199, 122, 0.4); }
+.agora-arena .alt-status.loss { color: var(--neg); border-color: rgba(240, 79, 95, 0.4); }
+.agora-arena .alt-status.exit { color: var(--ivory); }
+.agora-arena .alt-status.open { color: var(--orange); border-color: rgba(255, 90, 31, 0.45); }
+.agora-arena .alt-status.reject { color: var(--mut2); border-style: dashed; }
+
+.agora-arena .alt-table { border: 1px solid var(--line); border-radius: 16px; background: var(--sd); overflow: hidden; }
+.agora-arena .alt-thead, .agora-arena .alt-row {
+  display: grid;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 16px;
+  font-size: 0.82rem;
+}
+.agora-arena .alt-thead { font-size: 0.7rem; color: var(--mut2); letter-spacing: 0.04em; border-bottom: 1px solid var(--line); background: rgba(255, 255, 255, 0.02); }
+.agora-arena .alt-row { border-bottom: 1px solid var(--line); }
+.agora-arena .alt-row:last-child { border-bottom: 0; }
+.agora-arena .alt-row:hover { background: rgba(255, 255, 255, 0.025); }
+.agora-arena .alt-row.rejected { opacity: 0.55; }
+.agora-arena .alt-tbody { max-height: 520px; overflow: auto; }
+.agora-arena .alt-q { display: grid; line-height: 1.3; min-width: 0; }
+.agora-arena .alt-q small { color: var(--mut2); font-size: 0.72rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.agora-arena .alt-q b { color: var(--ivory); }
+.agora-arena .poly-log .alt-thead, .agora-arena .poly-log .alt-row { grid-template-columns: 74px 1.8fr 56px 130px 80px 90px 90px; }
+.agora-arena .wx-log .alt-thead, .agora-arena .wx-log .alt-row { grid-template-columns: 74px 1.1fr 84px 150px 120px 70px 90px 80px; }
+.agora-arena .stk-log .alt-thead, .agora-arena .stk-log .alt-row { grid-template-columns: 74px 110px 1.4fr 150px 90px 130px 90px; }
+.agora-arena .stk-table .alt-thead, .agora-arena .stk-table .alt-row { grid-template-columns: 1.3fr 70px 150px 60px 1fr; padding: 9px 12px; }
+@media (max-width: 900px) {
+  .agora-arena .alt-thead { display: none; }
+  .agora-arena .alt-row { grid-template-columns: 1fr 1fr !important; }
+  .agora-arena .alt-q { grid-column: 1 / -1; }
+}
+
+/* 차트 */
+.agora-arena .alt-chart { display: grid; gap: 6px; }
+.agora-arena .alt-chart-svg { width: 100%; height: auto; display: block; cursor: crosshair; }
+.agora-arena .alt-chart-tip { display: flex; gap: 12px; align-items: baseline; font-size: 0.8rem; color: var(--mut); min-height: 20px; flex-wrap: wrap; }
+.agora-arena .alt-chart-tip b { font: 800 0.95rem var(--disp); }
+.agora-arena .alt-chart-tip .bench { color: var(--mut2); }
+
+/* Polymarket 카드 */
+.agora-arena .poly-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.agora-arena .poly-card { border: 1px solid var(--line); border-radius: 16px; background: var(--sd); padding: 14px 16px; display: grid; gap: 10px; }
+.agora-arena .poly-card-top { display: flex; justify-content: space-between; align-items: center; }
+.agora-arena .poly-cat { font: 700 0.64rem var(--body); letter-spacing: 0.1em; color: var(--mut2); text-transform: uppercase; }
+.agora-arena .poly-q { margin: 0; font: 700 0.95rem var(--body); line-height: 1.4; letter-spacing: -0.01em; }
+.agora-arena .poly-prob { display: grid; gap: 6px; }
+.agora-arena .poly-prob-bar { position: relative; height: 10px; border-radius: 6px; background: var(--line2); overflow: visible; }
+.agora-arena .poly-prob-bar b { display: block; height: 100%; border-radius: 6px; opacity: 0.55; transition: width 0.8s var(--ease); }
+.agora-arena .poly-prob-bar i { position: absolute; top: -3px; width: 2px; height: 16px; background: var(--ivory); transform: translateX(-1px); }
+.agora-arena .poly-prob-bar i.entry { background: var(--mut2); }
+.agora-arena .poly-prob-bar i.now { width: 3px; }
+.agora-arena .poly-prob-bar i.now.up { background: var(--pos); }
+.agora-arena .poly-prob-bar i.now.dn { background: var(--neg); }
+.agora-arena .poly-prob-nums { display: flex; justify-content: space-between; font-size: 0.76rem; color: var(--mut); }
+.agora-arena .poly-prob-nums b { color: var(--ivory); }
+.agora-arena .poly-meta { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; font-size: 0.76rem; color: var(--mut2); }
+.agora-arena .poly-meta b { color: var(--ivory); font-weight: 700; }
+.agora-arena .poly-meta .up b { color: var(--pos); }
+.agora-arena .poly-meta .dn b { color: var(--neg); }
+.agora-arena .poly-foot { display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--mut2); border-top: 1px dashed var(--line2); padding-top: 8px; }
+.agora-arena .poly-wallets { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.agora-arena .poly-wallet { border: 1px solid var(--line); border-radius: 14px; background: var(--sd); padding: 12px 14px; display: grid; gap: 8px; }
+.agora-arena .poly-wallet-id { display: grid; line-height: 1.3; }
+.agora-arena .poly-wallet-id b { font-size: 0.9rem; }
+.agora-arena .poly-wallet-id span { font-size: 0.74rem; color: var(--mut2); }
+.agora-arena .poly-wallet-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; font-size: 0.74rem; color: var(--mut2); }
+.agora-arena .poly-wallet-stats b { color: var(--ivory); }
+
+/* 날씨 카드 */
+.agora-arena .wx-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 12px; }
+.agora-arena .wx-card { border: 1px solid var(--line); border-radius: 16px; background: var(--sd); padding: 14px 16px; display: grid; gap: 10px; }
+.agora-arena .wx-card-top { display: flex; align-items: center; gap: 8px; }
+.agora-arena .wx-card-top b { font: 800 0.95rem var(--disp); }
+.agora-arena .wx-card-top .alt-side { margin-left: auto; }
+.agora-arena .wx-q { margin: 0; font: 600 0.88rem var(--body); color: var(--mut); }
+.agora-arena .wx-q b { color: var(--ivory); font-size: 1rem; }
+.agora-arena .wx-scale { position: relative; height: 26px; margin: 2px 0; border-radius: 6px; background: linear-gradient(90deg, #6bb7d6 0%, var(--line2) 50%, #f28c5a 100%); opacity: 0.95; }
+.agora-arena .wx-scale .wx-bracket { position: absolute; top: 4px; bottom: 4px; background: rgba(255, 248, 237, 0.28); border: 1px solid rgba(255, 248, 237, 0.7); border-radius: 4px; }
+.agora-arena .wx-scale .wx-forecast { position: absolute; top: -3px; bottom: -3px; width: 2px; background: var(--ivory); transform: translateX(-1px); }
+.agora-arena .wx-scale .wx-actual { position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%; transform: translate(-5px, -5px); border: 2px solid var(--black); }
+.agora-arena .wx-scale .wx-actual.win { background: var(--pos); }
+.agora-arena .wx-scale .wx-actual.loss { background: var(--neg); }
+.agora-arena .wx-scale span { position: absolute; top: 100%; margin-top: 2px; font-size: 0.62rem; color: var(--mut2); }
+.agora-arena .wx-scale span.l { left: 0; }
+.agora-arena .wx-scale span.r { right: 0; }
+.agora-arena .wx-nums { display: grid; grid-template-columns: 1fr 1fr; gap: 3px 10px; font-size: 0.76rem; color: var(--mut2); margin-top: 8px; }
+.agora-arena .wx-nums b { color: var(--ivory); }
+.agora-arena .wx-nums .up b { color: var(--pos); }
+.agora-arena .wx-foot { display: flex; justify-content: space-between; font-size: 0.72rem; color: var(--mut2); border-top: 1px dashed var(--line2); padding-top: 8px; gap: 8px; flex-wrap: wrap; }
+.agora-arena .wx-foot b { color: var(--ivory); }
+.agora-arena .wx-cities { display: grid; gap: 8px; }
+.agora-arena .wx-city { display: grid; grid-template-columns: 90px 1fr 48px 72px; align-items: center; gap: 10px; font-size: 0.8rem; }
+.agora-arena .wx-city .k { color: var(--mut); }
+.agora-arena .wx-city .bar { height: 6px; background: var(--line2); border-radius: 4px; overflow: hidden; }
+.agora-arena .wx-city .bar i { display: block; height: 100%; border-radius: 4px; }
+.agora-arena .wx-city .v { text-align: right; }
+.agora-arena .alt-real .tag.real { font-size: 0.6rem; }
+
+/* 주식 */
+.agora-arena .stk-vs { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-size: 0.8rem; margin-top: 8px; color: var(--mut); }
+.agora-arena .stk-holdings .alt-table { margin-top: 6px; }
+.agora-arena .stk-expo { display: grid; gap: 8px; margin: 6px 0 12px; }
+.agora-arena .stk-expo-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: var(--line2); }
+.agora-arena .stk-expo-bar i { display: block; height: 100%; }
+.agora-arena .stk-expo-bar i.cash { background: var(--line); }
+.agora-arena .stk-expo-list { display: flex; gap: 10px 14px; flex-wrap: wrap; font-size: 0.76rem; color: var(--mut2); }
+.agora-arena .stk-expo-list i { display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 4px; vertical-align: middle; }
+.agora-arena .stk-expo-list i.cash { background: var(--line); }
+.agora-arena .stk-expo-list b { color: var(--ivory); }
+
+/* 데모 예치 */
+.agora-arena .demo-deposit { display: inline-flex; flex-direction: column; gap: 4px; }
+.agora-arena .demo-deposit-err { color: var(--neg); font-size: 0.72rem; }
+.ar-header .wallet-chip.demo { border-color: rgba(255, 90, 31, 0.5); color: var(--orange); }
+.ar-header .wallet-chip.demo .dot { background: var(--orange); }
+
+/* MINT 아카이브 */
+.agora-arena .mint-strats .alt-thead, .agora-arena .mint-strats .alt-row { grid-template-columns: 1.2fr 1.4fr 110px 130px; }
+.agora-arena .mint-log .alt-thead, .agora-arena .mint-log .alt-row { grid-template-columns: 74px 1fr 120px 150px 90px 110px 1fr; }
+.agora-arena .mint-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 4px; vertical-align: middle; }
+.agora-arena .mint-roi { display: grid; gap: 4px; }
+.agora-arena .mint-roi .bar { display: block; height: 5px; background: var(--line2); border-radius: 3px; overflow: hidden; }
+.agora-arena .mint-roi .bar b { display: block; height: 100%; border-radius: 3px; }

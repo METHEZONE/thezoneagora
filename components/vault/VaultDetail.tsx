@@ -9,6 +9,8 @@ import { VaultPerformance } from "@/components/vault/VaultPerformance";
 import { ActivityFeed } from "@/components/vault/ActivityFeed";
 import { ActionBar } from "@/components/vault/ActionBar";
 import { CharacterRow } from "@/components/vault/CharacterRow";
+import { DemoDepositButton } from "@/components/vault/DemoDepositButton";
+import { DEMO_OWNER } from "@/lib/vault/demo";
 
 /**
  * 특정 전략(strategyId) 볼트의 대시보드. /vault(mint 게스트)와 /vault/[strategyId]가 공유한다.
@@ -47,6 +49,12 @@ export function VaultDetail({ strategyId }: { strategyId: string }) {
         >
           지갑 연결하고 배분하기
         </Link>
+        <DemoDepositButton
+          strategyId={strategyId}
+          amountUsdc={10_000}
+          className="mt-3 rounded-xl border border-agora-orange/40 bg-agora-orange/10 px-5 py-2.5 text-[13px] font-semibold text-agora-orange hover:bg-agora-orange/20"
+          label="Sui 없이 임의로 10,000 USDC 예치하기 (demo)"
+        />
       </div>
     );
   }
@@ -71,6 +79,12 @@ export function VaultDetail({ strategyId }: { strategyId: string }) {
         >
           볼트 만들기
         </Link>
+        <DemoDepositButton
+          strategyId={strategyId}
+          amountUsdc={10_000}
+          className="mt-3 rounded-xl border border-agora-orange/40 bg-agora-orange/10 px-5 py-2.5 text-[13px] font-semibold text-agora-orange hover:bg-agora-orange/20"
+          label="임의로 10,000 USDC 예치하기 (demo)"
+        />
       </div>
     );
   }
@@ -90,7 +104,25 @@ export function VaultDetail({ strategyId }: { strategyId: string }) {
           <p className="text-[13px] font-medium text-agora-orange">
             데모 볼트 — 지갑을 연결하면 내 볼트를 만들 수 있어요
           </p>
-          <CharacterRow size={40} className="hidden sm:flex" />
+          <DemoDepositButton
+            strategyId={strategyId}
+            amountUsdc={10_000}
+            className="rounded-xl bg-agora-orange px-4 py-2 text-[12px] font-bold text-arena-black hover:opacity-90"
+            label="Sui 없이 임의로 10,000 USDC 예치 (demo)"
+          />
+        </div>
+      )}
+      {owner === DEMO_OWNER && !vault.isGuest && (
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-agora-orange/30 bg-agora-orange/10 px-4 py-3">
+          <p className="text-[13px] font-medium text-agora-orange">
+            DEMO — 지갑 없이 임의 자금으로 만든 mock 볼트입니다. 입금·출금·긴급탈출 전부 이 브라우저 안에서만 동작해요.
+          </p>
+          <DemoDepositButton
+            strategyId={strategyId}
+            amountUsdc={1_000}
+            className="rounded-xl border border-agora-orange/40 bg-agora-orange/10 px-4 py-2 text-[12px] font-semibold text-agora-orange hover:bg-agora-orange/20"
+            label="+1,000 USDC 임의 예치 (demo)"
+          />
         </div>
       )}
 

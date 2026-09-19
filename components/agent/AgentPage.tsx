@@ -7,8 +7,12 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import { AgentCharacter, characterFor, useCharacterBlink } from "@/components/arena/characters";
 import { useBacktest, useReplayBoard } from "@/lib/backtest/client";
-import type { BacktestWindow } from "@/lib/backtest/klines";
+import { WINDOWS, type BacktestWindow } from "@/lib/backtest/klines";
 import { configFor } from "@/lib/backtest/engine";
+import { altConfigFor } from "@/lib/altstrat/configs";
+import { AltAgentPage } from "@/components/agent/alt/AltAgentPage";
+import { MintArchivePage } from "@/components/agent/MintArchivePage";
+import { DemoDepositButton } from "@/components/vault/DemoDepositButton";
 import { AGENTS } from "@/lib/data/seed/seasons";
 import {
   AGENT_NAME,
@@ -16,6 +20,7 @@ import {
   STRATEGY_ONELINER,
   SYMBOL_LABEL,
   WINDOW_LABEL,
+  WINDOW_SHORT,
   riskSentence,
 } from "@/components/agent/meta";
 import { PriceEquityChart } from "@/components/agent/PriceEquityChart";
@@ -27,6 +32,14 @@ import { Pnl, RiskBadge, ScoreBreakdownInline, ScoreRing, usd } from "@/componen
 type Tab = "record" | "backtest";
 
 export function AgentPage({ agentId, initialTab = "record" }: { agentId: string; initialTab?: Tab }) {
+  const alt = altConfigFor(agentId);
+  if (alt) return <AltAgentPage cfg={alt} />;
+  // MINT는 리플레이가 아니라 실제 MK2 아카이브 — 전용 페이지.
+  if (agentId === "mint") return <MintArchivePage />;
+  return <CryptoAgentPage agentId={agentId} initialTab={initialTab} />;
+}
+
+function CryptoAgentPage({ agentId, initialTab = "record" }: { agentId: string; initialTab?: Tab }) {
   useCharacterBlink();
   const cfg = configFor(agentId);
   const seed = AGENTS.find((a) => a.id === agentId);
@@ -52,7 +65,7 @@ export function AgentPage({ agentId, initialTab = "record" }: { agentId: string;
     return (
       <div className="ag-page wrap">
         <div className="ag-error">알 수 없는 에이전트입니다: {agentId}</div>
-        <Link href="/app" className="btn ghost">
+        <Link href="/" className="btn ghost">
           ← 아레나로
         </Link>
       </div>
@@ -67,7 +80,7 @@ export function AgentPage({ agentId, initialTab = "record" }: { agentId: string;
     <div className="ag-page">
       <div className="wrap">
         <nav className="ag-crumb">
-          <Link href="/app">아레나</Link>
+          <Link href="/">아레나</Link>
           <span>/</span>
           <span>{name}</span>
         </nav>
@@ -93,6 +106,7 @@ export function AgentPage({ agentId, initialTab = "record" }: { agentId: string;
               <button type="button" className="btn ghost" onClick={() => setTab("backtest")}>
                 백테스트 해보기
               </button>
+              <DemoDepositButton strategyId={agentId} amountUsdc={10_000} className="btn ghost" label="데모 자금으로 예치 (Sui 없이)" />
             </div>
           </div>
           <div className="ag-hero-side">
@@ -101,7 +115,7 @@ export function AgentPage({ agentId, initialTab = "record" }: { agentId: string;
                 <ScoreRing score={r.score} color={accent} size={84} showBreakdown={false} />
                 <div className="ag-hero-rank num">
                   <b>#{rank ?? "–"}</b>
-                  <small>AGORA 점수 기준 · {WINDOW_LABEL[window]}</small>
+                  <small>AGORA 점수 기준 · {WINDOW_LABEL[window]} · 10명 중</small>
                 </div>
               </>
             ) : (
@@ -142,9 +156,9 @@ export function AgentPage({ agentId, initialTab = "record" }: { agentId: string;
                 )}
               </div>
               <div className="ag-seg">
-                {(["7d", "30d"] as BacktestWindow[]).map((w) => (
-                  <button key={w} type="button" className={`ag-seg-btn num${window === w ? " on" : ""}`} onClick={() => setWindow(w)}>
-                    {WINDOW_LABEL[w]}
+                {WINDOWS.map((w) => (
+                  <button key={w} type="button" className={`ag-seg-btn num${window === w ? " on" : ""}`} onClick={() => setWindow(w)} title={WINDOW_LABEL[w]}>
+                    {WINDOW_SHORT[w]}
                   </button>
                 ))}
               </div>
@@ -179,7 +193,7 @@ export function AgentPage({ agentId, initialTab = "record" }: { agentId: string;
                       <b className="num ag-card-head">{r.score.total} / 100</b>
                     </header>
                     <ScoreBreakdownInline score={r.score} color={accent} />
-                    <p className="ag-bd-note">수익률 30 · 위험조정 30 · 일관성 20 · 최근추세 20. 5명 모두 같은 공식, 같은 시세.</p>
+                    <p className="ag-bd-note">수익률 30 · 위험조정 30 · 일관성 20 · 최근추세 20. 10명 모두 같은 공식.</p>
                   </section>
                   <section className="ag-card">
                     <header>

@@ -20,6 +20,10 @@ import type { LiveAgentState } from "@/lib/live/types";
 import { AGENTS as SEED_AGENTS } from "@/lib/data/seed/seasons";
 import { characterFor } from "@/components/arena/characters";
 import mintReal from "@/lib/data/mint/mint-real-data.json";
+import { ALT_CONFIGS } from "@/lib/altstrat/configs";
+import type { AgentKind, AgentSummary } from "@/lib/backtest/engine";
+import type { ReplayBoard } from "@/lib/backtest/service";
+import { STRATEGY_LABEL } from "@/components/agent/meta";
 
 // MINT는 라이브 컨트래리언 시뮬레이션이 아니라 실제 MK2 엔진(Mac mini, OKX 페이퍼
 // 트레이딩, 2026.04.17~09.19, 879건)의 아카이브 자산곡선을 그대로 보여준다.
@@ -64,6 +68,8 @@ const MINT_SHARPE = (() => {
 export interface ArenaAgent {
   id: string;
   name: string;
+  /** crypto / polymarket-copy / weather-arb / stocks */
+  kind: AgentKind;
   strat: string;
   /** 전 에이전트가 실시간 시세를 추종하는 페이퍼 트레이딩이라 항상 true — UI에서
    *  REAL/SIM을 가르는 용도가 아니라 "실데이터 기반" 배지를 다는 데 쓴다. */
@@ -82,7 +88,9 @@ export interface ArenaAgent {
   score: number;
 }
 
-const AGENT_ORDER = ["mint", "axiom", "delphi", "atlas", "zephyr"];
+const CRYPTO_ORDER = ["mint", "axiom", "delphi", "atlas", "zephyr"];
+const ALT_ORDER = ALT_CONFIGS.map((c) => c.agentId);
+export const AGENT_ORDER = [...CRYPTO_ORDER, ...ALT_ORDER];
 
 const MOCK_SEED: Record<string, { backers: number; aum: number; win: number }> = {
   mint: { backers: 214, aum: 48_200, win: 64 },
@@ -90,6 +98,11 @@ const MOCK_SEED: Record<string, { backers: number; aum: number; win: number }> =
   delphi: { backers: 128, aum: 26_800, win: 71 },
   atlas: { backers: 64, aum: 15_200, win: 49 },
   zephyr: { backers: 37, aum: 8_600, win: 44 },
+  pythia: { backers: 96, aum: 19_400, win: 58 },
+  augur: { backers: 73, aum: 12_100, win: 53 },
+  kestrel: { backers: 41, aum: 6_900, win: 25 },
+  sigma: { backers: 88, aum: 17_300, win: 42 },
+  vega: { backers: 59, aum: 11_800, win: 56 },
 };
 
 function stratLabel(tagline: string): string {
@@ -158,6 +171,7 @@ function buildAgent(
   return {
     id: state.agentId,
     name: (seed?.name ?? state.agentId).toUpperCase(),
+    kind: "crypto",
     strat: seed ? stratLabel(seed.tagline) : state.strategy,
     real: seed?.isReal ?? true,
     symbol: isMint ? "MULTI" : state.symbol.replace(/USDT$/, ""),
@@ -196,5 +210,52 @@ export function useArenaAgents(): ArenaAgent[] {
   }, [engine]);
 
   const byId = new Map(snapshotAgents.map((s) => [s.agentId, s]));
-  return AGENT_ORDER.map((id) => buildAgent(byId.get(id)!, mockRef.current[id]));
+  const crypto = CRYPTO_ORDER.map((id) => buildAgent(byId.get(id)!, mockRef.current[id]));
+  // 대체 전략 5종은 브라우저 라이브 엔진이 없다 — 숫자는 느린 시계(/api/replay)에서
+  // mergeBoard()로 덧입힌다. 여기서는 캐릭터/백커 같은 정적 껍데기만 만든다.
+  const alt = ALT_CONFIGS.map<ArenaAgent>((cfg) => {
+    const seed = SEED_AGENTS.find((a) => a.id === cfg.agentId);
+    const mock = mockRef.current[cfg.agentId];
+    return {
+      id: cfg.agentId,
+      name: (seed?.name ?? cfg.agentId).toUpperCase(),
+      kind: cfg.kind,
+      strat: STRATEGY_LABEL[cfg.strategy] ?? cfg.strategy,
+      real: false,
+      symbol: cfg.venue,
+      accent: characterFor(cfg.agentId).accent,
+      ret: 0,
+      mdd: 0.5,
+      sharpe: 0,
+      win: mock.win,
+      backers: mock.backers,
+      aum: mock.aum,
+      hist: [0, 0],
+      score: 50,
+    };
+  });
+  return [...crypto, ...alt];
+}
+
+/**
+ * 느린 시계(리플레이 보드) 숫자를 아레나 에이전트에 덧입힌다.
+ * 트랙 위치·티커·상세 시트·리더보드가 전부 같은 창(1D~6M)의 같은 숫자를 쓰게 하는 단일 지점.
+ * 보드가 아직 없으면(로딩/에러) 크립토는 라이브 값, 대체 전략은 0으로 둔다.
+ */
+export function mergeBoard(agents: ArenaAgent[], board: ReplayBoard | null | undefined): ArenaAgent[] {
+  if (!board) return agents;
+  const byId = new Map<string, AgentSummary>(board.agents.map((a) => [a.agentId, a]));
+  return agents.map((a) => {
+    const b = byId.get(a.id);
+    if (!b) return a;
+    return {
+      ...a,
+      kind: b.kind,
+      ret: Math.round(b.metrics.roiPct * 100) / 100,
+      mdd: Math.max(0.5, Math.round(b.metrics.mddPct * 10) / 10),
+      hist: b.spark.length >= 2 ? b.spark : a.hist,
+      score: b.score.total,
+      win: b.metrics.roundTrips ? Math.round(b.metrics.winRatePct) : a.win,
+    };
+  });
 }

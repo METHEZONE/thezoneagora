@@ -19,6 +19,8 @@ import type {
   VaultDataSource,
 } from "@/lib/vault/VaultDataSource";
 import { getLiveStrategyEngine } from "@/lib/live/LiveStrategyEngine";
+import { DEMO_OWNER } from "@/lib/vault/demo";
+import { useDemoMode } from "@/lib/vault/useDemoMode";
 
 const MAX_FEED_LENGTH = 200;
 
@@ -65,8 +67,11 @@ export interface UseVaultResult {
  */
 export function useVault(strategyId: string): UseVaultResult {
   const account = useCurrentAccount();
-  const owner = account?.address ?? null;
-  const source = useMemo(() => getVaultDataSource(), []);
+  const demo = useDemoMode();
+  // 데모 모드면 지갑 없이도 고정 owner로 mock 볼트를 소유한다.
+  const owner = account?.address ?? (demo ? DEMO_OWNER : null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const source = useMemo(() => getVaultDataSource(), [demo]);
 
   // real(SuiVaultSource) 모드에서 createVault/depositMore 등이 실제로 지갑 서명을
   // 요청하려면 dApp Kit의 서명 콜백을 소스에 주입해야 한다. 이 배선이 아예 없어서
@@ -219,8 +224,10 @@ export function useMyVaults(): {
   refresh: () => Promise<void>;
 } {
   const account = useCurrentAccount();
-  const owner = account?.address ?? null;
-  const source = useMemo(() => getVaultDataSource(), []);
+  const demo = useDemoMode();
+  const owner = account?.address ?? (demo ? DEMO_OWNER : null);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const source = useMemo(() => getVaultDataSource(), [demo]);
 
   const [vaults, setVaults] = useState<OwnedVaultSummary[]>([]);
   const [loading, setLoading] = useState(true);

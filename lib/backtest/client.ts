@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import type { BacktestWindow } from "@/lib/backtest/klines";
 import type { BtResult } from "@/lib/backtest/engine";
-import type { ReplayBoard } from "@/lib/backtest/service";
+import type { AnyResult, ReplayBoard } from "@/lib/backtest/service";
 
 // 브라우저 측 느린 시계 클라이언트. 모듈 메모리 캐시 + 진행 중 요청 dedupe.
 // basePath("/agora")는 fetch에 자동 적용되지 않으므로 직접 붙인다.
@@ -56,12 +56,26 @@ export function useBacktest(
   window: BacktestWindow,
   capital: number
 ): AsyncState<BtResult> {
-  const [state, setState] = useState<AsyncState<BtResult>>({ data: null, error: null, loading: !!agentId });
+  const any = useAnyBacktest(agentId, window, capital);
+  return {
+    data: any.data && any.data.kind === "crypto" && !("archive" in any.data) ? any.data : null,
+    error: any.error,
+    loading: any.loading,
+  };
+}
+
+/** 크립토(BtResult)든 대체 전략(AltResult)이든 종류를 가리지 않고 받는다. */
+export function useAnyBacktest(
+  agentId: string | null,
+  window: BacktestWindow,
+  capital: number
+): AsyncState<AnyResult> {
+  const [state, setState] = useState<AsyncState<AnyResult>>({ data: null, error: null, loading: !!agentId });
   useEffect(() => {
     if (!agentId) return;
     let alive = true;
     setState((s) => ({ ...s, loading: true, error: null }));
-    getJson<BtResult>(`${BASE}/backtest?agent=${agentId}&window=${window}&capital=${capital}`)
+    getJson<AnyResult>(`${BASE}/backtest?agent=${agentId}&window=${window}&capital=${capital}`)
       .then((data) => alive && setState({ data, error: null, loading: false }))
       .catch((e: Error) => alive && setState({ data: null, error: e.message, loading: false }));
     return () => {
@@ -71,6 +85,8 @@ export function useBacktest(
   return state;
 }
 
-export function fetchBacktest(agentId: string, window: BacktestWindow, capital: number): Promise<BtResult> {
-  return getJson<BtResult>(`${BASE}/backtest?agent=${agentId}&window=${window}&capital=${capital}`);
+export async function fetchBacktest(agentId: string, window: BacktestWindow, capital: number): Promise<BtResult> {
+  const r = await getJson<AnyResult>(`${BASE}/backtest?agent=${agentId}&window=${window}&capital=${capital}`);
+  if (r.kind !== "crypto" || "archive" in r) throw new Error("이 에이전트는 크립토 리플레이 백테스트를 지원하지 않습니다.");
+  return r;
 }

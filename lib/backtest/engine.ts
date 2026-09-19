@@ -14,7 +14,11 @@ import {
   type StrategyExtra,
 } from "@/lib/live/strategyLogic";
 import type { LiveStrategyKind, SignalSide, TickerSymbol } from "@/lib/live/types";
-import { WARMUP_CANDLES, type BacktestWindow, type Candle } from "@/lib/backtest/klines";
+import { WARMUP_CANDLES, WINDOW_SPEC, type BacktestWindow, type Candle } from "@/lib/backtest/klines";
+
+/** 리더보드에 함께 서는 에이전트 종류. crypto는 Binance 실시세 리플레이, 나머지는
+ *  lib/altstrat의 결정론적 페이퍼 시뮬레이션. */
+export type AgentKind = "crypto" | "polymarket-copy" | "weather-arb" | "stocks";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // 느린 시계 — 결정론적 백테스트 엔진.
@@ -97,6 +101,7 @@ export interface ScoreBreakdown {
 export type RiskGrade = "low" | "mid" | "high";
 
 export interface BtResult {
+  kind: "crypto";
   agentId: string;
   strategy: LiveStrategyKind;
   symbol: TickerSymbol;
@@ -205,6 +210,7 @@ export function runBacktest(
   for (const s of symbols) closes[s] = (histories[s] ?? []).map((c) => c.c);
 
   const rng = seededRandom(hashString(`${cfg.agentId}:${window}:${main[0].t}`));
+  const candleHours = WINDOW_SPEC[window].candleHours;
   const extra: StrategyExtra = { cooldownTicks: 0, anchorPrice: null };
   const total = main.length;
   const start = WARMUP_CANDLES; // 창 시작 인덱스
@@ -291,7 +297,7 @@ export function runBacktest(
           fee,
           pnl,
           pnlPct: (pnl / before) * 100,
-          holdHours: i - position.entryIndex,
+          holdHours: (i - position.entryIndex) * candleHours,
           equityAfter: equity,
           verdict: "VERIFIED",
           riskScoreBps: v.riskScoreBps,
@@ -316,14 +322,21 @@ export function runBacktest(
     capital,
     equityCurve,
     holdCurve,
-    trades,
-    candles: windowCandles,
+    tradePnlPcts: trades.filter((t) => t.side === "SELL" && t.verdict === "VERIFIED").map((t) => t.pnlPct ?? 0),
+    holdHoursList: trades.filter((t) => t.side === "SELL" && t.verdict === "VERIFIED").map((t) => t.holdHours ?? 0),
+    buys: trades.filter((t) => t.side === "BUY" && t.verdict === "VERIFIED").length,
+    sells: trades.filter((t) => t.side === "SELL" && t.verdict === "VERIFIED").length,
+    rejected: trades.filter((t) => t.verdict === "REJECTED").length,
+    from: windowCandles[0]?.t ?? 0,
+    to: windowCandles[windowCandles.length - 1]?.t ?? 0,
     exposureCount,
     openPosition: position !== null,
+    candlesPerDay: 24 / candleHours,
   });
   const score = computeScore(metrics);
 
   return {
+    kind: "crypto",
     agentId: cfg.agentId,
     strategy: cfg.strategy,
     symbol: cfg.symbol,
@@ -338,16 +351,32 @@ export function runBacktest(
   };
 }
 
-function computeMetrics(args: {
+export interface MetricsInput {
   capital: number;
   equityCurve: number[];
-  holdCurve: number[];
-  trades: BtTrade[];
-  candles: Candle[];
+  /** 벤치마크(그냥 들고 있기) 곡선. 없으면 자본 그대로(=0%)로 본다. */
+  holdCurve?: number[];
+  /** 청산된 거래별 손익 % (시간순) */
+  tradePnlPcts: number[];
+  /** 청산된 거래별 보유 시간(시간 단위) */
+  holdHoursList: number[];
+  buys: number;
+  sells: number;
+  rejected: number;
+  from: number;
+  to: number;
   exposureCount: number;
   openPosition: boolean;
-}): BtMetrics {
-  const { capital, equityCurve, holdCurve, trades, candles, exposureCount, openPosition } = args;
+  /** equityCurve 샘플 하나가 덮는 시간의 역수 — 1시간봉이면 24, 4시간봉이면 6 */
+  candlesPerDay: number;
+}
+
+/** equity 곡선 + 거래 요약으로 공통 지표를 뽑는다. 크립토 리플레이와 대체 전략
+ *  시뮬레이션이 같은 함수를 써야 AGORA 점수가 종류를 가리지 않고 공정해진다. */
+export function computeMetrics(args: MetricsInput): BtMetrics {
+  const { capital, equityCurve, tradePnlPcts: pcts, holdHoursList: holds, buys, sells, rejected, exposureCount, openPosition } = args;
+  const holdCurve = args.holdCurve ?? equityCurve.map(() => capital);
+  const candlesPerDay = Math.max(1, Math.round(args.candlesPerDay));
   const finalEquity = equityCurve[equityCurve.length - 1] ?? capital;
   const pnl = finalEquity - capital;
   const roiPct = (pnl / capital) * 100;
@@ -359,10 +388,6 @@ function computeMetrics(args: {
     if (peak > 0) mdd = Math.max(mdd, ((peak - e) / peak) * 100);
   }
 
-  const sells = trades.filter((t) => t.side === "SELL" && t.verdict === "VERIFIED");
-  const buys = trades.filter((t) => t.side === "BUY" && t.verdict === "VERIFIED");
-  const rejected = trades.filter((t) => t.verdict === "REJECTED");
-  const pcts = sells.map((t) => t.pnlPct ?? 0);
   const wins = pcts.filter((p) => p > 0).length;
   const losses = pcts.length - wins;
   let maxWin = 0;
@@ -380,14 +405,13 @@ function computeMetrics(args: {
     maxWin = Math.max(maxWin, curWin);
     maxLose = Math.max(maxLose, curLose);
   }
-  const holds = sells.map((t) => t.holdHours ?? 0);
-
   // 일 단위 수익 난 날 비율
   let profitableDays = 0;
   let dayCount = 0;
-  for (let i = 24; i <= equityCurve.length; i += 24) {
-    const a = equityCurve[i - 24];
-    const b = equityCurve[Math.min(i, equityCurve.length) - 1];
+  for (let i = candlesPerDay; i <= equityCurve.length; i += candlesPerDay) {
+    // 하루의 시작점(i-candlesPerDay)과 다음 날 시작점(i, 마지막이면 끝점)을 비교한다.
+    const a = equityCurve[i - candlesPerDay];
+    const b = equityCurve[Math.min(i, equityCurve.length - 1)];
     if (a !== undefined && b !== undefined) {
       dayCount += 1;
       if (b > a) profitableDays += 1;
@@ -395,7 +419,7 @@ function computeMetrics(args: {
   }
 
   const n = equityCurve.length;
-  const idx7 = Math.max(0, n - 168);
+  const idx7 = Math.max(0, n - 7 * candlesPerDay);
   const recent7dRoiPct = n > 1 ? ((equityCurve[n - 1] - equityCurve[idx7]) / equityCurve[idx7]) * 100 : 0;
   const holdFinal = holdCurve[holdCurve.length - 1] ?? capital;
 
@@ -405,10 +429,10 @@ function computeMetrics(args: {
     pnl,
     roiPct,
     mddPct: Math.round(mdd * 100) / 100,
-    roundTrips: sells.length,
+    roundTrips: pcts.length,
     wins,
     losses,
-    winRatePct: sells.length ? Math.round((wins / sells.length) * 1000) / 10 : 0,
+    winRatePct: pcts.length ? Math.round((wins / pcts.length) * 1000) / 10 : 0,
     bestTradePct: pcts.length ? Math.max(...pcts) : null,
     worstTradePct: pcts.length ? Math.min(...pcts) : null,
     avgTradePct: pcts.length ? pcts.reduce((a, b) => a + b, 0) / pcts.length : null,
@@ -418,23 +442,26 @@ function computeMetrics(args: {
     exposurePct: n ? Math.round((exposureCount / n) * 1000) / 10 : 0,
     profitableDaysPct: dayCount ? Math.round((profitableDays / dayCount) * 1000) / 10 : 0,
     tradingDays: dayCount,
-    buys: buys.length,
-    sells: sells.length,
-    rejected: rejected.length,
+    buys,
+    sells,
+    rejected,
     recent7dRoiPct,
     holdRoiPct: ((holdFinal - capital) / capital) * 100,
     holdFinalEquity: holdFinal,
     openPosition,
-    from: candles[0]?.t ?? 0,
-    to: candles[candles.length - 1]?.t ?? 0,
+    from: args.from,
+    to: args.to,
   };
 }
 
 /** 리더보드용 경량 요약 (캔들/거래 전체는 빼고 스파크라인만). */
 export interface AgentSummary {
+  kind: AgentKind;
   agentId: string;
-  strategy: LiveStrategyKind;
-  symbol: TickerSymbol;
+  /** crypto면 LiveStrategyKind, 그 외엔 대체 전략 서브타입 문자열 */
+  strategy: string;
+  /** crypto면 Binance 티커, 그 외엔 거래 무대(POLYMARKET/KALSHI/US-EQ 등) */
+  symbol: string;
   window: BacktestWindow;
   metrics: BtMetrics;
   score: ScoreBreakdown;
@@ -443,15 +470,21 @@ export interface AgentSummary {
   spark: number[];
 }
 
-export function summarize(r: BtResult): AgentSummary {
-  const n = r.equityCurve.length;
-  const points = 32;
+export function sparkOf(equityCurve: number[], capital: number, points = 32): number[] {
+  const n = equityCurve.length;
+  if (n === 0) return [];
   const spark: number[] = [];
   for (let k = 0; k < points; k++) {
     const i = Math.min(n - 1, Math.round((k / (points - 1)) * (n - 1)));
-    spark.push(((r.equityCurve[i] - r.metrics.capital) / r.metrics.capital) * 100);
+    spark.push(((equityCurve[i] - capital) / capital) * 100);
   }
+  return spark;
+}
+
+export function summarize(r: BtResult): AgentSummary {
+  const spark = sparkOf(r.equityCurve, r.metrics.capital);
   return {
+    kind: "crypto",
     agentId: r.agentId,
     strategy: r.strategy,
     symbol: r.symbol,

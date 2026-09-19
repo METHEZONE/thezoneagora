@@ -7,8 +7,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { useWalletConnect } from "@/components/arena/WalletConnect";
+import { setDemoMode } from "@/lib/vault/demo";
+import { DemoDepositButton } from "@/components/vault/DemoDepositButton";
 
-export function ConnectStep() {
+export function ConnectStep({ strategyId, amountUsdc }: { strategyId: string; amountUsdc?: number }) {
   const wallet = useWalletConnect();
   const [attempted, setAttempted] = useState(false);
 
@@ -42,6 +44,28 @@ export function ConnectStep() {
           한 번은 실패할 수 있어요 (확장 프로그램이 깨어나는 시간) — 바로 재시도하면 됩니다.
         </p>
       )}
+
+      <div className="mt-2 w-full max-w-sm rounded-2xl border border-white/10 bg-white/[0.03] p-4 text-left">
+        <div className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-light">Sui 연결이 안 되나요?</div>
+        <p className="mt-1 text-[13px] leading-relaxed text-muted-light">
+          지갑 없이 데모 자금으로 같은 볼트 흐름을 끝까지 볼 수 있어요. 데모 볼트는 이 브라우저에만 저장됩니다.
+        </p>
+        <div className="mt-3 flex flex-col gap-2 sm:flex-row">
+          <DemoDepositButton
+            strategyId={strategyId}
+            amountUsdc={amountUsdc ?? 10_000}
+            className="flex-1 rounded-[12px] border border-agora-orange/50 bg-agora-orange/10 px-4 py-2.5 text-[13px] font-semibold text-agora-orange transition-colors hover:bg-agora-orange/20"
+            label={`임의로 ${(amountUsdc ?? 10_000).toLocaleString()} USDC 예치하기 (demo)`}
+          />
+          <button
+            type="button"
+            className="flex-1 rounded-[12px] border border-white/15 bg-white/[0.03] px-4 py-2.5 text-[13px] font-semibold text-warm-ivory transition-colors hover:bg-white/[0.08]"
+            onClick={() => setDemoMode(true)}
+          >
+            금액 직접 정하기 (demo)
+          </button>
+        </div>
+      </div>
     </motion.div>
   );
 }

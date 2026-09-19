@@ -11,6 +11,8 @@
 import Link from "next/link";
 import { AgoraMark } from "@/components/arena/AgoraMark";
 import { useWalletConnect } from "@/components/arena/WalletConnect";
+import { useDemoMode } from "@/lib/vault/useDemoMode";
+import { setDemoMode } from "@/lib/vault/demo";
 import "@/components/arena/arena.css";
 
 function shortenAddress(address: string): string {
@@ -19,6 +21,7 @@ function shortenAddress(address: string): string {
 
 export function AppHeader() {
   const wallet = useWalletConnect();
+  const demo = useDemoMode();
 
   return (
     <header className="ar-header">
@@ -37,6 +40,17 @@ export function AppHeader() {
           <Link href="/vault" className="btn ghost">
             내 볼트
           </Link>
+          {demo && !wallet.connected && (
+            <button
+              type="button"
+              className="wallet-chip num demo"
+              onClick={() => setDemoMode(false)}
+              title="데모 모드 종료 (mock 볼트 → 지갑 모드)"
+            >
+              <span className="dot" />
+              DEMO 볼트
+            </button>
+          )}
           {wallet.connected && wallet.address ? (
             <button
               type="button"

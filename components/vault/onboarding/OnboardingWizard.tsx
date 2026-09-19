@@ -103,7 +103,7 @@ export function OnboardingWizard() {
       <div className="mx-auto max-w-[480px]">
         <StepIndicator step={step} />
 
-        {step === 1 && <ConnectStep />}
+        {step === 1 && <ConnectStep strategyId={strategyId} amountUsdc={prefilled ? Number(prefilled) : undefined} />}
 
         {step === 2 && (
           <DepositStep

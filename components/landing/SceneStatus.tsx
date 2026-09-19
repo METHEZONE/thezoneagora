@@ -8,7 +8,7 @@ const EASE = [0.22, 1, 0.36, 1] as const;
 const ROWS: { what: string; detail: string; st: string; cls: "on" | "archive" | "next" }[] = [
   {
     what: "페이퍼 트레이딩 엔진",
-    detail: "5개 전략 · Binance, CoinGecko 실시간 시세 · 전 에이전트 $10,000 기준",
+    detail: "10개 Agent · 4개 전략군(크립토·예측시장·날씨·주식) · 전 에이전트 $10,000 기준",
     st: "지금 작동",
     cls: "on",
   },

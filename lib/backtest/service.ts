@@ -1,6 +1,6 @@
 import { STRATEGY_CONFIGS, requiredSymbolsFor } from "@/lib/live/strategyLogic";
 import type { TickerSymbol } from "@/lib/live/types";
-import { fetchHourlyCandles, type BacktestWindow, type Candle } from "@/lib/backtest/klines";
+import { fetchHourlyCandles, isBacktestWindow, type BacktestWindow, type Candle } from "@/lib/backtest/klines";
 import {
   configFor,
   runBacktest,
@@ -8,6 +8,11 @@ import {
   type AgentSummary,
   type BtResult,
 } from "@/lib/backtest/engine";
+import { altResult, altSummaries, isAltAgent } from "@/lib/altstrat/service";
+import type { AltResult } from "@/lib/altstrat/types";
+import { mintArchiveResult, mintArchiveSummary, type MintArchiveResult } from "@/lib/backtest/mintArchive";
+
+export type AnyResult = BtResult | AltResult | MintArchiveResult;
 
 export const DEFAULT_CAPITAL = 10_000;
 
@@ -27,7 +32,7 @@ async function candlesFor(window: BacktestWindow): Promise<Record<TickerSymbol, 
 }
 
 export function parseWindow(v: string | null | undefined): BacktestWindow {
-  return v === "7d" ? "7d" : "30d";
+  return isBacktestWindow(v) ? v : "30d";
 }
 
 export function parseCapital(v: string | null | undefined): number {
@@ -40,7 +45,10 @@ export async function backtestAgent(
   agentId: string,
   window: BacktestWindow,
   capital = DEFAULT_CAPITAL
-): Promise<BtResult> {
+): Promise<AnyResult> {
+  if (isAltAgent(agentId)) return altResult(agentId, window, capital);
+  // MINT는 실제 MK2 아카이브 — 리플레이가 아니라 기록 그 자체.
+  if (agentId === "mint") return mintArchiveResult(window, capital);
   const cfg = configFor(agentId);
   if (!cfg) throw new Error(`알 수 없는 에이전트: ${agentId}`);
   const candles = await candlesFor(window);
@@ -56,6 +64,11 @@ export interface ReplayBoard {
 
 export async function replayAll(window: BacktestWindow, capital = DEFAULT_CAPITAL): Promise<ReplayBoard> {
   const candles = await candlesFor(window);
-  const agents = STRATEGY_CONFIGS.map((cfg) => summarize(runBacktest(cfg, candles, window, capital)));
-  return { window, capital, generatedAt: Date.now(), agents };
+  // MINT(실제 MK2 아카이브) + 크립토 리플레이 4 + 대체 전략 5(예측시장 카피 2 · 날씨 1 · 주식 2) = 10.
+  const mint = mintArchiveSummary(window, capital);
+  const crypto = STRATEGY_CONFIGS.filter((c) => c.agentId !== "mint").map((cfg) =>
+    summarize(runBacktest(cfg, candles, window, capital))
+  );
+  const alt = altSummaries(window, capital);
+  return { window, capital, generatedAt: Date.now(), agents: [mint, ...crypto, ...alt] };
 }

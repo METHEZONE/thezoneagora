@@ -4,10 +4,10 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import type { BacktestWindow } from "@/lib/backtest/klines";
+import { WINDOWS, type BacktestWindow } from "@/lib/backtest/klines";
 import { fetchBacktest } from "@/lib/backtest/client";
 import type { BtResult } from "@/lib/backtest/engine";
-import { AGENT_NAME, STRATEGY_LABEL, SYMBOL_LABEL, WINDOW_LABEL } from "@/components/agent/meta";
+import { AGENT_NAME, STRATEGY_LABEL, SYMBOL_LABEL, WINDOW_LABEL, WINDOW_SHORT } from "@/components/agent/meta";
 import { PriceEquityChart } from "@/components/agent/PriceEquityChart";
 import { MetricCards } from "@/components/agent/MetricCards";
 import { TimeMachine } from "@/components/agent/TimeMachine";
@@ -118,9 +118,9 @@ export function BacktestPanel({
         <div className="ag-bt-field">
           <label>얼마 동안</label>
           <div className="ag-seg">
-            {(["7d", "30d"] as BacktestWindow[]).map((w) => (
-              <button key={w} type="button" className={`ag-seg-btn num${window === w ? " on" : ""}`} onClick={() => setWindow(w)}>
-                최근 {WINDOW_LABEL[w]}
+            {WINDOWS.map((w) => (
+              <button key={w} type="button" className={`ag-seg-btn num${window === w ? " on" : ""}`} onClick={() => setWindow(w)} title={`최근 ${WINDOW_LABEL[w]}`}>
+                {WINDOW_SHORT[w]}
               </button>
             ))}
           </div>

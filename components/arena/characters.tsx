@@ -1,14 +1,25 @@
 "use client";
 
 /**
- * design/agora-arena.html의 귀여운 에이전트 캐릭터 5종 포팅.
- * face 종류: visor(바이저 로봇) / eye(외눈) / wing(날개 육각) / block(블록 로봇) / spark(다이아).
+ * design/agora-arena.html의 귀여운 에이전트 캐릭터 5종 포팅 + 대체 전략 5종 추가.
+ * face 종류: visor(바이저 로봇) / eye(외눈) / wing(날개 육각) / block(블록 로봇) / spark(다이아)
+ *           / orb(수정구슬) / dice(주사위) / cloud(구름) / bar(막대차트) / shield(실드).
  * 눈 깜빡임은 useCharacterBlink()가 .agora-eye 클래스를 주기적으로 스케일한다.
  */
 
 import { useEffect } from "react";
 
-export type CharacterFace = "visor" | "eye" | "wing" | "block" | "spark";
+export type CharacterFace =
+  | "visor"
+  | "eye"
+  | "wing"
+  | "block"
+  | "spark"
+  | "orb"
+  | "dice"
+  | "cloud"
+  | "bar"
+  | "shield";
 
 export interface CharacterSpec {
   face: CharacterFace;
@@ -22,6 +33,12 @@ export const AGENT_CHARACTERS: Record<string, CharacterSpec> = {
   zephyr: { face: "wing", accent: "#6BB7D6" }, // 날씨 arb — 날개
   atlas: { face: "block", accent: "#9AA6B5" }, // 매크로 — 블록
   axiom: { face: "spark", accent: "#E97FA4" }, // 모멘텀 — 다이아
+  // 크립토 외 전략 5종
+  pythia: { face: "orb", accent: "#C084FC" }, // 예측시장 카피(매크로) — 수정구슬
+  augur: { face: "dice", accent: "#FB7185" }, // 예측시장 카피(스포츠) — 주사위
+  kestrel: { face: "cloud", accent: "#7DD3FC" }, // 날씨 아비트리지 — 구름
+  sigma: { face: "bar", accent: "#2DD4BF" }, // 주식 모멘텀 — 막대차트
+  vega: { face: "shield", accent: "#A3E635" }, // ETF 로테이션 — 실드
 };
 
 export function characterFor(agentId: string): CharacterSpec {
@@ -71,6 +88,55 @@ function faceSvg(face: CharacterFace, c: string): string {
       <path class="agora-eye" d="M23 31 l3.2 -3.2 3.2 3.2 -3.2 3.2 Z" fill="#11100F"/>
       <path class="agora-eye" d="M34.6 31 l3.2 -3.2 3.2 3.2 -3.2 3.2 Z" fill="#11100F"/>
       <path d="M27 41 Q32 44.5 37 41" stroke="#11100F" stroke-width="2.4" stroke-linecap="round" fill="none"/>`;
+    case "orb":
+      // 수정구슬 — 받침대 위 구체, 안쪽에 확률 파동
+      return `
+      <circle cx="32" cy="30" r="21" fill="${c}"/>
+      <path d="M17 24 Q32 14 47 24" stroke="#FFF8ED" stroke-width="2" opacity=".55" fill="none" stroke-linecap="round"/>
+      <path d="M18 36 Q25 30 32 36 T46 36" stroke="#11100F" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".55"/>
+      <circle class="agora-eye" cx="25" cy="29" r="3.2" fill="#11100F"/>
+      <circle class="agora-eye" cx="39" cy="29" r="3.2" fill="#11100F"/>
+      <path d="M20 54 Q32 47 44 54 L46 60 H18 Z" fill="${c}" opacity=".85"/>`;
+    case "dice":
+      // 주사위 — 둥근 정육면체 정면, 눈이 점
+      return `
+      <rect x="11" y="13" width="42" height="42" rx="10" fill="${c}"/>
+      <circle cx="21" cy="23" r="3.2" fill="#11100F"/>
+      <circle cx="43" cy="23" r="3.2" fill="#11100F"/>
+      <circle cx="21" cy="45" r="3.2" fill="#11100F"/>
+      <circle cx="43" cy="45" r="3.2" fill="#11100F"/>
+      <circle class="agora-eye" cx="26" cy="34" r="3.4" fill="#11100F"/>
+      <circle class="agora-eye" cx="38" cy="34" r="3.4" fill="#11100F"/>
+      <path d="M27 41.5 Q32 44.5 37 41.5" stroke="#11100F" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <rect x="19" y="55" width="9" height="6" rx="3" fill="${c}"/>
+      <rect x="36" y="55" width="9" height="6" rx="3" fill="${c}"/>`;
+    case "cloud":
+      // 구름 — 볼록볼록한 상단, 아래 빗줄기 다리
+      return `
+      <path d="M17 44 Q8 44 9 35 Q10 27 19 28 Q20 16 32 16 Q43 16 45 26 Q56 25 56 35 Q56 44 47 44 Z" fill="${c}"/>
+      <circle class="agora-eye" cx="26" cy="33" r="3.2" fill="#11100F"/>
+      <circle class="agora-eye" cx="38" cy="33" r="3.2" fill="#11100F"/>
+      <path d="M28 39.5 Q32 42.5 36 39.5" stroke="#11100F" stroke-width="2.2" stroke-linecap="round" fill="none"/>
+      <path d="M22 48 L20 56 M32 48 L30 58 M42 48 L40 56" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity=".8"/>`;
+    case "bar":
+      // 막대차트 — 세 막대가 몸통, 가운데 막대에 얼굴
+      return `
+      <rect x="10" y="34" width="12" height="26" rx="4" fill="${c}" opacity=".75"/>
+      <rect x="26" y="12" width="12" height="48" rx="4" fill="${c}"/>
+      <rect x="42" y="24" width="12" height="36" rx="4" fill="${c}" opacity=".85"/>
+      <rect class="agora-eye" x="28" y="22" width="3.4" height="4.2" rx="1.2" fill="#11100F"/>
+      <rect class="agora-eye" x="32.8" y="22" width="3.4" height="4.2" rx="1.2" fill="#11100F"/>
+      <path d="M29.5 31 Q32 33 34.5 31" stroke="#11100F" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M12 30 L30 10 L52 20" stroke="#FFF8ED" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".7"/>`;
+    case "shield":
+      // 실드 — 방패 몸통, 로테이션 화살표 이마
+      return `
+      <path d="M32 8 L54 16 V34 Q54 52 32 62 Q10 52 10 34 V16 Z" fill="${c}"/>
+      <path d="M24 22 A9 9 0 1 1 40 22" stroke="#11100F" stroke-width="2.2" fill="none" stroke-linecap="round" opacity=".6"/>
+      <path d="M40 22 l-3 -3.5 M40 22 l3.5 -2.5" stroke="#11100F" stroke-width="2.2" stroke-linecap="round" opacity=".6"/>
+      <circle class="agora-eye" cx="25" cy="34" r="3.3" fill="#11100F"/>
+      <circle class="agora-eye" cx="39" cy="34" r="3.3" fill="#11100F"/>
+      <path d="M27 43 Q32 46 37 43" stroke="#11100F" stroke-width="2.3" stroke-linecap="round" fill="none"/>`;
   }
 }
 

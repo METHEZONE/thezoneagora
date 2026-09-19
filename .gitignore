@@ -40,3 +40,6 @@ yarn-error.log*
 /.omc/project-memory.json
 .next-dev*/
 .next-build/
+
+# per-worktree Next dist dirs (NEXT_DIST_DIR overrides)
+.next-*

@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { parseCapital, parseWindow, replayAll } from "@/lib/backtest/service";
 
-// GET /api/replay?window=7d|30d&capital=10000
-// 느린 시계: 5개 에이전트를 Binance 1시간봉 위에서 결정론적으로 재생한 리더보드 요약.
+// GET /api/replay?window=1d|7d|30d|90d|180d&capital=10000
+// 느린 시계: 크립토 5개는 Binance 봉 위에서, 대체 전략 5개는 결정론적 시뮬레이션으로 재생한 리더보드 요약.
 // 누가 봐도 같은 숫자 — 리더보드 7D/30D 컬럼·AGORA 점수의 단일 출처.
 export const dynamic = "force-dynamic";
 export const preferredRegion = "icn1";

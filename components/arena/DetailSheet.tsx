@@ -11,7 +11,8 @@ import { useWalletConnect } from "@/components/arena/WalletConnect";
 import { usePrefersReducedMotion } from "@/components/arena/useReducedMotion";
 import type { ArenaAgent } from "@/components/arena/useArenaAgents";
 import { useReplayBoard } from "@/lib/backtest/client";
-import { RISK_LABEL } from "@/components/agent/meta";
+import { RISK_LABEL, WINDOW_LABEL, sourceLine } from "@/components/agent/meta";
+import type { BacktestWindow } from "@/lib/backtest/klines";
 
 const CHIPS = [100, 500, 1000, 2500];
 const MONTHLY_FEE = 2;
@@ -66,12 +67,14 @@ function EquityCurve({ hist, color, reduced }: { hist: number[]; color: string; 
 
 export function DetailSheet({
   agents,
+  window: win = "30d",
   openAgentId,
   scrollToDelegate,
   onClose,
   onDelegate,
 }: {
   agents: ArenaAgent[];
+  window?: BacktestWindow;
   openAgentId: string | null;
   scrollToDelegate: boolean;
   onClose: () => void;
@@ -85,9 +88,10 @@ export function DetailSheet({
   const delegateAreaRef = useRef<HTMLDivElement>(null);
   const lastAgentRef = useRef<ArenaAgent | null>(null);
 
-  // 시트 요약 숫자는 느린 시계(30일 리플레이)에서 — 브라우저마다 다른 라이브 상태가 아니라
+  // 시트 요약 숫자는 느린 시계(선택한 창의 리플레이)에서 — 브라우저마다 다른 라이브 상태가 아니라
   // 누가 봐도 같은 숫자를 보여준다. 로딩 전엔 라이브 값으로 폴백.
-  const board = useReplayBoard("30d");
+  const board = useReplayBoard(win);
+  const winLabel = WINDOW_LABEL[win];
   const ranked = [...agents].sort((a, b) => b.score - a.score);
   const liveAgent = agents.find((a) => a.id === openAgentId) ?? null;
   if (liveAgent) lastAgentRef.current = liveAgent;
@@ -173,7 +177,7 @@ export function DetailSheet({
             </div>
             <div>
               <div className="dt-name">
-                {agent.name} <span className="tag real">{agent.symbol} 실시간 시세 · 페이퍼 트레이딩</span>
+                {agent.name} <span className="tag real">{sourceLine(agent.kind, agent.symbol)}</span>
               </div>
               <div className="dt-strat">
                 {agent.strat} · 백커 <b className="num">{agent.backers.toLocaleString()}</b>명 · 위임 자본{" "}
@@ -182,7 +186,7 @@ export function DetailSheet({
             </div>
             <div className="dt-rank">
               <div className="r num">#{replayRank ?? rank}</div>
-              <div className="k">{replay ? `AGORA ${replay.score.total}점 · 30일` : "지금 · 라이브 순위"}</div>
+              <div className="k">{replay ? `AGORA ${replay.score.total}점 · ${winLabel}` : "지금 · 라이브 순위"}</div>
             </div>
           </div>
 
@@ -198,7 +202,7 @@ export function DetailSheet({
           <div className="dt-stats">
             <div className="dst">
               <div className={`v num ${ret >= 0 ? "up" : "dn"}`}>{fmtPct(ret)}</div>
-              <div className="k">{replay ? "30일 수익률" : "시즌 수익률"}</div>
+              <div className="k">{replay ? `${winLabel} 수익률` : "시즌 수익률"}</div>
             </div>
             <div className="dst">
               <div className="v num dn">−{mdd.toFixed(1)}%</div>
@@ -225,7 +229,7 @@ export function DetailSheet({
 
           <div className="equity">
             <h4>
-              <span>{replay ? "EQUITY CURVE · 최근 30일 · 실제 시세 리플레이" : "EQUITY CURVE · SEASON 1"}</span>
+              <span>{replay ? `EQUITY CURVE · 최근 ${winLabel} · 리플레이` : "EQUITY CURVE · SEASON 1"}</span>
               <span className="num">$10,000 기준</span>
             </h4>
             <EquityCurve hist={hist} color={agent.accent} reduced={reduced} />

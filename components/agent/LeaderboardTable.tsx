@@ -10,9 +10,9 @@ import { motion } from "framer-motion";
 import { AgentCharacter } from "@/components/arena/characters";
 import type { ArenaAgent } from "@/components/arena/useArenaAgents";
 import { useReplayBoard } from "@/lib/backtest/client";
-import type { BacktestWindow } from "@/lib/backtest/klines";
-import type { AgentSummary } from "@/lib/backtest/engine";
-import { AGENT_NAME, STRATEGY_LABEL, SYMBOL_LABEL, WINDOW_LABEL } from "@/components/agent/meta";
+import { WINDOWS, WINDOW_SPEC, type BacktestWindow } from "@/lib/backtest/klines";
+import type { AgentKind, AgentSummary } from "@/lib/backtest/engine";
+import { AGENT_NAME, KIND_COLOR, KIND_SHORT, STRATEGY_LABEL, WINDOW_LABEL, WINDOW_SHORT, symbolLabel } from "@/components/agent/meta";
 import { Pnl, RiskBadge, ScoreRing, Spark, usd } from "@/components/agent/primitives";
 
 type SortKey = "score" | "return" | "stability";
@@ -36,28 +36,35 @@ export function LeaderboardTable({
   window,
   onWindowChange,
   onDelegateClick,
+  kindFilter = "all",
 }: {
   liveAgents: ArenaAgent[];
   window: BacktestWindow;
   onWindowChange: (w: BacktestWindow) => void;
   onDelegateClick: (agentId: string) => void;
+  kindFilter?: AgentKind | "all";
 }) {
   const [sort, setSort] = useState<SortKey>("score");
   const board = useReplayBoard(window);
   const liveById = useMemo(() => new Map(liveAgents.map((a) => [a.id, a])), [liveAgents]);
-  const ranked = useMemo(() => (board.data ? sortAgents(board.data.agents, sort) : []), [board.data, sort]);
+  const filtered = useMemo(
+    () => (board.data ? board.data.agents.filter((a) => kindFilter === "all" || a.kind === kindFilter) : []),
+    [board.data, kindFilter]
+  );
+  const ranked = useMemo(() => sortAgents(filtered, sort), [filtered, sort]);
   const capital = board.data?.capital ?? 10_000;
 
   const agg = useMemo(() => {
-    if (!board.data) return null;
-    const list = board.data.agents;
+    if (!board.data || filtered.length === 0) return null;
+    const list = filtered;
     const avgRoi = list.reduce((s, a) => s + a.metrics.roiPct, 0) / list.length;
     const best = [...list].sort((a, b) => b.metrics.roiPct - a.metrics.roiPct)[0];
     const trades = list.reduce((s, a) => s + a.metrics.buys + a.metrics.sells, 0);
     const positive = list.filter((a) => a.metrics.roiPct > 0).length;
-    const avgHold = list.reduce((s, a) => s + a.metrics.holdRoiPct, 0) / list.length;
-    return { avgRoi, best, trades, positive, avgHold, n: list.length };
-  }, [board.data]);
+    const cryptos = list.filter((a) => a.kind === "crypto");
+    const avgHold = cryptos.length ? cryptos.reduce((s, a) => s + a.metrics.holdRoiPct, 0) / cryptos.length : null;
+    return { avgRoi, best, trades, positive, avgHold, n: list.length, nCrypto: cryptos.length };
+  }, [board.data, filtered]);
 
   return (
     <div className="ag-board">
@@ -78,14 +85,15 @@ export function LeaderboardTable({
           ))}
         </div>
         <div className="ag-seg" role="group" aria-label="기간">
-          {(["7d", "30d"] as BacktestWindow[]).map((w) => (
+          {WINDOWS.map((w) => (
             <button
               key={w}
               type="button"
               className={`ag-seg-btn num${window === w ? " on" : ""}`}
               onClick={() => onWindowChange(w)}
+              title={WINDOW_LABEL[w]}
             >
-              {w === "30d" ? "시즌 · 30일" : "7일"}
+              {WINDOW_SHORT[w]}
             </button>
           ))}
         </div>
@@ -94,12 +102,18 @@ export function LeaderboardTable({
       {agg && (
         <div className="ag-agg">
           <div className="ag-agg-cell">
-            <div className="k">5개 평균 수익률 · {WINDOW_LABEL[window]}</div>
+            <div className="k">{agg.n}개 평균 수익률 · {WINDOW_LABEL[window]}</div>
             <div className="v">
               <Pnl pct={agg.avgRoi} d={2} />
             </div>
             <div className="s num">
-              그냥 들고 있었으면 <Pnl pct={agg.avgHold} d={1} />
+              {agg.avgHold !== null ? (
+                <>
+                  크립토 {agg.nCrypto}개 그냥 들고 있었으면 <Pnl pct={agg.avgHold} d={1} />
+                </>
+              ) : (
+                "전략별 무대 규칙 그대로 재생"
+              )}
             </div>
           </div>
           <div className="ag-agg-cell">
@@ -108,7 +122,7 @@ export function LeaderboardTable({
               {AGENT_NAME[agg.best.agentId]} <Pnl pct={agg.best.metrics.roiPct} d={2} />
             </div>
             <div className="s">
-              {STRATEGY_LABEL[agg.best.strategy]} · {SYMBOL_LABEL[agg.best.symbol]}
+              {STRATEGY_LABEL[agg.best.strategy] ?? agg.best.strategy} · {symbolLabel(agg.best.symbol)}
             </div>
           </div>
           <div className="ag-agg-cell">
@@ -121,7 +135,7 @@ export function LeaderboardTable({
           <div className="ag-agg-cell">
             <div className="k">기간 내 총 체결</div>
             <div className="v num">{agg.trades.toLocaleString()}</div>
-            <div className="s">Binance 1시간봉 리플레이 · 수수료 0.10% 반영</div>
+            <div className="s">크립토 Binance {WINDOW_SPEC[window].intervalLabel} 리플레이 · 수수료 반영</div>
           </div>
         </div>
       )}
@@ -141,7 +155,7 @@ export function LeaderboardTable({
 
         {board.loading && !board.data && (
           <div className="ag-skeleton">
-            {[0, 1, 2, 3, 4].map((i) => (
+            {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => (
               <div key={i} className="ag-skel-row" />
             ))}
           </div>
@@ -167,14 +181,17 @@ export function LeaderboardTable({
                 <AgentCharacter agentId={a.agentId} size={44} label={AGENT_NAME[a.agentId]} />
                 <span className="ag-agent-txt">
                   <span className="ag-agent-name">
-                    {AGENT_NAME[a.agentId]}
-                    {live && <i className="ag-live-dot" title="실시간 시세 반응 중" />}
+                    {AGENT_NAME[a.agentId] ?? a.agentId.toUpperCase()}
+                    {live && a.kind === "crypto" && <i className="ag-live-dot" title="실시간 시세 반응 중" />}
+                    <span className="ag-kind num" style={{ "--kc": KIND_COLOR[a.kind] } as React.CSSProperties}>
+                      {KIND_SHORT[a.kind]}
+                    </span>
                   </span>
                   <span className="ag-agent-sub">
                     <span className="ag-chip" style={{ "--c": accent } as React.CSSProperties}>
-                      {STRATEGY_LABEL[a.strategy]}
+                      {STRATEGY_LABEL[a.strategy] ?? a.strategy}
                     </span>
-                    <span className="ag-sym num">{SYMBOL_LABEL[a.symbol]}</span>
+                    <span className="ag-sym num">{symbolLabel(a.symbol)}</span>
                   </span>
                 </span>
               </Link>
@@ -203,7 +220,7 @@ export function LeaderboardTable({
               <span className="ag-cell-win num">
                 <b>{m.roundTrips ? `${m.winRatePct.toFixed(0)}%` : "—"}</b>
                 <small>
-                  {m.roundTrips}회 왕복 · 거부 {m.rejected}
+                  {m.roundTrips}회 {a.kind === "crypto" ? "왕복" : a.kind === "stocks" ? "청산" : "정산"} · 거부 {m.rejected}
                 </small>
               </span>
 
@@ -213,8 +230,8 @@ export function LeaderboardTable({
               </span>
 
               <span className="ag-cell-cta">
-                <Link href={`/agent/${a.agentId}/backtest`} className="btn ghost sm">
-                  백테스트
+                <Link href={a.kind === "crypto" && a.strategy !== "mk2-portfolio" ? `/agent/${a.agentId}/backtest` : `/agent/${a.agentId}`} className="btn ghost sm">
+                  {a.kind === "crypto" && a.strategy !== "mk2-portfolio" ? "백테스트" : "상세"}
                 </Link>
                 <button type="button" className="btn primary sm" onClick={() => onDelegateClick(a.agentId)}>
                   맡기기
@@ -226,8 +243,10 @@ export function LeaderboardTable({
       </div>
 
       <p className="ag-foot-note">
-        점수는 <b>수익률 30 · 위험조정 30 · 일관성 20 · 최근추세 20</b>. 점수 링에 마우스를 올리면 분해가 보여요.
-        모든 숫자는 {WINDOW_LABEL[window]} 동안의 실제 시세로 다시 돌려본 결과이며, 백커 수는 데모 시드값입니다.
+        점수는 <b>수익률 30 · 위험조정 30 · 일관성 20 · 최근추세 20</b> — 10개 전부 같은 공식. 점수 링에 마우스를 올리면
+        분해가 보여요. 크립토 5개는 {WINDOW_LABEL[window]} 동안의 Binance 실제 시세로 다시 돌려본 결과, 예측시장·날씨·주식
+        5개는 각 무대 규칙(정산가 0/1 · 브래킷 정산 · 정규장)을 따르는 결정론적 페이퍼 시뮬레이션입니다. 백커 수는 데모
+        시드값.
       </p>
     </div>
   );
@@ -250,7 +269,7 @@ export function HookBanner({
       <span className="ag-hook-txt">
         <span className="ag-hook-lead">처음이세요?</span>
         <AgentCharacter agentId={top.agentId} size={26} label={AGENT_NAME[top.agentId]} />
-        <b>{AGENT_NAME[top.agentId]}</b>가 이번 시즌 종합 1위 ·{" "}
+        <b>{AGENT_NAME[top.agentId]}</b>가 {WINDOW_LABEL[window]} 종합 1위 ·{" "}
         <Pnl pct={m.roiPct} d={1} /> · {usd(board.data.capital)} 넣었으면 지금 <b className="num">{usd(m.finalEquity)}</b>
       </span>
       <span className="ag-hook-cta">

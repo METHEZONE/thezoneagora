@@ -3,7 +3,7 @@
 import { AgentCharacter, useCharacterBlink } from "@/components/arena/characters";
 
 /** design/agora-arena.html의 #onbChars(5종 캐릭터 나란히 bob) 레퍼런스. */
-const CHARACTER_IDS = ["mint", "delphi", "zephyr", "atlas", "axiom"];
+const CHARACTER_IDS = ["mint", "delphi", "zephyr", "atlas", "axiom", "pythia", "augur", "kestrel", "sigma", "vega"];
 
 export function CharacterRow({
   size = 56,

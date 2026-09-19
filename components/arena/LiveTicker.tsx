@@ -47,16 +47,46 @@ function randomMockLine(agents: ArenaAgent[]): ReactNode {
       </>
     );
   }
-  if (kind < 0.8) {
+  if (kind < 0.72) {
     return (
       <>
         <b>{ranked[0].name}</b>&nbsp;이(가) 1위 수성 중&nbsp;· AGORA 점수&nbsp;<b>{ranked[0].score}</b>
       </>
     );
   }
+  if (kind < 0.9) {
+    // 크립토 외 에이전트는 브라우저 라이브 엔진이 없어 체결 이벤트가 없다 — 무대별 판단 문장을 흘린다.
+    const alt = agents.filter((x) => x.kind !== "crypto");
+    if (alt.length) {
+      const b = alt[Math.floor(rand(0, alt.length))];
+      if (b.kind === "polymarket-copy") {
+        const p = (0.18 + Math.random() * 0.7).toFixed(2);
+        return (
+          <>
+            <b>{b.name}</b>&nbsp;카피 진입&nbsp;<span className={Math.random() < 0.55 ? "up" : "dn"}>{Math.random() < 0.55 ? "YES" : "NO"}</span>
+            &nbsp;@ {p} · Polymarket
+          </>
+        );
+      }
+      if (b.kind === "weather-arb") {
+        const city = ["Chicago", "Miami", "Denver", "Phoenix", "New York"][Math.floor(rand(0, 5))];
+        return (
+          <>
+            <b>{b.name}</b>&nbsp;{city} 최고기온 브래킷&nbsp;<span className="up">엣지 {(8 + Math.random() * 14).toFixed(0)}%p</span>&nbsp;· Kalshi
+          </>
+        );
+      }
+      const tk = ["NVDA", "AAPL", "TSLA", "QQQ", "GLD", "MSFT"][Math.floor(rand(0, 6))];
+      return (
+        <>
+          <b>{b.name}</b>&nbsp;정규장 체결&nbsp;<span className="up">매수</span>&nbsp;{tk}
+        </>
+      );
+    }
+  }
   return (
     <>
-      시즌 1 진행 중&nbsp;·&nbsp;<b>5개 Agent</b>가 같은&nbsp;<b>$10,000</b>로 경쟁하고 있습니다
+      시즌 1 진행 중&nbsp;·&nbsp;<b>{agents.length}개 Agent</b>가 같은&nbsp;<b>$10,000</b>로 경쟁하고 있습니다
     </>
   );
 }
@@ -93,7 +123,7 @@ export function LiveTicker({ agents }: { agents: ArenaAgent[] }) {
   useEffect(() => {
     push.current(
       <>
-        시즌 1 진행 중&nbsp;— <b>5개 Agent</b>가 같은&nbsp;<b>$10,000</b>로 경쟁하고 있습니다
+        시즌 1 진행 중&nbsp;— <b>10개 Agent</b>가 같은&nbsp;<b>$10,000</b>로 경쟁하고 있습니다
       </>
     );
 

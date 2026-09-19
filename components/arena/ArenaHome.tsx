@@ -2,7 +2,7 @@
 
 // design/agora-arena.html 전체 조립 — 온보딩/티커/레이스/리더보드/신뢰 섹션/상세 시트/내 포지션.
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useMemo, useState, type MouseEvent } from "react";
 import { AgoraMark } from "@/components/arena/AgoraMark";
 import { OnboardingOverlay } from "@/components/arena/OnboardingOverlay";
 import { LiveTicker } from "@/components/arena/LiveTicker";
@@ -15,7 +15,10 @@ import { DetailSheet } from "@/components/arena/DetailSheet";
 import { MyPositionBar, type MyPosition } from "@/components/arena/MyPositionBar";
 import { ToastProvider, useToast } from "@/components/arena/Toast";
 import { useWalletConnect } from "@/components/arena/WalletConnect";
-import { useArenaAgents, type ArenaAgent } from "@/components/arena/useArenaAgents";
+import { mergeBoard, useArenaAgents, type ArenaAgent } from "@/components/arena/useArenaAgents";
+import { useReplayBoard } from "@/lib/backtest/client";
+import type { AgentKind } from "@/lib/backtest/engine";
+import { WINDOW_LABEL } from "@/components/agent/meta";
 import { useCountUp } from "@/components/arena/useCountUp";
 import { usePrefersReducedMotion } from "@/components/arena/useReducedMotion";
 import { useCharacterBlink } from "@/components/arena/characters";
@@ -28,7 +31,12 @@ const POSITION_KEY = "agora-my-position-v1";
 function ArenaHomeInner() {
   useCharacterBlink();
   const reduced = usePrefersReducedMotion();
-  const agents = useArenaAgents();
+  const liveAgents = useArenaAgents();
+  const [boardWindow, setBoardWindow] = useState<BacktestWindow>("30d");
+  const [kindFilter, setKindFilter] = useState<AgentKind | "all">("all");
+  // 단일 출처: 트랙·티커·상세 시트·리더보드가 모두 이 보드(선택한 창)의 숫자를 쓴다.
+  const board = useReplayBoard(boardWindow);
+  const agents = useMemo(() => mergeBoard(liveAgents, board.data), [liveAgents, board.data]);
   const topEarner = agents.reduce<ArenaAgent | null>(
     (best, a) => (!best || a.ret > best.ret ? a : best),
     null
@@ -40,7 +48,6 @@ function ArenaHomeInner() {
   const [sheetAgentId, setSheetAgentId] = useState<string | null>(null);
   const [scrollToDelegate, setScrollToDelegate] = useState(false);
   const [position, setPosition] = useState<MyPosition | null>(null);
-  const [boardWindow, setBoardWindow] = useState<BacktestWindow>("30d");
   const [positionHydrated, setPositionHydrated] = useState(false);
 
   useEffect(() => {
@@ -167,12 +174,14 @@ function ArenaHomeInner() {
               <h1>
                 지금, 누가 <span className="accent">이기고</span> 있나
               </h1>
-              <p className="hero-sub">트랙 위 위치가 곧 시즌 성과입니다. 캐릭터를 누르면 전적을 볼 수 있어요.</p>
-              {topEarner && (
+              <p className="hero-sub">
+                트랙 위 위치가 곧 <b>{WINDOW_LABEL[boardWindow]}</b> 성과입니다. 크립토·예측시장·날씨·주식 10개 Agent가 같은
+                $10,000로 달려요. 캐릭터를 누르면 전적 페이지로 들어갑니다.
+              </p>
+              {topEarner && board.data && (
                 <p className="hero-sub top-earner num">
-                  <span className="dot" /> 지금 가장 많이 버는 중: <b>{topEarner.name}</b>{" "}
-                  <span className={topEarner.ret >= 0 ? "up" : "dn"}>{fmtPct(topEarner.ret)}</span> ·{" "}
-                  {topEarner.symbol} 실시간 시세 기반
+                  <span className="dot" /> {WINDOW_LABEL[boardWindow]} 수익률 1위: <b>{topEarner.name}</b>{" "}
+                  <span className={topEarner.ret >= 0 ? "up" : "dn"}>{fmtPct(topEarner.ret)}</span> · {topEarner.strat}
                 </p>
               )}
             </div>
@@ -187,19 +196,27 @@ function ArenaHomeInner() {
               </div>
               <div className="kpi">
                 <div className="v num">
-                  <em>시즌 1</em>
+                  <em>{agents.length}</em>
                 </div>
-                <div className="k">진행 중</div>
+                <div className="k">Agent · 4개 전략군</div>
               </div>
             </div>
           </div>
 
-          <RaceTrack agents={agents} onSelect={(id) => openDetail(id)} />
+          <RaceTrack
+            agents={agents}
+            window={boardWindow}
+            onWindowChange={setBoardWindow}
+            loading={board.loading && !board.data}
+            kindFilter={kindFilter}
+            onKindFilter={setKindFilter}
+          />
 
           <div className="track-foot">
             <span className="hint">
-              트랙은 <b>지금 이 순간</b> 실시간 시세 반응(빠른 시계). 아래 리더보드는 최근 7일/30일 실제 시세로 다시
-              돌려본 <b>AGORA 점수</b>(느린 시계) — 원시 수익률 1위가 종합 1위가 아닐 수 있습니다.
+              트랙 위치는 <b>{WINDOW_LABEL[boardWindow]} 수익률</b>, 번호표는 같은 기간 <b>AGORA 점수</b> 순위 — 아래 리더보드와
+              같은 숫자입니다. 크립토는 Binance 실시세 리플레이, 예측시장·날씨·주식은 각 무대 규칙을 그대로 따르는 페이퍼
+              시뮬레이션. 캐릭터가 달리는 건 숫자가 갱신됐다는 신호예요.
             </span>
             <a className="btn ghost" href="#board" onClick={scrollToBoard}>
               리더보드 ↓
@@ -213,7 +230,7 @@ function ArenaHomeInner() {
           <div className="sec-head">
             <h2 className="sec-title">리더보드</h2>
             <span className="sec-note">
-              수익 옆에 항상 리스크 — <b>둘 다 보고</b> 고르세요 · 숫자는 실제 시세로 다시 돌려본 결과
+              수익 옆에 항상 리스크 — <b>둘 다 보고</b> 고르세요 · 트랙과 같은 {WINDOW_LABEL[boardWindow]} 창
             </span>
           </div>
           <LeaderboardTable
@@ -221,6 +238,7 @@ function ArenaHomeInner() {
             window={boardWindow}
             onWindowChange={setBoardWindow}
             onDelegateClick={(id) => openDetail(id, true)}
+            kindFilter={kindFilter}
           />
         </div>
       </section>
@@ -231,14 +249,16 @@ function ArenaHomeInner() {
         <div className="wrap">
           <AgoraMark className="fm" />
           <p className="num">
-            THE ZONE AGORA · Season 1 (최근 30일 롤링) · 트랙은 실시세 기반 페이퍼 트레이딩, 리더보드 7D/30D 지표는 Binance
-            1시간봉 리플레이 · 백커 수/위임 자본은 데모 시드값 · Sui Testnet 연동
+            THE ZONE AGORA · Season 1 · 10 Agents (크립토 5 · 예측시장 카피 2 · 날씨 아비트리지 1 · 미국 주식 2) · 1D~6M 창은
+            트랙·리더보드·상세가 같은 리플레이 결과를 공유 · 크립토는 Binance 봉 리플레이, 나머지는 결정론적 페이퍼 시뮬레이션 ·
+            백커 수/위임 자본은 데모 시드값 · Sui Testnet 연동
           </p>
         </div>
       </footer>
 
       <DetailSheet
         agents={agents}
+        window={boardWindow}
         openAgentId={sheetAgentId}
         scrollToDelegate={scrollToDelegate}
         onClose={() => setSheetAgentId(null)}

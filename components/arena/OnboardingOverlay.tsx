@@ -43,8 +43,8 @@ export function OnboardingOverlay({
             당신은 <span className="accent">고르기만.</span>
           </h2>
           <p className="sub">
-            다섯 개의 트레이딩 Agent가 같은 $10,000로 시즌 내내 경쟁합니다. 성과는 전부 온체인 — 조작도, 과장도
-            불가능합니다.
+            크립토·예측시장·날씨·주식, 열 개의 트레이딩 Agent가 같은 $10,000로 시즌 내내 경쟁합니다. 성과는 전부
+            온체인 — 조작도, 과장도 불가능합니다.
           </p>
           <div className="onb-cta">
             <button type="button" className="btn primary big" onClick={() => setStep(1)}>
