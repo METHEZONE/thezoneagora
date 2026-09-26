@@ -153,7 +153,7 @@ export function LiveTicker({ agents }: { agents: ArenaAgent[] }) {
           <i /> LIVE
         </span>
         <div className="tk-stage" id="tkStage">
-          {items.map((it) => (
+          {items.slice(-1).map((it) => (
             <div key={it.id} className={`tk-item${it.phase === "base" ? "" : ` ${it.phase}`}`}>
               {it.content}
             </div>
